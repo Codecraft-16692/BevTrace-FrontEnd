@@ -1,53 +1,87 @@
 # BevTrace Frontend
 
-Frontend Angular del proyecto **BevTrace** (CodeCraft, UPC), construido con la arquitectura de la guía *ClosedSource*:
-DDD, un bounded context por carpeta y cada uno dividido en `domain / application / infrastructure / presentation`.
+Angular frontend for BevTrace, a beverage logistics and traceability platform covering inventory, dispatch, traceability, IoT telemetry, incidents, analytics and subscriptions.
 
-## Puesta en marcha
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
+
+## Getting started
+
+Install the dependencies:
 
 ```bash
 npm install
-npm run api      # API mock (json-server) en http://localhost:3000  -> server/db.json
-npm start        # Angular en http://localhost:4200
 ```
 
-Para regenerar los datos de ejemplo con fechas relativas a hoy (recomendado antes de una demo):
+Start the mock API (json-server) at `http://localhost:3000`, backed by `server/db.json`:
+
+```bash
+npm run api
+```
+
+In a second terminal, start the development server:
+
+```bash
+npm start
+```
+
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+
+To regenerate the sample data with dates relative to today (recommended before a demo):
 
 ```bash
 node server/seed.mjs
 ```
 
-## Credenciales de prueba
+## Test credentials
 
-| Rol | Correo | Contraseña |
+| Role | Email | Password |
 |---|---|---|
-| Administrador | bevtrace@admin.com | Admin1234 |
-| Jefe de Logística | alex.rivera@bevtrace.com | Logistics1 |
-| Operario de Almacén | maria.paz@bevtrace.com | Warehouse1 |
-
-Reglas de seguridad: el correo debe contener `@` y dominio válido; la contraseña necesita 1 mayúscula, 1 número y más de 8 caracteres
-(constante `PASSWORD_MIN_LENGTH` en `iam/domain/model/credentials-policy.ts`). Tras 5 intentos fallidos el formulario se bloquea 30 s.
-Los botones y rutas se filtran por rol (`role-guard`). Las contraseñas en `db.json` son texto plano **solo porque es un mock**.
+| Administrator | bevtrace@admin.com | Admin1234 |
+| Logistics Manager | alex.rivera@bevtrace.com | Logistics1 |
+| Warehouse Operator | maria.paz@bevtrace.com | Warehouse1 |
 
 ## Bounded contexts
 
-| Carpeta | Contenido |
+| Folder | Contents |
 |---|---|
-| `iam` | Inicio de sesión, registro, usuarios y roles (admin) |
-| `inventory` | Catálogo y mermas, ingreso de lotes por código, registro de mermas, conciliación y discrepancias |
-| `dispatch` | Cola de despachos, programación, clasificación, asignación de vehículo, validación de paletas, salida |
-| `traceability` | Mapa de rutas activas, puntos de control, entrega / rechazo, historial |
-| `telemetry` | Panel de conectividad (crítico > 30 min), aprovisionamiento, simulador IoT |
-| `incident` | Detección de anomalías, reglas, incidentes, acciones correctivas, notificaciones |
-| `analytics` | Panel de KPI (OTIF, Fill Rate, ERI, rotación, merma) y reportes con CSV |
-| `subscription` | Planes, pago simulado, facturación, newsletter, contacto y vista de administración |
-| `shared` | Layout, barra pública, selector de idioma, landing, dashboard, componentes comunes |
+| `iam` | Sign in, sign up, users and roles (admin) |
+| `inventory` | Catalog and shrinkage, batch intake by code, shrinkage logging, reconciliation and discrepancies |
+| `dispatch` | Dispatch queue, scheduling, classification, vehicle assignment, pallet validation, departure |
+| `traceability` | Active routes map, checkpoints, delivery / rejection, history |
+| `telemetry` | Connectivity dashboard (critical > 30 min), provisioning, IoT simulator |
+| `incident` | Anomaly detection, rules, incidents, corrective actions, notifications |
+| `analytics` | KPI dashboard (OTIF, Fill Rate, ERI, rotation, shrinkage) and reports with CSV export |
+| `subscription` | Plans, simulated payment, billing, newsletter, contact and admin view |
+| `shared` | Layout, public bar, language switcher, landing page, dashboard, common components |
 
-## Notas
+Each bounded context follows a DDD layered structure: `domain`, `application`, `infrastructure` and `presentation`.
 
-- **Sin backend:** `json-server` sirve `server/db.json`. Como no aplica reglas de negocio, las validan las stores de `application/`
-  (stock, capacidad del vehículo, paletas, conciliación pendiente, etc.). Al conectar el backend real bastará cambiar `environment.ts` y las facades `*-api.ts`.
-- **Mapa:** `RouteCanvas` es un mapa esquemático SVG (sin API de mapas) alimentado con latitud y longitud.
-- **i18n:** `public/i18n/en.json` y `es.json`; el idioma elegido se recuerda en el navegador.
-- **Pago:** tarjeta de prueba `4242 4242 4242 4242` (aprobada) y `4000 0000 0000 0002` (rechazada). Solo se guardan los 4 últimos dígitos.
-- Códigos de lote para probar el ingreso: `LT-2609-101` y `LT-2609-102`.
+## Code scaffolding
+
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+
+```bash
+ng generate component component-name
+```
+
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+
+```bash
+ng generate --help
+```
+
+## Building
+
+To build the project run:
+
+```bash
+ng build
+```
+
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
