@@ -1,0 +1,36 @@
+.toolbar {
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  gap: 12px;
+  padding: 0 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--bt-primary);
+}
+
+.toolbar-logo {
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
+}
+
+.toolbar-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 600px) {
+  .toolbar {
+    padding: 0 12px;
+  }
+}
