@@ -14,6 +14,11 @@ const dateOnly = (ms) => new Date(ms).toISOString().split('T')[0];
 const dayOnly = (d) => dateOnly(now - d * 86400000);
 const inDays = (d) => dateOnly(now + d * 86400000);
 
+const roles = [
+  { id: 1, name: 'ROLE_ADMIN', isAdmin: true },
+  { id: 2, name: 'ROLE_LOGISTICS_MANAGER', isAdmin: false },
+  { id: 3, name: 'ROLE_WAREHOUSE_OPERATOR', isAdmin: false },
+];
 
 const users = [
   { id: 1, roleId: 1, name: 'BevTrace Admin', email: 'bevtrace@admin.com', password: 'Admin1234', phone: '+51 1 555-0100', active: true, createdAt: dayAgo(120) },
