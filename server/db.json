@@ -1,7 +1,10 @@
 {
   "roles": [
     {
-,
+      "id": 1,
+      "name": "ROLE_ADMIN",
+      "isAdmin": true
+    },
     {
       "id": 2,
       "name": "ROLE_LOGISTICS_MANAGER",
