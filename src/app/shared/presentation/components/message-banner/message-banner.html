@@ -1,0 +1,6 @@
+@if (message(); as msg) {
+  <div [class]="'banner banner-' + type()" [attr.role]="type() === 'error' ? 'alert' : 'status'">
+    <mat-icon>{{ icon() }}</mat-icon>
+    <span>{{ msg.key | translate: msg.params }}</span>
+  </div>
+}

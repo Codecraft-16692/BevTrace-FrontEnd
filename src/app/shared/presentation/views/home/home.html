@@ -1,0 +1,174 @@
+<header class="nav">
+  <a routerLink="/home" fragment="home" class="brand" (click)="active.set('home')">
+    <img src="/bevtrace-logo.png" alt="BevTrace logo" />
+    <span>BevTrace</span>
+  </a>
+  <nav class="links">
+    @for (link of links; track link.id) {
+      <a routerLink="/home" [fragment]="link.id" [class.active]="active() === link.id" (click)="active.set(link.id)">
+        {{ 'landing.nav.' + link.key | translate }}
+      </a>
+    }
+  </nav>
+  <div class="actions">
+    <div class="lang">
+      <button type="button" [class.on]="lang() === 'es'" (click)="setLanguage('es')">ES</button>
+      <button type="button" [class.on]="lang() === 'en'" (click)="setLanguage('en')">EN</button>
+    </div>
+    @if (iamStore.isSignedIn()) {
+      <a class="btn-solid" routerLink="/dashboard">{{ 'nav.dashboard' | translate }}</a>
+    } @else {
+      <a class="btn-link" routerLink="/iam/sign-in">{{ 'landing.nav.login' | translate }}</a>
+      <a class="btn-solid" routerLink="/iam/sign-up">{{ 'landing.nav.register' | translate }}</a>
+    }
+  </div>
+</header>
+
+<section id="home" class="hero">
+  <img class="watermark" src="/bevtrace-logo.png" alt="" aria-hidden="true" />
+  <div class="hero-copy">
+    <span class="tag"><i></i>{{ 'landing.hero.tag' | translate }}</span>
+    <h1>{{ 'landing.hero.headline-1' | translate }}<br />{{ 'landing.hero.headline-2' | translate }}</h1>
+    <p>{{ 'landing.hero.description' | translate }}</p>
+    <div class="hero-actions">
+      <a class="btn-orange" routerLink="/home" fragment="features">{{ 'landing.hero.cta-solution' | translate }}</a>
+      <a class="btn-outline" routerLink="/home" fragment="team">{{ 'landing.hero.cta-team' | translate }}</a>
+    </div>
+    <small class="foot">{{ 'landing.hero.footnote' | translate }}</small>
+  </div>
+</section>
+
+<section id="audience" class="audience">
+  <h2>{{ 'landing.audience.title' | translate }}</h2>
+  <div class="segments">
+    <button type="button" [class.active]="segment() === 'manager'" (click)="segment.set('manager')">
+      {{ 'landing.hero.manager' | translate }} <mat-icon>arrow_forward</mat-icon>
+    </button>
+    <button type="button" [class.active]="segment() === 'driver'" (click)="segment.set('driver')">
+      {{ 'landing.hero.driver' | translate }} <mat-icon>local_shipping</mat-icon>
+    </button>
+  </div>
+  <div class="segment-panel">
+    <strong>{{ 'landing.segments.' + segment() + '.title' | translate }}</strong>
+    <span>{{ 'landing.segments.' + segment() + '.text' | translate }}</span>
+  </div>
+</section>
+
+<section id="about" class="shift">
+  <div class="shift-copy">
+    <h2>{{ 'landing.shift.title' | translate }}</h2>
+    <p>{{ 'landing.shift.text' | translate }}</p>
+  </div>
+  <div class="shift-cards">
+    <div class="shift-card">
+      <strong>{{ 'landing.shift.manual-title' | translate }}</strong>
+      <span>{{ 'landing.shift.manual-text' | translate }}</span>
+    </div>
+    <div class="shift-card accent">
+      <strong>{{ 'landing.shift.iot-title' | translate }}</strong>
+      <span>{{ 'landing.shift.iot-text' | translate }}</span>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="features">
+  <h2>{{ 'landing.features.title' | translate }}</h2>
+  <p class="lead">{{ 'landing.features.subtitle' | translate }}</p>
+  <div class="feature-grid">
+    @for (feature of features; track feature.key) {
+      <div class="feature">
+        <span class="icon"><mat-icon>{{ feature.icon }}</mat-icon></span>
+        <h3>{{ 'landing.features.' + feature.key + '.title' | translate }}</h3>
+        <p>{{ 'landing.features.' + feature.key + '.text' | translate }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<section id="plans" class="pricing">
+  <div class="pricing-head">
+    <div>
+      <h2>{{ 'landing.pricing.title' | translate }}</h2>
+      <p class="lead">{{ 'landing.pricing.subtitle' | translate }}</p>
+    </div>
+    <div class="cycle-toggle">
+      <button type="button" [class.active]="cycle() === 'MONTHLY'" (click)="cycle.set('MONTHLY')">{{ 'plans.monthly' | translate }}</button>
+      <button type="button" [class.active]="cycle() === 'YEARLY'" (click)="cycle.set('YEARLY')">{{ 'plans.yearly' | translate }}</button>
+    </div>
+  </div>
+  <div class="plan-grid">
+    @for (plan of subscriptionStore.plansOf(cycle()); track plan.id) {
+      <app-plan-card [plan]="plan" (chosen)="choosePlan($event)" />
+    }
+  </div>
+</section>
+
+<section id="team" class="team">
+  <h2>{{ 'landing.team.title' | translate }}</h2>
+  <p class="lead">{{ 'landing.team.subtitle' | translate }}</p>
+  <div class="team-grid">
+    @for (member of team; track member.key) {
+      <div class="member">
+        <img [src]="'/team/' + member.key + '.jpg'" [alt]="member.name" />
+        <strong>{{ member.name }}</strong>
+        <span class="area">{{ 'landing.team.members.' + member.key + '.area' | translate }}</span>
+        <span class="role">{{ 'landing.team.members.' + member.key + '.role' | translate }}</span>
+      </div>
+    }
+  </div>
+</section>
+
+<section id="contact" class="cta">
+  <h2>{{ 'landing.cta.title' | translate }}</h2>
+  <p>{{ 'landing.cta.text' | translate }}</p>
+
+  <div class="cta-grid">
+    <form class="panel" [formGroup]="contactForm" (ngSubmit)="onContact()" novalidate>
+      <h3>{{ 'landing.cta.demo' | translate }}</h3>
+      <div class="field">
+        <input type="text" [placeholder]="'landing.contact.name' | translate" formControlName="fullName" [class.invalid]="contactForm.controls.fullName.invalid && contactForm.controls.fullName.touched" />
+      </div>
+      <div class="field">
+        <input type="email" [placeholder]="'iam.fields.email' | translate" formControlName="email" [class.invalid]="contactForm.controls.email.invalid && contactForm.controls.email.touched" />
+      </div>
+      <div class="field">
+        <input type="text" [placeholder]="'landing.contact.company' | translate" formControlName="company" />
+      </div>
+      <div class="field">
+        <textarea rows="3" [placeholder]="'landing.contact.message' | translate" formControlName="message" [class.invalid]="contactForm.controls.message.invalid && contactForm.controls.message.touched"></textarea>
+      </div>
+      <button type="submit" class="btn-white">{{ 'landing.contact.send' | translate }}</button>
+    </form>
+
+    <form class="panel" [formGroup]="newsletterForm" (ngSubmit)="onSubscribe()" novalidate>
+      <h3>{{ 'landing.newsletter.title' | translate }}</h3>
+      <p>{{ 'landing.newsletter.text' | translate }}</p>
+      <div class="field">
+        <input type="email" [placeholder]="'landing.newsletter.placeholder' | translate" formControlName="email" [class.invalid]="newsletterForm.controls.email.invalid && newsletterForm.controls.email.touched" />
+        @if (newsletterForm.controls.email.invalid && newsletterForm.controls.email.touched) {
+          <span class="field-error">{{ 'iam.errors.email-format' | translate }}</span>
+        }
+      </div>
+      <button type="submit" class="btn-white">{{ 'landing.newsletter.button' | translate }}</button>
+      <p class="mail"><mat-icon>mail</mat-icon> contact&#64;bevtrace.com</p>
+    </form>
+  </div>
+
+  <div class="feedback">
+    <app-message-banner [message]="subscriptionStore.successMsg()" type="success" />
+    <app-message-banner [message]="subscriptionStore.error()" type="error" />
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-brand">
+    <strong>BevTrace</strong>
+    <span>{{ 'landing.footer.tagline' | translate }}</span>
+  </div>
+  <div class="footer-links">
+    <a routerLink="/home" fragment="about">{{ 'landing.footer.terms' | translate }}</a>
+    <a routerLink="/home" fragment="about">{{ 'landing.footer.privacy' | translate }}</a>
+    <a routerLink="/home" fragment="about">{{ 'landing.footer.security' | translate }}</a>
+  </div>
+  <span class="copy">© 2026 BevTrace · CodeCraft · Universidad Peruana de Ciencias Aplicadas</span>
+</footer>

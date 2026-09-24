@@ -1,0 +1,28 @@
+<svg [attr.viewBox]="'0 0 ' + width + ' ' + height" class="canvas" role="img" aria-label="Route map">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#dfe6e9" stroke-width="1" />
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="#f4f8f9" />
+  <rect width="100%" height="100%" fill="url(#grid)" />
+  <text x="16" y="24" class="compass">N ↑</text>
+
+  @for (route of layout(); track route.id) {
+    <g [class.dimmed]="selectedId() !== null && selectedId() !== route.id" class="route" (click)="select(route.id)">
+      <polyline [attr.points]="route.polyline" fill="none" [attr.stroke]="route.color" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 0" />
+      @for (dot of route.dots; track $index) {
+        <circle [attr.cx]="dot.x" [attr.cy]="dot.y" [attr.r]="$last ? 9 : 6" [class]="'dot dot-' + dot.status">
+          <title>{{ dot.label }}</title>
+        </circle>
+      }
+      @if (route.vehicle; as vehicle) {
+        <g [attr.transform]="'translate(' + vehicle.x + ',' + vehicle.y + ')'">
+          <circle r="13" [attr.fill]="route.color" opacity="0.25" />
+          <circle r="7" [attr.fill]="route.color" stroke="#fff" stroke-width="2" />
+          <title>{{ route.label }}</title>
+        </g>
+      }
+    </g>
+  }
+</svg>
