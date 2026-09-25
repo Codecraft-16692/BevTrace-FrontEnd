@@ -1,0 +1,69 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>add_box</mat-icon>
+      <div>
+        <h2>{{ 'inventory.batch-form.title' | translate }}</h2>
+        <p>{{ 'inventory.batch-form.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  <div class="card form-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="productId">{{ 'inventory.fields.product' | translate }}</label>
+          <select id="productId" formControlName="productId" [class.invalid]="form.controls.productId.invalid && form.controls.productId.touched">
+            <option [ngValue]="null">{{ 'common.select' | translate }}</option>
+            @for (product of store.products(); track product.id) {
+              <option [ngValue]="product.id">{{ product.name }} ({{ product.skuCode }})</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="zoneId">{{ 'inventory.fields.zone' | translate }}</label>
+          <select id="zoneId" formControlName="zoneId" [class.invalid]="form.controls.zoneId.invalid && form.controls.zoneId.touched">
+            <option [ngValue]="null">{{ 'common.select' | translate }}</option>
+            @for (zone of store.zones(); track zone.id) {
+              <option [ngValue]="zone.id">{{ zone.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="batchNumber">{{ 'inventory.fields.batch' | translate }}</label>
+        <input id="batchNumber" type="text" class="mono" formControlName="batchNumber" [class.invalid]="form.controls.batchNumber.invalid && form.controls.batchNumber.touched" />
+        @if (form.controls.batchNumber.invalid && form.controls.batchNumber.touched) {
+          <span class="error-message">{{ 'inventory.errors.code-format' | translate }}</span>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="initialQty">{{ 'inventory.fields.quantity' | translate }}</label>
+          <input id="initialQty" type="number" min="1" formControlName="initialQty" [class.invalid]="form.controls.initialQty.invalid && form.controls.initialQty.touched" />
+          @if (form.controls.initialQty.invalid && form.controls.initialQty.touched) {
+            <span class="error-message">{{ 'inventory.errors.quantity-invalid' | translate }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="expirationDate">{{ 'inventory.fields.expiration' | translate }}</label>
+          <input id="expirationDate" type="date" [min]="today" formControlName="expirationDate" [class.invalid]="form.controls.expirationDate.invalid && form.controls.expirationDate.touched" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" style="max-width: 220px" [disabled]="store.isLoading()">
+          {{ 'inventory.batch-form.save' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
