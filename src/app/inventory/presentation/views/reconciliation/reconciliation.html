@@ -1,0 +1,152 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>fact_check</mat-icon>
+      <div>
+        <h2>{{ 'inventory.reconciliation.title' | translate }}</h2>
+        <p>{{ 'inventory.reconciliation.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  @if (store.openDiscrepancies().length > 0) {
+    <div class="banner banner-warn">
+      <mat-icon>warning_amber</mat-icon>
+      <span>{{ 'inventory.reconciliation.open-alert' | translate: { count: store.openDiscrepancies().length } }}</span>
+    </div>
+  }
+
+  <div class="table-card">
+    @if (store.isLoading()) {
+      <div class="loading-overlay"><mat-spinner diameter="36"></mat-spinner></div>
+    }
+    <div class="card-head">
+      <h3 class="table-title">{{ 'inventory.reconciliation.count' | translate }}</h3>
+      <div class="inline-actions">
+        <button type="button" class="btn-secondary" (click)="fillWithSystem()">
+          {{ 'inventory.reconciliation.fill' | translate }}
+        </button>
+        <button type="button" class="btn-action" [disabled]="store.isLoading()" (click)="onRun()">
+          {{ 'inventory.reconciliation.run' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <table class="simple-table">
+      <thead>
+        <tr>
+          <th>{{ 'inventory.fields.batch' | translate }}</th>
+          <th>{{ 'inventory.fields.product' | translate }}</th>
+          <th>{{ 'inventory.reconciliation.system-qty' | translate }}</th>
+          <th>{{ 'inventory.reconciliation.counted-qty' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (batch of store.availableBatches(); track batch.id) {
+          <tr>
+            <td class="bold-cell mono">{{ batch.batchNumber }}</td>
+            <td>{{ batch.productName }}</td>
+            <td>{{ batch.currentQty | number }}</td>
+            <td>
+              <input
+                type="number"
+                min="0"
+                class="count-input"
+                [value]="counts()[batch.id] ?? ''"
+                (input)="setCount(batch.id, $any($event.target).value)"
+              />
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-card">
+    <h3 class="table-title">{{ 'inventory.reconciliation.discrepancies' | translate }}</h3>
+    <table mat-table [dataSource]="store.discrepancies()" class="full-width-table">
+      <ng-container matColumnDef="batchNumber">
+        <th mat-header-cell *matHeaderCellDef>{{ 'inventory.fields.batch' | translate }}</th>
+        <td mat-cell *matCellDef="let item" class="bold-cell mono">{{ item.batchNumber }}</td>
+      </ng-container>
+      <ng-container matColumnDef="expectedQty">
+        <th mat-header-cell *matHeaderCellDef>{{ 'inventory.reconciliation.system-qty' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.expectedQty | number }}</td>
+      </ng-container>
+      <ng-container matColumnDef="countedQty">
+        <th mat-header-cell *matHeaderCellDef>{{ 'inventory.reconciliation.counted-qty' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.countedQty | number }}</td>
+      </ng-container>
+      <ng-container matColumnDef="difference">
+        <th mat-header-cell *matHeaderCellDef>{{ 'inventory.reconciliation.difference' | translate }}</th>
+        <td mat-cell *matCellDef="let item" [class.negative]="item.difference < 0">{{ item.difference }}</td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.status' | translate }}</th>
+        <td mat-cell *matCellDef="let item"><app-status-chip [status]="item.status" /></td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let item">
+          @if (item.status === 'OPEN') {
+            <div class="inline-actions">
+              <input
+                type="text"
+                class="note-input"
+                [placeholder]="'inventory.reconciliation.note' | translate"
+                (input)="setNote(item.id, $any($event.target).value)"
+              />
+              <button type="button" class="btn-secondary" (click)="onResolve(item.id)">
+                {{ 'inventory.reconciliation.resolve' | translate }}
+              </button>
+            </div>
+          } @else {
+            <span class="muted">{{ item.resolutionNote }}</span>
+          }
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="discrepancyColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: discrepancyColumns"></tr>
+    </table>
+    @if (store.discrepancies().length === 0) {
+      <div class="empty-state">{{ 'inventory.reconciliation.no-discrepancies' | translate }}</div>
+    }
+  </div>
+
+  <div class="table-card">
+    <h3 class="table-title">{{ 'inventory.reconciliation.history' | translate }}</h3>
+    <table mat-table [dataSource]="store.reconciliations()" class="full-width-table">
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.date' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.date }}</td>
+      </ng-container>
+      <ng-container matColumnDef="batches">
+        <th mat-header-cell *matHeaderCellDef>{{ 'inventory.reconciliation.batches' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.matchedBatches }} / {{ item.totalBatches }}</td>
+      </ng-container>
+      <ng-container matColumnDef="eri">
+        <th mat-header-cell *matHeaderCellDef>ERI</th>
+        <td mat-cell *matCellDef="let item" class="bold-cell">{{ item.eriPercentage }}%</td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.status' | translate }}</th>
+        <td mat-cell *matCellDef="let item"><app-status-chip [status]="item.status" /></td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let item">
+          @if (item.status === 'IN_REVIEW' && iamStore.hasAnyRole(['ROLE_LOGISTICS_MANAGER'])) {
+            <button type="button" class="btn-action" (click)="onConfirm(item.id)">
+              {{ 'inventory.reconciliation.confirm' | translate }}
+            </button>
+          }
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="historyColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: historyColumns"></tr>
+    </table>
+  </div>
+</div>
