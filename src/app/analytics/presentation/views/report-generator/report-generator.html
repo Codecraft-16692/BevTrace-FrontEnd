@@ -1,0 +1,67 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>summarize</mat-icon>
+      <div>
+        <h2>{{ 'analytics.reports.title' | translate }}</h2>
+        <p>{{ 'analytics.reports.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  <div class="card form-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="periodStart">{{ 'analytics.reports.from' | translate }}</label>
+          <input id="periodStart" type="date" [max]="today" formControlName="periodStart" />
+        </div>
+        <div class="form-group">
+          <label for="periodEnd">{{ 'analytics.reports.to' | translate }}</label>
+          <input id="periodEnd" type="date" [max]="today" formControlName="periodEnd" />
+        </div>
+      </div>
+      <button type="submit" class="btn-primary" style="max-width: 240px" [disabled]="store.isLoading()">
+        {{ 'analytics.reports.generate' | translate }}
+      </button>
+    </form>
+  </div>
+
+  <div class="table-card">
+    <h3 class="table-title">{{ 'analytics.reports.history' | translate }}</h3>
+    <table class="simple-table">
+      <thead>
+        <tr>
+          <th>{{ 'analytics.reports.period' | translate }}</th>
+          <th>OTIF</th>
+          <th>Fill Rate</th>
+          <th>ERI</th>
+          <th>{{ 'analytics.dashboard.rotation' | translate }}</th>
+          <th>{{ 'analytics.dashboard.shrinkage' | translate }}</th>
+          <th>{{ 'analytics.reports.generated' | translate }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (report of store.reports(); track report.id) {
+          <tr>
+            <td class="bold-cell">{{ report.periodStart }} → {{ report.periodEnd }}</td>
+            <td>{{ metric(report, 'OTIF') }}%</td>
+            <td>{{ metric(report, 'FILL_RATE') }}%</td>
+            <td>{{ metric(report, 'ERI') }}%</td>
+            <td>{{ metric(report, 'INVENTORY_ROTATION') }}x</td>
+            <td>{{ metric(report, 'SHRINKAGE_RATE') }}%</td>
+            <td>{{ report.createdAt | date: 'MMM d, HH:mm' }} · {{ report.generatedByName }}</td>
+            <td><button type="button" class="btn-secondary" (click)="downloadCsv(report)">CSV</button></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (store.reports().length === 0) {
+      <div class="empty-state">{{ 'common.no-results' | translate }}</div>
+    }
+  </div>
+</div>
