@@ -1,0 +1,96 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>insights</mat-icon>
+      <div>
+        <h2>{{ 'analytics.dashboard.title' | translate }}</h2>
+        <p>{{ store.period().start }} → {{ store.period().end }}</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      @for (option of periods; track option) {
+        <button type="button" [class]="days() === option ? 'btn-action' : 'btn-secondary'" (click)="onPeriod(option)">
+          {{ 'analytics.dashboard.last-days' | translate: { days: option } }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+
+  @if (!store.indicators().hasData && !store.isLoading()) {
+    <div class="banner banner-warn"><mat-icon>info</mat-icon><span>{{ 'analytics.dashboard.no-data' | translate }}</span></div>
+  }
+
+  <div class="kpi-grid">
+    <div class="kpi-card ok">
+      <span class="kpi-label">OTIF</span>
+      <span class="kpi-value">{{ store.indicators().otif }}%</span>
+      <span class="kpi-hint" [class.up]="delta(store.indicators().otif, store.previousIndicators().otif) >= 0" [class.down]="delta(store.indicators().otif, store.previousIndicators().otif) < 0">
+        {{ delta(store.indicators().otif, store.previousIndicators().otif) | number: '1.0-2' }} pp
+      </span>
+    </div>
+    <div class="kpi-card ok">
+      <span class="kpi-label">Fill Rate</span>
+      <span class="kpi-value">{{ store.indicators().fillRate }}%</span>
+      <span class="kpi-hint" [class.up]="delta(store.indicators().fillRate, store.previousIndicators().fillRate) >= 0" [class.down]="delta(store.indicators().fillRate, store.previousIndicators().fillRate) < 0">
+        {{ delta(store.indicators().fillRate, store.previousIndicators().fillRate) | number: '1.0-2' }} pp
+      </span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">ERI</span>
+      <span class="kpi-value">{{ store.indicators().eri }}%</span>
+      <span class="kpi-hint" [class.up]="delta(store.indicators().eri, store.previousIndicators().eri) >= 0" [class.down]="delta(store.indicators().eri, store.previousIndicators().eri) < 0">
+        {{ delta(store.indicators().eri, store.previousIndicators().eri) | number: '1.0-2' }} pp
+      </span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">{{ 'analytics.dashboard.rotation' | translate }}</span>
+      <span class="kpi-value">{{ store.indicators().inventoryRotation }}x</span>
+    </div>
+    <div class="kpi-card" [class.error]="store.indicators().shrinkageRate > 2" [class.warn]="store.indicators().shrinkageRate > 1">
+      <span class="kpi-label">{{ 'analytics.dashboard.shrinkage' | translate }}</span>
+      <span class="kpi-value">{{ store.indicators().shrinkageRate }}%</span>
+      <span class="kpi-hint" [class.up]="delta(store.indicators().shrinkageRate, store.previousIndicators().shrinkageRate) <= 0" [class.down]="delta(store.indicators().shrinkageRate, store.previousIndicators().shrinkageRate) > 0">
+        {{ delta(store.indicators().shrinkageRate, store.previousIndicators().shrinkageRate) | number: '1.0-2' }} pp {{ 'analytics.dashboard.vs-previous' | translate }}
+      </span>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>{{ 'analytics.dashboard.trend' | translate }}</h3>
+      <div class="chart-box"><canvas baseChart [data]="trendData()" [options]="chartOptions" type="line"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>{{ 'analytics.dashboard.regional' | translate }}</h3>
+      <div class="chart-box"><canvas baseChart [data]="regionData()" [options]="chartOptions" type="bar"></canvas></div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <h3 class="table-title">{{ 'analytics.dashboard.zones' | translate }}</h3>
+    <table class="simple-table">
+      <thead>
+        <tr>
+          <th>{{ 'inventory.fields.zone' | translate }}</th>
+          <th>{{ 'analytics.dashboard.batches' | translate }}</th>
+          <th>{{ 'inventory.catalog.total-units' | translate }}</th>
+          <th>{{ 'analytics.dashboard.lost' | translate }}</th>
+          <th>{{ 'analytics.dashboard.shrinkage' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of store.zoneOverview(); track row.zone) {
+          <tr>
+            <td class="bold-cell">{{ row.zone }}</td>
+            <td>{{ row.batches }}</td>
+            <td>{{ row.units | number }}</td>
+            <td>{{ row.lost | number }}</td>
+            <td><span [class]="row.shrinkage > 2 ? 'chip chip-error' : row.shrinkage > 1 ? 'chip chip-warn' : 'chip chip-ok'">{{ row.shrinkage }}%</span></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
