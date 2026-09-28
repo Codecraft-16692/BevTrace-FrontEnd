@@ -1,0 +1,71 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>event_available</mat-icon>
+      <div>
+        <h2>{{ 'dispatch.form.title' | translate }}</h2>
+        <p>{{ 'dispatch.form.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+
+  <div class="card form-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-group">
+        <label for="destinationId">{{ 'dispatch.fields.destination' | translate }}</label>
+        <select id="destinationId" formControlName="destinationId" [class.invalid]="form.controls.destinationId.invalid && form.controls.destinationId.touched">
+          <option [ngValue]="null">{{ 'common.select' | translate }}</option>
+          @for (destination of store.destinations(); track destination.id) {
+            <option [ngValue]="destination.id">{{ destination.clientName }} · {{ destination.region }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="scheduledDate">{{ 'dispatch.fields.date' | translate }}</label>
+          <input id="scheduledDate" type="date" [min]="today" formControlName="scheduledDate" />
+        </div>
+        <div class="form-group">
+          <label for="priority">{{ 'dispatch.fields.priority' | translate }}</label>
+          <select id="priority" formControlName="priority">
+            @for (priority of priorities; track priority) {
+              <option [value]="priority">{{ 'status.' + priority | translate }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <h3 class="section-title">{{ 'dispatch.form.cargo' | translate }}</h3>
+      @for (line of lines(); track $index) {
+        <div class="cargo-row">
+          <select [value]="line.batchId ?? ''" (change)="setBatch($index, $any($event.target).value)">
+            <option value="">{{ 'common.select' | translate }}</option>
+            @for (batch of store.dispatchableBatches(); track batch.id) {
+              <option [value]="batch.id" [selected]="batch.id === line.batchId">
+                {{ batch.batchNumber }} · {{ batch.productName }} ({{ store.freeStock(batch) }})
+              </option>
+            }
+          </select>
+          <input type="number" min="1" [value]="line.quantity" (input)="setQuantity($index, $any($event.target).value)" />
+          <button type="button" class="btn-secondary" (click)="removeLine($index)" [disabled]="lines().length === 1">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+
+      <div class="form-actions between">
+        <button type="button" class="btn-secondary" (click)="addLine()">{{ 'dispatch.form.add-line' | translate }}</button>
+        <span class="muted">{{ 'dispatch.form.total' | translate: { count: totalUnits() } }}</span>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" style="max-width: 240px" [disabled]="store.isLoading()">
+          {{ 'dispatch.form.save' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
