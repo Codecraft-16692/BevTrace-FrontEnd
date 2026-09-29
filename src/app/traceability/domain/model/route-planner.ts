@@ -84,6 +84,6 @@ export class RoutePlanner {
       Math.sin(dLat / 2) ** 2 +
       Math.cos(toRad(ORIGIN.latitude)) * Math.cos(toRad(latitude)) * Math.sin(dLng / 2) ** 2;
     const km = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return Math.round((km / AVERAGE_SPEED_KMH) * 60) + 30;
+    return Math.max(60, Math.round((km / AVERAGE_SPEED_KMH) * 60) + 30);
   }
 }
