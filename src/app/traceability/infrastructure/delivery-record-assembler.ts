@@ -14,6 +14,15 @@ export class DeliveryRecordAssembler implements BaseAssembler<
   DeliveryRecordResource,
   DeliveryRecordsResponse
 > {
+  /**
+   * Converts a response envelope into domain entities.
+   *
+   * @param response - API response containing resources
+   * @returns Array of DeliveryRecord domain entities
+   */
+  toEntitiesFromResponse(response: DeliveryRecordsResponse): DeliveryRecord[] {
+    return response.records.map((resource) => this.toEntityFromResource(resource));
+  }
 
   /**
    * Converts an API resource into a domain entity.
