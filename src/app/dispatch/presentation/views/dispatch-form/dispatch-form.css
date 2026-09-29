@@ -1,0 +1,20 @@
+.cargo-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 44px;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cargo-row select,
+.cargo-row input {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #cfd8dc;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.between {
+  justify-content: space-between;
+  align-items: center;
+}
