@@ -56,6 +56,6 @@ export class DeliveryHistory implements OnInit {
    * @returns Name of the receiver or a dash
    */
   protected receiverOf(logId: number): string {
-    return this.store.recordsOf(logId).find((record) => record.status === 'DELIVERED')?.receivedBy;
+    return this.store.recordsOf(logId).find((record) => record.status === 'DELIVERED')?.receivedBy ?? '-';
   }
 }
