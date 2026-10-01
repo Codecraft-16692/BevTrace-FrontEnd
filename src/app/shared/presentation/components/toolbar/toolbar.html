@@ -1,0 +1,17 @@
+<mat-toolbar class="toolbar">
+  <a routerLink="/home" class="brand">
+    <img src="/bevtrace-logo.png" alt="BevTrace logo" class="toolbar-logo" />
+    <span class="toolbar-title">BevTrace</span>
+  </a>
+
+  <span class="spacer"></span>
+
+  @if (iamStore.isSignedIn()) {
+    <a mat-stroked-button routerLink="/dashboard">{{ 'nav.dashboard' | translate }}</a>
+  } @else {
+    <a mat-button routerLink="/iam/sign-in">{{ 'landing.nav.login' | translate }}</a>
+    <a mat-flat-button routerLink="/iam/sign-up">{{ 'landing.nav.register' | translate }}</a>
+  }
+
+  <app-language-switcher />
+</mat-toolbar>
