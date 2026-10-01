@@ -1,0 +1,41 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>task_alt</mat-icon>
+      <div>
+        <h2>{{ 'traceability.history.title' | translate }}</h2>
+        <p>{{ 'traceability.history.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <table class="simple-table">
+      <thead>
+        <tr>
+          <th>{{ 'dispatch.fields.vehicle' | translate }}</th>
+          <th>{{ 'dispatch.fields.destination' | translate }}</th>
+          <th>{{ 'traceability.fields.started' | translate }}</th>
+          <th>{{ 'traceability.fields.finished' | translate }}</th>
+          <th>{{ 'traceability.detail.received-by' | translate }}</th>
+          <th>{{ 'common.status' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of store.completedLogs(); track log.id) {
+          <tr class="clickable" (click)="open(log.id)">
+            <td class="bold-cell mono">{{ log.vehiclePlate }}</td>
+            <td>{{ log.destinationName }}</td>
+            <td>{{ log.startTime | date: 'MMM d, HH:mm' }}</td>
+            <td>{{ log.endTime | date: 'MMM d, HH:mm' }}</td>
+            <td>{{ receiverOf(log.id) }}</td>
+            <td><app-status-chip [status]="log.currentStatus" /></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (store.completedLogs().length === 0) {
+      <div class="empty-state">{{ 'common.no-results' | translate }}</div>
+    }
+  </div>
+</div>
