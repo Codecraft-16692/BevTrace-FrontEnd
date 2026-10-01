@@ -1,0 +1,76 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>rule</mat-icon>
+      <div>
+        <h2>{{ 'incident.rules.title' | translate }}</h2>
+        <p>{{ 'incident.rules.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  <div class="grid-main">
+    <div class="table-card">
+      <table mat-table [dataSource]="store.rules()" class="full-width-table">
+        <ng-container matColumnDef="conditionType">
+          <th mat-header-cell *matHeaderCellDef>{{ 'incident.fields.condition' | translate }}</th>
+          <td mat-cell *matCellDef="let rule" class="bold-cell">{{ 'incident.conditions.' + rule.conditionType | translate }}</td>
+        </ng-container>
+        <ng-container matColumnDef="threshold">
+          <th mat-header-cell *matHeaderCellDef>{{ 'incident.fields.threshold' | translate }}</th>
+          <td mat-cell *matCellDef="let rule" class="mono">{{ rule.threshold }}</td>
+        </ng-container>
+        <ng-container matColumnDef="severity">
+          <th mat-header-cell *matHeaderCellDef>{{ 'incident.fields.severity' | translate }}</th>
+          <td mat-cell *matCellDef="let rule"><app-status-chip [status]="rule.severity" /></td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>{{ 'common.description' | translate }}</th>
+          <td mat-cell *matCellDef="let rule">{{ rule.description }}</td>
+        </ng-container>
+        <ng-container matColumnDef="active">
+          <th mat-header-cell *matHeaderCellDef>{{ 'common.active' | translate }}</th>
+          <td mat-cell *matCellDef="let rule">
+            <mat-slide-toggle [checked]="rule.active" (change)="onToggle(rule.id, $event.checked)"></mat-slide-toggle>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>{{ 'incident.rules.new' | translate }}</h3>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-group">
+          <label for="conditionType">{{ 'incident.fields.condition' | translate }}</label>
+          <select id="conditionType" formControlName="conditionType">
+            @for (condition of conditions; track condition) {
+              <option [value]="condition">{{ 'incident.conditions.' + condition | translate }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="threshold">{{ 'incident.fields.threshold' | translate }}</label>
+          <input id="threshold" type="number" min="1" formControlName="threshold" [class.invalid]="form.controls.threshold.invalid && form.controls.threshold.touched" />
+        </div>
+        <div class="form-group">
+          <label for="severity">{{ 'incident.fields.severity' | translate }}</label>
+          <select id="severity" formControlName="severity">
+            @for (severity of severities; track severity) {
+              <option [value]="severity">{{ 'status.' + severity | translate }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="description">{{ 'common.description' | translate }}</label>
+          <input id="description" type="text" formControlName="description" [class.invalid]="form.controls.description.invalid && form.controls.description.touched" />
+        </div>
+        <button type="submit" class="btn-primary">{{ 'incident.rules.save' | translate }}</button>
+      </form>
+    </div>
+  </div>
+</div>
