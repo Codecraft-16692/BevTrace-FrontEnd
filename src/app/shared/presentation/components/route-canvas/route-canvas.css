@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.canvas {
+  width: 100%;
+  height: auto;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+}
+
+.compass {
+  font-size: 12px;
+  fill: #607d8b;
+  font-weight: 600;
+}
+
+.route {
+  cursor: pointer;
+}
+
+.dimmed {
+  opacity: 0.25;
+}
+
+.dot {
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.dot-REACHED {
+  fill: #2e7d32;
+}
+
+.dot-PENDING {
+  fill: #90a4ae;
+}
+
+.dot-OMITTED {
+  fill: #c62828;
+}
