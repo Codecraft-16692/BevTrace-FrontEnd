@@ -1,0 +1,79 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>dashboard</mat-icon>
+      <div>
+        <h2>{{ 'dashboard.welcome' | translate: { name: firstName() } }}</h2>
+        <p>{{ 'dashboard.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card clickable" (click)="go('/inventory/catalog')">
+      <span class="kpi-label">{{ 'dashboard.units' | translate }}</span>
+      <span class="kpi-value">{{ inventory.totalUnits() | number }}</span>
+      <span class="kpi-hint">{{ 'dashboard.shrinkage' | translate: { rate: inventory.shrinkageRate() } }}</span>
+    </div>
+    <div class="kpi-card warn clickable" (click)="go('/dispatch/queue')">
+      <span class="kpi-label">{{ 'dashboard.queue' | translate }}</span>
+      <span class="kpi-value">{{ dispatch.queue().length }}</span>
+      <span class="kpi-hint">{{ 'dashboard.in-transit' | translate: { count: dispatch.inTransit().length } }}</span>
+    </div>
+    <div class="kpi-card ok clickable" (click)="go('/traceability/route-map')">
+      <span class="kpi-label">{{ 'dashboard.routes' | translate }}</span>
+      <span class="kpi-value">{{ traceability.activeLogs().length }}</span>
+    </div>
+    <div class="kpi-card clickable" [class.error]="telemetry.criticalCount() > 0" (click)="go('/telemetry/devices')">
+      <span class="kpi-label">{{ 'dashboard.devices' | translate }}</span>
+      <span class="kpi-value">{{ telemetry.connectedCount() }} / {{ telemetry.devices().length }}</span>
+      <span class="kpi-hint">{{ 'dashboard.critical-devices' | translate: { count: telemetry.criticalCount() } }}</span>
+    </div>
+    <div class="kpi-card clickable" [class.error]="incidents.criticalCount() > 0" (click)="go('/incidents/dashboard')">
+      <span class="kpi-label">{{ 'dashboard.incidents' | translate }}</span>
+      <span class="kpi-value">{{ incidents.activeIncidents().length }}</span>
+      <span class="kpi-hint">{{ 'dashboard.critical-incidents' | translate: { count: incidents.criticalCount() } }}</span>
+    </div>
+    <div class="kpi-card clickable" [class.error]="inventory.openDiscrepancies().length > 0" (click)="go('/inventory/reconciliation')">
+      <span class="kpi-label">{{ 'dashboard.discrepancies' | translate }}</span>
+      <span class="kpi-value">{{ inventory.openDiscrepancies().length }}</span>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="table-card">
+      <h3 class="table-title">{{ 'dashboard.next-dispatches' | translate }}</h3>
+      <table class="simple-table">
+        <tbody>
+          @for (order of nextDispatches(); track order.id) {
+            <tr class="clickable" (click)="go('/dispatch/' + order.id)">
+              <td class="bold-cell mono">#{{ order.id }}</td>
+              <td>{{ order.destinationName }}<div class="muted">{{ order.scheduledDate }}</div></td>
+              <td><app-status-chip [status]="order.priority" /></td>
+              <td><app-status-chip [status]="order.status" /></td>
+            </tr>
+          } @empty {
+            <tr><td class="muted">{{ 'common.no-results' | translate }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-card">
+      <h3 class="table-title">{{ 'dashboard.latest-incidents' | translate }}</h3>
+      <table class="simple-table">
+        <tbody>
+          @for (incident of latestIncidents(); track incident.id) {
+            <tr class="clickable" (click)="go('/incidents/dashboard')">
+              <td><app-status-chip [status]="incident.severity" /></td>
+              <td>{{ 'incident.conditions.' + incident.anomalyType | translate }}<div class="muted">{{ incident.destinationName }}</div></td>
+              <td class="muted">{{ incident.detectedAt | date: 'MMM d, HH:mm' }}</td>
+            </tr>
+          } @empty {
+            <tr><td class="muted">{{ 'incident.dashboard.empty' | translate }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
