@@ -1,0 +1,144 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>rule</mat-icon>
+      <div>
+        <h2>{{ 'dispatch.detail.title' | translate }} #{{ orderId() }}</h2>
+        <p>{{ 'dispatch.detail.subtitle' | translate }}</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-secondary" (click)="back()">{{ 'common.back' | translate }}</button>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  @if (store.isLoading() && !order()) {
+    <div class="empty-state"><mat-spinner diameter="36"></mat-spinner></div>
+  }
+
+  @if (order(); as order) {
+    <div class="stepper">
+      <div class="step done"><span>1</span>{{ 'status.SCHEDULED' | translate }}</div>
+      <div class="step" [class.done]="order.status !== 'SCHEDULED' && order.status !== 'CANCELLED'"><span>2</span>{{ 'status.AUTHORIZED' | translate }}</div>
+      <div class="step" [class.done]="order.cargoValidated"><span>3</span>{{ 'dispatch.detail.validated' | translate }}</div>
+      <div class="step" [class.done]="order.status === 'IN_TRANSIT' || order.status === 'DELIVERED'"><span>4</span>{{ 'status.IN_TRANSIT' | translate }}</div>
+      <div class="step" [class.done]="order.status === 'DELIVERED'"><span>5</span>{{ 'status.DELIVERED' | translate }}</div>
+    </div>
+
+    <div class="grid-main">
+      <div class="card">
+        <h3>{{ 'dispatch.detail.shipment' | translate }} <app-status-chip [status]="order.status" /></h3>
+        <div class="data-grid">
+          <div><span class="kpi-label">{{ 'dispatch.fields.destination' | translate }}</span><strong>{{ order.destinationName }}</strong><span class="muted">{{ destination()?.address }}</span></div>
+          <div><span class="kpi-label">{{ 'dispatch.fields.date' | translate }}</span><strong>{{ order.scheduledDate }}</strong></div>
+          <div><span class="kpi-label">{{ 'dispatch.fields.units' | translate }}</span><strong>{{ order.requestedQuantity | number }}</strong></div>
+          <div><span class="kpi-label">{{ 'dispatch.fields.weight' | translate }}</span><strong>{{ order.estimatedWeight | number }} kg</strong></div>
+          <div><span class="kpi-label">{{ 'dispatch.fields.vehicle' | translate }}</span><strong class="mono">{{ order.vehiclePlate || '—' }}</strong></div>
+        </div>
+
+        <table class="simple-table">
+          <thead>
+            <tr>
+              <th>{{ 'inventory.fields.batch' | translate }}</th>
+              <th>{{ 'inventory.fields.quantity' | translate }}</th>
+              <th>{{ 'dispatch.fields.pallets' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of cargo(); track item.id) {
+              <tr>
+                <td class="bold-cell mono">{{ item.batchNumber }}</td>
+                <td>{{ item.quantity | number }}</td>
+                <td class="mono">{{ item.palletCodes.join(', ') }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>{{ 'dispatch.detail.priority' | translate }}</h3>
+        <p class="muted">{{ 'dispatch.detail.priority-hint' | translate }}</p>
+        @for (priority of priorities; track priority) {
+          <div class="priority-option" [class.active]="order.priority === priority" [class.locked]="!canManage()" (click)="onPriority(priority)">
+            <strong>{{ 'status.' + priority | translate }}</strong>
+            <span>{{ 'dispatch.detail.priority-' + priority | translate }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>{{ 'dispatch.detail.suggested-route' | translate }}</h3>
+        <app-route-canvas [routes]="suggestedRoute()" />
+        <p class="muted">{{ 'dispatch.detail.eta' | translate: { minutes: estimatedMinutes() } }}</p>
+      </div>
+
+      <div class="card">
+        @if (order.status === 'SCHEDULED') {
+          <h3>{{ 'dispatch.detail.assign' | translate }}</h3>
+          @if (canManage()) {
+            <div class="form-group">
+              <label for="vehicle">{{ 'dispatch.fields.vehicle' | translate }}</label>
+              <select id="vehicle" (change)="onVehicleChange($any($event.target).value)">
+                <option value="">{{ 'common.select' | translate }}</option>
+                @for (vehicle of store.availableVehicles(); track vehicle.id) {
+                  <option [value]="vehicle.id">{{ vehicle.plateNumber }} · {{ vehicle.driverName }} · {{ vehicle.maxCapacity | number }} kg</option>
+                }
+              </select>
+            </div>
+            <button type="button" class="btn-action" [disabled]="vehicleId() === null || store.isLoading()" (click)="onAssign()">{{ 'dispatch.detail.authorize' | translate }}</button>
+          } @else {
+            <p class="muted">{{ 'dispatch.detail.manager-only' | translate }}</p>
+          }
+        }
+
+        @if (order.status === 'AUTHORIZED') {
+          <h3>{{ 'dispatch.detail.validate' | translate }}</h3>
+          <p class="muted">{{ 'dispatch.detail.validate-hint' | translate: { count: expectedPallets().length } }}</p>
+          @if (order.cargoValidated) {
+            <div class="banner banner-success"><mat-icon>check_circle</mat-icon><span>{{ 'dispatch.detail.cargo-validated' | translate }}</span></div>
+          } @else if (canOperate()) {
+            <div class="form-group">
+              <textarea rows="5" class="mono" [value]="palletText()" [placeholder]="'dispatch.detail.pallet-placeholder' | translate" (input)="palletText.set($any($event.target).value)"></textarea>
+            </div>
+            <div class="inline-actions">
+              <button type="button" class="btn-secondary" (click)="simulateScan()">{{ 'dispatch.detail.simulate-ok' | translate }}</button>
+              <button type="button" class="btn-secondary" (click)="simulateWrongScan()">{{ 'dispatch.detail.simulate-wrong' | translate }}</button>
+              <button type="button" class="btn-action" [disabled]="store.isLoading()" (click)="onValidate()">{{ 'dispatch.detail.validate-button' | translate }}</button>
+            </div>
+          } @else {
+            <p class="muted">{{ 'dispatch.detail.operator-only' | translate }}</p>
+          }
+
+          @if (canOperate()) {
+            <div class="depart-box">
+              <button type="button" class="btn-action" [disabled]="!order.cargoValidated || store.isLoading()" (click)="onDepart()">{{ 'dispatch.detail.depart' | translate }}</button>
+              @if (!order.cargoValidated) {
+                <span class="muted">{{ 'dispatch.detail.depart-blocked' | translate }}</span>
+              }
+            </div>
+          }
+        }
+
+        @if (order.status === 'IN_TRANSIT' || order.status === 'DELIVERED') {
+          <h3>{{ 'dispatch.detail.tracking' | translate }}</h3>
+          <p class="muted">{{ 'dispatch.detail.tracking-hint' | translate }}</p>
+          <button type="button" class="btn-action" (click)="openTracking()">{{ 'dispatch.detail.open-tracking' | translate }}</button>
+        }
+
+        @if ((order.status === 'SCHEDULED' || order.status === 'AUTHORIZED') && canManage()) {
+          <div class="depart-box">
+            <button type="button" class="btn-secondary" (click)="onCancel()">{{ 'dispatch.detail.cancel' | translate }}</button>
+          </div>
+        }
+      </div>
+    </div>
+  } @else if (!store.isLoading()) {
+    <div class="empty-state">{{ 'dispatch.detail.not-found' | translate }}</div>
+  }
+</div>
