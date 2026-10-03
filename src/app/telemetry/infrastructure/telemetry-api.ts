@@ -168,4 +168,3 @@ export class TelemetryApi extends BaseApi {
     return this.disconnectionEndpoint.patch(id, { endedAt, dataStatus });
   }
 }
-
