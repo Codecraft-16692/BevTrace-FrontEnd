@@ -1,0 +1,61 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>qr_code_scanner</mat-icon>
+      <div>
+        <h2>{{ 'inventory.entry.title' | translate }}</h2>
+        <p>{{ 'inventory.entry.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  <div class="grid-main">
+    <div class="card">
+      <h3>{{ 'inventory.entry.scan' | translate }}</h3>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-group">
+          <label for="scanCode">{{ 'inventory.entry.code' | translate }}</label>
+          <input
+            id="scanCode"
+            type="text"
+            class="mono"
+            autocomplete="off"
+            formControlName="scanCode"
+            [placeholder]="'inventory.entry.placeholder' | translate"
+            [class.invalid]="form.controls.scanCode.invalid && form.controls.scanCode.touched"
+          />
+          @if (form.controls.scanCode.invalid && form.controls.scanCode.touched) {
+            <span class="error-message">{{ 'inventory.errors.code-format' | translate }}</span>
+          }
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="store.isLoading()">
+          @if (!store.isLoading()) {
+            <span>{{ 'inventory.entry.register' | translate }}</span>
+          } @else {
+            <mat-spinner diameter="20"></mat-spinner>
+          }
+        </button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>{{ 'inventory.entry.expected-title' | translate }}</h3>
+      <p class="muted">{{ 'inventory.entry.expected-hint' | translate }}</p>
+      @for (batch of store.expectedBatches(); track batch.id) {
+        <div class="expected-row" (click)="useCode(batch.batchNumber)">
+          <div>
+            <strong class="mono">{{ batch.batchNumber }}</strong>
+            <div class="muted">{{ batch.productName }} · {{ batch.initialQty }}</div>
+          </div>
+          <mat-icon>touch_app</mat-icon>
+        </div>
+      } @empty {
+        <div class="empty-state">{{ 'inventory.entry.none-expected' | translate }}</div>
+      }
+    </div>
+  </div>
+</div>
