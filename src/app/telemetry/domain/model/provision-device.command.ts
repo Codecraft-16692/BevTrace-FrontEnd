@@ -16,4 +16,8 @@ export interface ProvisionDeviceCommand {
    */
   vehicleId: number;
 
+  /**
+   * The identifier of the device model.
+   */
+  modelId: number;
 }
