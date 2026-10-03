@@ -1,0 +1,113 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>inventory_2</mat-icon>
+      <div>
+        <h2>{{ 'inventory.catalog.title' | translate }}</h2>
+        <p>{{ 'inventory.catalog.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">{{ 'inventory.catalog.total-units' | translate }}</span>
+      <span class="kpi-value">{{ store.totalUnits() | number }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">{{ 'inventory.catalog.active-batches' | translate }}</span>
+      <span class="kpi-value">{{ store.availableBatches().length }}</span>
+      <span class="kpi-hint">{{ 'inventory.catalog.expected' | translate: { count: store.expectedBatches().length } }}</span>
+    </div>
+    <div class="kpi-card" [class.warn]="store.shrinkageRate() > 1" [class.error]="store.shrinkageRate() > 2">
+      <span class="kpi-label">{{ 'inventory.catalog.shrinkage-rate' | translate }}</span>
+      <span class="kpi-value">{{ store.shrinkageRate() }}%</span>
+      <span class="kpi-hint">{{ 'inventory.catalog.units-lost' | translate: { count: store.totalWaste() } }}</span>
+    </div>
+    <div class="kpi-card" [class.error]="store.openDiscrepancies().length > 0">
+      <span class="kpi-label">{{ 'inventory.catalog.open-discrepancies' | translate }}</span>
+      <span class="kpi-value">{{ store.openDiscrepancies().length }}</span>
+    </div>
+  </div>
+
+  <div class="table-card">
+    @if (store.isLoading()) {
+      <div class="loading-overlay"><mat-spinner diameter="36"></mat-spinner></div>
+    }
+
+    <div class="filters">
+      <input
+        type="search"
+        [placeholder]="'inventory.catalog.search' | translate"
+        [value]="search()"
+        (input)="onSearch($any($event.target).value)"
+      />
+      <select [value]="statusFilter()" (change)="onStatus($any($event.target).value)">
+        <option value="">{{ 'common.all-statuses' | translate }}</option>
+        <option value="AVAILABLE">{{ 'status.AVAILABLE' | translate }}</option>
+        <option value="EXPECTED">{{ 'status.EXPECTED' | translate }}</option>
+        <option value="DEPLETED">{{ 'status.DEPLETED' | translate }}</option>
+      </select>
+      <select [value]="zoneFilter()" (change)="onZone($any($event.target).value)">
+        <option value="">{{ 'inventory.catalog.all-zones' | translate }}</option>
+        @for (zone of store.zones(); track zone.id) {
+          <option [value]="zone.id">{{ zone.name }}</option>
+        }
+      </select>
+    </div>
+
+    <table mat-table [dataSource]="page()" class="full-width-table">
+      <ng-container matColumnDef="batchNumber">
+        <th mat-header-cell *matHeaderCellDef>{{ 'inventory.fields.batch' | translate }}</th>
+        <td mat-cell *matCellDef="let batch" class="bold-cell mono">{{ batch.batchNumber }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="product">
+        <th mat-header-cell *matHeaderCellDef>{{ 'inventory.fields.product' | translate }}</th>
+        <td mat-cell *matCellDef="let batch">
+          {{ batch.productName }}
+          <div class="muted mono">{{ batch.productSku }}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="zone">
+        <th mat-header-cell *matHeaderCellDef>{{ 'inventory.fields.zone' | translate }}</th>
+        <td mat-cell *matCellDef="let batch">{{ batch.zoneName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="currentQty">
+        <th mat-header-cell *matHeaderCellDef>{{ 'inventory.fields.stock' | translate }}</th>
+        <td mat-cell *matCellDef="let batch">
+          {{ batch.currentQty | number }} <span class="muted">/ {{ batch.initialQty | number }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expirationDate">
+        <th mat-header-cell *matHeaderCellDef>{{ 'inventory.fields.expiration' | translate }}</th>
+        <td mat-cell *matCellDef="let batch">{{ batch.expirationDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.status' | translate }}</th>
+        <td mat-cell *matCellDef="let batch"><app-status-chip [status]="batch.status" /></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    @if (filtered().length === 0 && !store.isLoading()) {
+      <div class="empty-state">{{ 'common.no-results' | translate }}</div>
+    }
+
+    <mat-paginator
+      [length]="filtered().length"
+      [pageIndex]="pageIndex()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[8, 16, 32]"
+      (page)="onPage($event)"
+    />
+  </div>
+</div>
