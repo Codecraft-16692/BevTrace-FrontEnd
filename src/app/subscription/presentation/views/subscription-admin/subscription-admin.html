@@ -1,0 +1,100 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <div>
+        <h2>{{ 'subscription.admin.title' | translate }}</h2>
+        <p>{{ 'subscription.admin.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+
+  <div class="kpi-grid">
+    <div class="kpi-card ok">
+      <span class="kpi-label">{{ 'subscription.admin.active' | translate }}</span>
+      <span class="kpi-value">{{ store.activeCount() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">{{ 'subscription.admin.revenue' | translate }}</span>
+      <span class="kpi-value">S/ {{ store.revenue() | number }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">{{ 'subscription.admin.newsletter' | translate }}</span>
+      <span class="kpi-value">{{ store.subscribers().length }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">{{ 'subscription.admin.contacts' | translate }}</span>
+      <span class="kpi-value">{{ store.contactRequests().length }}</span>
+    </div>
+    @for (role of iamStore.roles(); track role.id) {
+      <div class="kpi-card">
+        <span class="kpi-label">{{ 'roles.' + role.name | translate }}</span>
+        <span class="kpi-value">{{ usersWithRole(role.id) }}</span>
+        <span class="kpi-hint">{{ 'subscription.admin.users' | translate }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="table-card">
+    <h3 class="table-title">{{ 'subscription.admin.subscriptions' | translate }}</h3>
+    <table class="simple-table">
+      <thead>
+        <tr>
+          <th>{{ 'subscription.checkout.company' | translate }}</th>
+          <th>{{ 'iam.fields.name' | translate }}</th>
+          <th>{{ 'subscription.plans.plan' | translate }}</th>
+          <th>{{ 'subscription.billing.cycle' | translate }}</th>
+          <th>{{ 'subscription.billing.renews' | translate }}</th>
+          <th>{{ 'common.status' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of store.subscriptions(); track item.id) {
+          <tr>
+            <td class="bold-cell">{{ item.companyName }}</td>
+            <td>{{ item.userName }}<div class="muted">{{ item.userEmail }}</div></td>
+            <td>{{ item.planCode }}</td>
+            <td>{{ (item.billingCycle === 'MONTHLY' ? 'plans.monthly' : 'plans.yearly') | translate }}</td>
+            <td>{{ item.currentPeriodEnd | date: 'mediumDate' }}</td>
+            <td><app-status-chip [status]="item.status" /></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="table-card">
+      <h3 class="table-title">{{ 'subscription.admin.contacts' | translate }}</h3>
+      <table class="simple-table">
+        <tbody>
+          @for (request of store.contactRequests(); track request.id) {
+            <tr>
+              <td><strong>{{ request.fullName }}</strong> · {{ request.company }}<div class="muted">{{ request.email }} · {{ request.createdAt | date: 'mediumDate' }}</div><div>{{ request.message }}</div></td>
+            </tr>
+          } @empty {
+            <tr><td class="muted">{{ 'common.no-results' | translate }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-card">
+      <h3 class="table-title">{{ 'subscription.admin.newsletter' | translate }}</h3>
+      <table class="simple-table">
+        <tbody>
+          @for (subscriber of store.subscribers(); track subscriber.id) {
+            <tr>
+              <td>{{ subscriber.email }}</td>
+              <td class="muted">{{ subscriber.subscribedAt | date: 'mediumDate' }}</td>
+            </tr>
+          } @empty {
+            <tr><td class="muted">{{ 'common.no-results' | translate }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
