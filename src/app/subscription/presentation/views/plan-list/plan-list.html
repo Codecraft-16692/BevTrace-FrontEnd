@@ -1,0 +1,23 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>workspace_premium</mat-icon>
+      <div>
+        <h2>{{ 'subscription.plans.title' | translate }}</h2>
+        <p>{{ 'subscription.plans.subtitle' | translate }}</p>
+      </div>
+    </div>
+    <div class="cycle-toggle">
+      <button type="button" [class.active]="cycle() === 'MONTHLY'" (click)="cycle.set('MONTHLY')">{{ 'plans.monthly' | translate }}</button>
+      <button type="button" [class.active]="cycle() === 'YEARLY'" (click)="cycle.set('YEARLY')">{{ 'plans.yearly' | translate }}</button>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+
+  <div class="grid-3">
+    @for (plan of store.plansOf(cycle()); track plan.id) {
+      <app-plan-card [plan]="plan" actionKey="subscription.plans.choose" (chosen)="choose($event)" />
+    }
+  </div>
+</div>
