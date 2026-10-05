@@ -1,0 +1,58 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>memory</mat-icon>
+      <div>
+        <h2>{{ 'telemetry.form.title' | translate }}</h2>
+        <p>{{ 'telemetry.form.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  <div class="card form-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-group">
+        <label for="deviceCode">{{ 'telemetry.fields.code' | translate }}</label>
+        <input id="deviceCode" type="text" class="mono" formControlName="deviceCode" [class.invalid]="form.controls.deviceCode.invalid && form.controls.deviceCode.touched" />
+        @if (form.controls.deviceCode.invalid && form.controls.deviceCode.touched) {
+          <span class="error-message">{{ 'telemetry.errors.code-format' | translate }}</span>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="vehicleId">{{ 'dispatch.fields.vehicle' | translate }}</label>
+          <select id="vehicleId" formControlName="vehicleId" [class.invalid]="form.controls.vehicleId.invalid && form.controls.vehicleId.touched">
+            <option [ngValue]="null">{{ 'common.select' | translate }}</option>
+            @for (vehicle of store.vehiclesWithoutDevice(); track vehicle.id) {
+              <option [ngValue]="vehicle.id">{{ vehicle.plateNumber }} · {{ vehicle.driverName }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="modelId">{{ 'telemetry.fields.model' | translate }}</label>
+          <select id="modelId" formControlName="modelId" [class.invalid]="form.controls.modelId.invalid && form.controls.modelId.touched">
+            <option [ngValue]="null">{{ 'common.select' | translate }}</option>
+            @for (model of store.models(); track model.id) {
+              <option [ngValue]="model.id">{{ model.name }} ({{ model.sensors }})</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      @if (store.vehiclesWithoutDevice().length === 0) {
+        <p class="muted">{{ 'telemetry.form.all-equipped' | translate }}</p>
+      }
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" style="max-width: 220px" [disabled]="store.isLoading()">
+          {{ 'telemetry.form.save' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
