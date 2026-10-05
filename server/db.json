@@ -1,0 +1,2222 @@
+{
+  "roles": [
+    {
+      "id": 1,
+      "name": "ROLE_ADMIN",
+      "isAdmin": true
+    },
+    {
+      "id": 2,
+      "name": "ROLE_LOGISTICS_MANAGER",
+      "isAdmin": false
+    },
+    {
+      "id": 3,
+      "name": "ROLE_WAREHOUSE_OPERATOR",
+      "isAdmin": false
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "roleId": 1,
+      "name": "BevTrace Admin",
+      "email": "bevtrace@admin.com",
+      "password": "Admin1234",
+      "phone": "+51 1 555-0100",
+      "active": true,
+      "createdAt": "2026-06-02T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "roleId": 2,
+      "name": "Alex Rivera",
+      "email": "alex.rivera@bevtrace.com",
+      "password": "Logistics1",
+      "phone": "+51 987 654 321",
+      "active": true,
+      "createdAt": "2026-07-02T10:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "roleId": 3,
+      "name": "María Paz",
+      "email": "maria.paz@bevtrace.com",
+      "password": "Warehouse1",
+      "phone": "+51 987 111 222",
+      "active": true,
+      "createdAt": "2026-07-12T10:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "roleId": 2,
+      "name": "Carolina Vega",
+      "email": "carolina.vega@andinabev.pe",
+      "password": "Andina2026",
+      "phone": "+51 955 222 333",
+      "active": true,
+      "createdAt": "2026-08-16T10:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "roleId": 3,
+      "name": "Jorge Salas",
+      "email": "jorge.salas@andinabev.pe",
+      "password": "Andina2027",
+      "phone": "+51 955 444 555",
+      "active": false,
+      "createdAt": "2026-08-31T10:00:00.000Z"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "skuCode": "BT-AGU-500",
+      "name": "Agua Mineral 500 ml",
+      "category": "Water",
+      "volumeMl": 500,
+      "packagingType": "PET"
+    },
+    {
+      "id": 2,
+      "skuCode": "BT-GAS-500",
+      "name": "Agua con Gas 500 ml",
+      "category": "Water",
+      "volumeMl": 500,
+      "packagingType": "PET"
+    },
+    {
+      "id": 3,
+      "skuCode": "BT-COL-1500",
+      "name": "Gaseosa Cola 1.5 L",
+      "category": "Soda",
+      "volumeMl": 1500,
+      "packagingType": "PET"
+    },
+    {
+      "id": 4,
+      "skuCode": "BT-LIM-2000",
+      "name": "Gaseosa Limón 2 L",
+      "category": "Soda",
+      "volumeMl": 2000,
+      "packagingType": "PET"
+    },
+    {
+      "id": 5,
+      "skuCode": "BT-NAR-1000",
+      "name": "Jugo de Naranja 1 L",
+      "category": "Juice",
+      "volumeMl": 1000,
+      "packagingType": "PET"
+    },
+    {
+      "id": 6,
+      "skuCode": "BT-ISO-750",
+      "name": "Bebida Isotónica 750 ml",
+      "category": "Sports",
+      "volumeMl": 750,
+      "packagingType": "PET"
+    },
+    {
+      "id": 7,
+      "skuCode": "BT-TEH-500",
+      "name": "Té Helado 500 ml",
+      "category": "Tea",
+      "volumeMl": 500,
+      "packagingType": "PET"
+    },
+    {
+      "id": 8,
+      "skuCode": "BT-BID-20000",
+      "name": "Agua Bidón 20 L",
+      "category": "Water",
+      "volumeMl": 20000,
+      "packagingType": "Returnable"
+    }
+  ],
+  "zones": [
+    {
+      "id": 1,
+      "name": "Zone A - Cold Dock",
+      "aisle": "A1",
+      "rack": "R01"
+    },
+    {
+      "id": 2,
+      "name": "Zone B - Bulk Storage",
+      "aisle": "B2",
+      "rack": "R05"
+    },
+    {
+      "id": 3,
+      "name": "Zone C - Fast Picking",
+      "aisle": "C1",
+      "rack": "R02"
+    },
+    {
+      "id": 4,
+      "name": "Zone D - Returnables",
+      "aisle": "D3",
+      "rack": "R09"
+    },
+    {
+      "id": 5,
+      "name": "Zone E - Overflow",
+      "aisle": "E1",
+      "rack": "R11"
+    }
+  ],
+  "batches": [
+    {
+      "id": 1,
+      "productId": 1,
+      "zoneId": 1,
+      "batchNumber": "LT-2609-001",
+      "initialQty": 4800,
+      "currentQty": 4120,
+      "status": "AVAILABLE",
+      "receivedAt": "2026-09-06T08:00:00.000Z",
+      "expirationDate": "2027-05-04"
+    },
+    {
+      "id": 2,
+      "productId": 2,
+      "zoneId": 3,
+      "batchNumber": "LT-2609-002",
+      "initialQty": 3600,
+      "currentQty": 3390,
+      "status": "AVAILABLE",
+      "receivedAt": "2026-09-08T08:00:00.000Z",
+      "expirationDate": "2027-04-06"
+    },
+    {
+      "id": 3,
+      "productId": 3,
+      "zoneId": 2,
+      "batchNumber": "LT-2609-003",
+      "initialQty": 5200,
+      "currentQty": 4460,
+      "status": "AVAILABLE",
+      "receivedAt": "2026-09-10T08:00:00.000Z",
+      "expirationDate": "2027-07-07"
+    },
+    {
+      "id": 4,
+      "productId": 4,
+      "zoneId": 2,
+      "batchNumber": "LT-2609-004",
+      "initialQty": 4100,
+      "currentQty": 4100,
+      "status": "AVAILABLE",
+      "receivedAt": "2026-09-15T08:00:00.000Z",
+      "expirationDate": "2027-07-12"
+    },
+    {
+      "id": 5,
+      "productId": 5,
+      "zoneId": 3,
+      "batchNumber": "LT-2609-005",
+      "initialQty": 2400,
+      "currentQty": 1650,
+      "status": "AVAILABLE",
+      "receivedAt": "2026-09-12T08:00:00.000Z",
+      "expirationDate": "2026-12-11"
+    },
+    {
+      "id": 6,
+      "productId": 6,
+      "zoneId": 1,
+      "batchNumber": "LT-2609-006",
+      "initialQty": 3000,
+      "currentQty": 2780,
+      "status": "AVAILABLE",
+      "receivedAt": "2026-09-16T08:00:00.000Z",
+      "expirationDate": "2027-03-15"
+    },
+    {
+      "id": 7,
+      "productId": 7,
+      "zoneId": 3,
+      "batchNumber": "LT-2609-007",
+      "initialQty": 3300,
+      "currentQty": 2950,
+      "status": "AVAILABLE",
+      "receivedAt": "2026-09-18T08:00:00.000Z",
+      "expirationDate": "2027-04-06"
+    },
+    {
+      "id": 8,
+      "productId": 8,
+      "zoneId": 4,
+      "batchNumber": "LT-2609-008",
+      "initialQty": 800,
+      "currentQty": 640,
+      "status": "AVAILABLE",
+      "receivedAt": "2026-09-20T08:00:00.000Z",
+      "expirationDate": "2027-09-20"
+    },
+    {
+      "id": 9,
+      "productId": 1,
+      "zoneId": 5,
+      "batchNumber": "LT-2609-009",
+      "initialQty": 6000,
+      "currentQty": 5770,
+      "status": "AVAILABLE",
+      "receivedAt": "2026-09-22T08:00:00.000Z",
+      "expirationDate": "2027-05-20"
+    },
+    {
+      "id": 10,
+      "productId": 3,
+      "zoneId": 2,
+      "batchNumber": "LT-2609-010",
+      "initialQty": 4400,
+      "currentQty": 4400,
+      "status": "AVAILABLE",
+      "receivedAt": "2026-09-25T08:00:00.000Z",
+      "expirationDate": "2027-07-22"
+    },
+    {
+      "id": 11,
+      "productId": 5,
+      "zoneId": 3,
+      "batchNumber": "LT-2609-011",
+      "initialQty": 2000,
+      "currentQty": 1985,
+      "status": "AVAILABLE",
+      "receivedAt": "2026-09-27T08:00:00.000Z",
+      "expirationDate": "2026-12-26"
+    },
+    {
+      "id": 12,
+      "productId": 2,
+      "zoneId": 1,
+      "batchNumber": "LT-2609-012",
+      "initialQty": 2500,
+      "currentQty": 0,
+      "status": "DEPLETED",
+      "receivedAt": "2026-08-16T08:00:00.000Z",
+      "expirationDate": "2027-03-14"
+    },
+    {
+      "id": 13,
+      "productId": 6,
+      "zoneId": 1,
+      "batchNumber": "LT-2609-101",
+      "initialQty": 3000,
+      "currentQty": 0,
+      "status": "EXPECTED",
+      "receivedAt": null,
+      "expirationDate": "2027-03-29"
+    },
+    {
+      "id": 14,
+      "productId": 4,
+      "zoneId": 2,
+      "batchNumber": "LT-2609-102",
+      "initialQty": 3500,
+      "currentQty": 0,
+      "status": "EXPECTED",
+      "receivedAt": null,
+      "expirationDate": "2027-07-27"
+    }
+  ],
+  "waste-records": [
+    {
+      "id": 1,
+      "batchId": 3,
+      "userId": 3,
+      "quantity": 30,
+      "reason": "Dented bottles during forklift handling",
+      "reportedDate": "2026-09-04"
+    },
+    {
+      "id": 2,
+      "batchId": 3,
+      "userId": 3,
+      "quantity": 12,
+      "reason": "Leaking caps detected at pallet inspection",
+      "reportedDate": "2026-09-08"
+    },
+    {
+      "id": 3,
+      "batchId": 5,
+      "userId": 5,
+      "quantity": 60,
+      "reason": "Pallet fell during loading",
+      "reportedDate": "2026-09-11"
+    },
+    {
+      "id": 4,
+      "batchId": 6,
+      "userId": 6,
+      "quantity": 18,
+      "reason": "Label damage / not sellable",
+      "reportedDate": "2026-09-13"
+    },
+    {
+      "id": 5,
+      "batchId": 3,
+      "userId": 3,
+      "quantity": 25,
+      "reason": "Bottles crushed by pallet stacking",
+      "reportedDate": "2026-09-16"
+    },
+    {
+      "id": 6,
+      "batchId": 8,
+      "userId": 8,
+      "quantity": 8,
+      "reason": "Damaged returnable bidons",
+      "reportedDate": "2026-09-19"
+    },
+    {
+      "id": 7,
+      "batchId": 1,
+      "userId": 1,
+      "quantity": 45,
+      "reason": "Water leak in the storage area",
+      "reportedDate": "2026-09-21"
+    },
+    {
+      "id": 8,
+      "batchId": 3,
+      "userId": 3,
+      "quantity": 20,
+      "reason": "Expired promotional packaging",
+      "reportedDate": "2026-09-24"
+    },
+    {
+      "id": 9,
+      "batchId": 5,
+      "userId": 5,
+      "quantity": 15,
+      "reason": "Broken bottles during unloading",
+      "reportedDate": "2026-09-27"
+    },
+    {
+      "id": 10,
+      "batchId": 3,
+      "userId": 3,
+      "quantity": 10,
+      "reason": "Damaged cases in the picking area",
+      "reportedDate": "2026-09-29"
+    }
+  ],
+  "reconciliations": [
+    {
+      "id": 1,
+      "date": "2026-09-03",
+      "status": "RECONCILED",
+      "totalBatches": 11,
+      "matchedBatches": 11,
+      "eriPercentage": 100,
+      "confirmedBy": 2,
+      "confirmedAt": "2026-09-03T17:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "date": "2026-09-08",
+      "status": "RECONCILED",
+      "totalBatches": 11,
+      "matchedBatches": 10,
+      "eriPercentage": 90.9,
+      "confirmedBy": 2,
+      "confirmedAt": "2026-09-08T17:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "date": "2026-09-13",
+      "status": "RECONCILED",
+      "totalBatches": 11,
+      "matchedBatches": 11,
+      "eriPercentage": 100,
+      "confirmedBy": 2,
+      "confirmedAt": "2026-09-13T17:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "date": "2026-09-18",
+      "status": "RECONCILED",
+      "totalBatches": 11,
+      "matchedBatches": 11,
+      "eriPercentage": 100,
+      "confirmedBy": 2,
+      "confirmedAt": "2026-09-18T17:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "date": "2026-09-23",
+      "status": "RECONCILED",
+      "totalBatches": 11,
+      "matchedBatches": 10,
+      "eriPercentage": 90.9,
+      "confirmedBy": 2,
+      "confirmedAt": "2026-09-23T17:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "date": "2026-09-28",
+      "status": "RECONCILED",
+      "totalBatches": 11,
+      "matchedBatches": 11,
+      "eriPercentage": 100,
+      "confirmedBy": 2,
+      "confirmedAt": "2026-09-28T17:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "date": "2026-09-29",
+      "status": "IN_REVIEW",
+      "totalBatches": 11,
+      "matchedBatches": 10,
+      "eriPercentage": 90.9,
+      "confirmedBy": null,
+      "confirmedAt": null
+    }
+  ],
+  "discrepancies": [
+    {
+      "id": 1,
+      "reconciliationId": 7,
+      "batchId": 9,
+      "expectedQty": 5770,
+      "countedQty": 5752,
+      "status": "OPEN",
+      "detectedAt": "2026-09-29T18:00:00.000Z",
+      "resolvedAt": null,
+      "resolutionNote": null
+    }
+  ],
+  "destinations": [
+    {
+      "id": 1,
+      "clientName": "Supermercados Metro San Miguel",
+      "address": "Av. La Marina 2000, San Miguel",
+      "latitude": -12.077,
+      "longitude": -77.091,
+      "region": "Lima Centro"
+    },
+    {
+      "id": 2,
+      "clientName": "Tambo+ Miraflores",
+      "address": "Av. Larco 1180, Miraflores",
+      "latitude": -12.1211,
+      "longitude": -77.0297,
+      "region": "Lima Sur"
+    },
+    {
+      "id": 3,
+      "clientName": "Wong Surco",
+      "address": "Av. Primavera 1240, Surco",
+      "latitude": -12.145,
+      "longitude": -76.993,
+      "region": "Lima Sur"
+    },
+    {
+      "id": 4,
+      "clientName": "Plaza Vea Comas",
+      "address": "Av. Túpac Amaru 4800, Comas",
+      "latitude": -11.937,
+      "longitude": -77.056,
+      "region": "Lima Norte"
+    },
+    {
+      "id": 5,
+      "clientName": "Tottus Independencia",
+      "address": "Av. Alfredo Mendiola 1200, Independencia",
+      "latitude": -11.993,
+      "longitude": -77.059,
+      "region": "Lima Norte"
+    },
+    {
+      "id": 6,
+      "clientName": "Terminal Portuario Callao",
+      "address": "Av. Contralmirante Mora 100, Callao",
+      "latitude": -12.056,
+      "longitude": -77.118,
+      "region": "Callao"
+    },
+    {
+      "id": 7,
+      "clientName": "Mercado Mayorista La Parada",
+      "address": "Av. Aviación 1500, La Victoria",
+      "latitude": -12.064,
+      "longitude": -77.01,
+      "region": "Lima Centro"
+    },
+    {
+      "id": 8,
+      "clientName": "Hiper Chosica",
+      "address": "Carretera Central Km 26, Chosica",
+      "latitude": -11.933,
+      "longitude": -76.697,
+      "region": "Lima Este"
+    }
+  ],
+  "drivers": [
+    {
+      "id": 1,
+      "fullName": "Luis Fernández",
+      "licenseNumber": "Q41258963",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "fullName": "Roberto Quispe",
+      "licenseNumber": "Q30214785",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 3,
+      "fullName": "Miguel Ángel Torres",
+      "licenseNumber": "Q52147896",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 4,
+      "fullName": "Diego Ramírez",
+      "licenseNumber": "Q47896321",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 5,
+      "fullName": "Pablo Huamán",
+      "licenseNumber": "Q36985214",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 6,
+      "fullName": "Andrés Castillo",
+      "licenseNumber": "Q25896314",
+      "status": "ON_LEAVE"
+    }
+  ],
+  "vehicles": [
+    {
+      "id": 1,
+      "driverId": 1,
+      "plateNumber": "BTV-101",
+      "maxCapacity": 12000,
+      "isAvailable": false
+    },
+    {
+      "id": 2,
+      "driverId": 2,
+      "plateNumber": "BTV-102",
+      "maxCapacity": 12000,
+      "isAvailable": true
+    },
+    {
+      "id": 3,
+      "driverId": 3,
+      "plateNumber": "BTV-103",
+      "maxCapacity": 8000,
+      "isAvailable": false
+    },
+    {
+      "id": 4,
+      "driverId": 4,
+      "plateNumber": "BTV-104",
+      "maxCapacity": 8000,
+      "isAvailable": false
+    },
+    {
+      "id": 5,
+      "driverId": 5,
+      "plateNumber": "BTV-105",
+      "maxCapacity": 15000,
+      "isAvailable": false
+    },
+    {
+      "id": 6,
+      "driverId": 6,
+      "plateNumber": "BTV-106",
+      "maxCapacity": 15000,
+      "isAvailable": true
+    }
+  ],
+  "models": [
+    {
+      "id": 1,
+      "name": "TrackNode T100",
+      "manufacturer": "Teltonika",
+      "sensors": "GPS, Temperature"
+    },
+    {
+      "id": 2,
+      "name": "ColdSense C200",
+      "manufacturer": "Queclink",
+      "sensors": "GPS, Temperature, Humidity"
+    }
+  ],
+  "devices": [
+    {
+      "id": 1,
+      "vehicleId": 1,
+      "modelId": 1,
+      "deviceCode": "IOT-1001",
+      "installedAt": "2026-06-22T10:00:00.000Z",
+      "isActive": true,
+      "connectionStatus": "CONNECTED",
+      "lastSignalAt": "2026-09-30T03:09:25.591Z"
+    },
+    {
+      "id": 2,
+      "vehicleId": 2,
+      "modelId": 1,
+      "deviceCode": "IOT-1002",
+      "installedAt": "2026-06-22T10:00:00.000Z",
+      "isActive": true,
+      "connectionStatus": "CONNECTED",
+      "lastSignalAt": "2026-09-30T03:10:25.591Z"
+    },
+    {
+      "id": 3,
+      "vehicleId": 3,
+      "modelId": 2,
+      "deviceCode": "IOT-1003",
+      "installedAt": "2026-07-02T10:00:00.000Z",
+      "isActive": true,
+      "connectionStatus": "DISCONNECTED",
+      "lastSignalAt": "2026-09-30T02:24:25.591Z"
+    },
+    {
+      "id": 4,
+      "vehicleId": 4,
+      "modelId": 2,
+      "deviceCode": "IOT-1004",
+      "installedAt": "2026-07-02T10:00:00.000Z",
+      "isActive": true,
+      "connectionStatus": "CONNECTED",
+      "lastSignalAt": "2026-09-30T03:07:25.591Z"
+    },
+    {
+      "id": 5,
+      "vehicleId": 5,
+      "modelId": 1,
+      "deviceCode": "IOT-1005",
+      "installedAt": "2026-08-01T10:00:00.000Z",
+      "isActive": true,
+      "connectionStatus": "DISCONNECTED",
+      "lastSignalAt": "2026-09-30T02:59:25.591Z"
+    },
+    {
+      "id": 6,
+      "vehicleId": 6,
+      "modelId": 2,
+      "deviceCode": "IOT-1006",
+      "installedAt": "2026-08-21T10:00:00.000Z",
+      "isActive": true,
+      "connectionStatus": "CONNECTED",
+      "lastSignalAt": "2026-09-30T03:08:25.591Z"
+    }
+  ],
+  "disconnection-periods": [
+    {
+      "id": 1,
+      "deviceId": 3,
+      "startedAt": "2026-09-30T02:24:25.591Z",
+      "endedAt": null,
+      "dataStatus": "AVAILABLE"
+    },
+    {
+      "id": 2,
+      "deviceId": 5,
+      "startedAt": "2026-09-30T02:59:25.591Z",
+      "endedAt": null,
+      "dataStatus": "AVAILABLE"
+    },
+    {
+      "id": 3,
+      "deviceId": 1,
+      "startedAt": "2026-09-28T14:00:00.000Z",
+      "endedAt": "2026-09-28T15:00:00.000Z",
+      "dataStatus": "AVAILABLE"
+    },
+    {
+      "id": 4,
+      "deviceId": 2,
+      "startedAt": "2026-09-25T09:00:00.000Z",
+      "endedAt": "2026-09-25T10:00:00.000Z",
+      "dataStatus": "UNAVAILABLE"
+    }
+  ],
+  "dispatch-orders": [
+    {
+      "id": 1,
+      "managerId": 4,
+      "vehicleId": 2,
+      "destinationId": 1,
+      "scheduledDate": "2026-08-06",
+      "status": "DELIVERED",
+      "priority": "STANDARD",
+      "estimatedWeight": 1320,
+      "requestedQuantity": 1200,
+      "deliveredQuantity": 1200,
+      "deliveredAt": "2026-08-06T15:00:00.000Z",
+      "departedAt": "2026-08-06T07:00:00.000Z",
+      "cargoValidated": true,
+      "createdAt": "2026-08-04T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "managerId": 2,
+      "vehicleId": 1,
+      "destinationId": 4,
+      "scheduledDate": "2026-08-11",
+      "status": "DELIVERED",
+      "priority": "STANDARD",
+      "estimatedWeight": 990,
+      "requestedQuantity": 900,
+      "deliveredQuantity": 870,
+      "deliveredAt": "2026-08-11T15:00:00.000Z",
+      "departedAt": "2026-08-11T07:00:00.000Z",
+      "cargoValidated": true,
+      "createdAt": "2026-08-09T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "managerId": 4,
+      "vehicleId": 4,
+      "destinationId": 2,
+      "scheduledDate": "2026-08-17",
+      "status": "DELIVERED",
+      "priority": "URGENT",
+      "estimatedWeight": 660,
+      "requestedQuantity": 600,
+      "deliveredQuantity": 600,
+      "deliveredAt": "2026-08-18T16:00:00.000Z",
+      "departedAt": "2026-08-17T07:00:00.000Z",
+      "cargoValidated": true,
+      "createdAt": "2026-08-15T00:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "managerId": 2,
+      "vehicleId": 5,
+      "destinationId": 6,
+      "scheduledDate": "2026-08-23",
+      "status": "DELIVERED",
+      "priority": "LOGISTICS",
+      "estimatedWeight": 2200,
+      "requestedQuantity": 2000,
+      "deliveredQuantity": 2000,
+      "deliveredAt": "2026-08-23T15:00:00.000Z",
+      "departedAt": "2026-08-23T07:00:00.000Z",
+      "cargoValidated": true,
+      "createdAt": "2026-08-21T00:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "managerId": 4,
+      "vehicleId": 2,
+      "destinationId": 3,
+      "scheduledDate": "2026-08-30",
+      "status": "DELIVERED",
+      "priority": "STANDARD",
+      "estimatedWeight": 880,
+      "requestedQuantity": 800,
+      "deliveredQuantity": 760,
+      "deliveredAt": "2026-08-30T15:00:00.000Z",
+      "departedAt": "2026-08-30T07:00:00.000Z",
+      "cargoValidated": true,
+      "createdAt": "2026-08-28T00:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "managerId": 2,
+      "vehicleId": 1,
+      "destinationId": 5,
+      "scheduledDate": "2026-09-05",
+      "status": "DELIVERED",
+      "priority": "STANDARD",
+      "estimatedWeight": 1650,
+      "requestedQuantity": 1500,
+      "deliveredQuantity": 1500,
+      "deliveredAt": "2026-09-05T15:00:00.000Z",
+      "departedAt": "2026-09-05T07:00:00.000Z",
+      "cargoValidated": true,
+      "createdAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "managerId": 4,
+      "vehicleId": 4,
+      "destinationId": 7,
+      "scheduledDate": "2026-09-11",
+      "status": "DELIVERED",
+      "priority": "LOGISTICS",
+      "estimatedWeight": 2640,
+      "requestedQuantity": 2400,
+      "deliveredQuantity": 2400,
+      "deliveredAt": "2026-09-12T17:00:00.000Z",
+      "departedAt": "2026-09-11T07:00:00.000Z",
+      "cargoValidated": true,
+      "createdAt": "2026-09-09T00:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "managerId": 2,
+      "vehicleId": 5,
+      "destinationId": 8,
+      "scheduledDate": "2026-09-16",
+      "status": "DELIVERED",
+      "priority": "STANDARD",
+      "estimatedWeight": 1100,
+      "requestedQuantity": 1000,
+      "deliveredQuantity": 1000,
+      "deliveredAt": "2026-09-16T15:00:00.000Z",
+      "departedAt": "2026-09-16T07:00:00.000Z",
+      "cargoValidated": true,
+      "createdAt": "2026-09-14T00:00:00.000Z"
+    },
+    {
+      "id": 9,
+      "managerId": 4,
+      "vehicleId": 2,
+      "destinationId": 1,
+      "scheduledDate": "2026-09-21",
+      "status": "DELIVERED",
+      "priority": "URGENT",
+      "estimatedWeight": 770,
+      "requestedQuantity": 700,
+      "deliveredQuantity": 700,
+      "deliveredAt": "2026-09-21T15:00:00.000Z",
+      "departedAt": "2026-09-21T07:00:00.000Z",
+      "cargoValidated": true,
+      "createdAt": "2026-09-19T00:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "managerId": 2,
+      "vehicleId": 1,
+      "destinationId": 4,
+      "scheduledDate": "2026-09-26",
+      "status": "DELIVERED",
+      "priority": "STANDARD",
+      "estimatedWeight": 1210,
+      "requestedQuantity": 1100,
+      "deliveredQuantity": 1050,
+      "deliveredAt": "2026-09-26T15:00:00.000Z",
+      "departedAt": "2026-09-26T07:00:00.000Z",
+      "cargoValidated": true,
+      "createdAt": "2026-09-24T00:00:00.000Z"
+    },
+    {
+      "id": 11,
+      "managerId": 4,
+      "vehicleId": 1,
+      "destinationId": 2,
+      "scheduledDate": "2026-09-30",
+      "status": "IN_TRANSIT",
+      "priority": "URGENT",
+      "estimatedWeight": 990,
+      "requestedQuantity": 900,
+      "deliveredQuantity": null,
+      "deliveredAt": null,
+      "departedAt": "2026-09-30T01:36:25.591Z",
+      "cargoValidated": true,
+      "createdAt": "2026-09-28T00:00:00.000Z"
+    },
+    {
+      "id": 12,
+      "managerId": 2,
+      "vehicleId": 3,
+      "destinationId": 5,
+      "scheduledDate": "2026-09-30",
+      "status": "IN_TRANSIT",
+      "priority": "STANDARD",
+      "estimatedWeight": 1540,
+      "requestedQuantity": 1400,
+      "deliveredQuantity": null,
+      "deliveredAt": null,
+      "departedAt": "2026-09-30T00:41:25.591Z",
+      "cargoValidated": true,
+      "createdAt": "2026-09-28T00:00:00.000Z"
+    },
+    {
+      "id": 13,
+      "managerId": 4,
+      "vehicleId": 4,
+      "destinationId": 3,
+      "scheduledDate": "2026-09-30",
+      "status": "AUTHORIZED",
+      "priority": "LOGISTICS",
+      "estimatedWeight": 1100,
+      "requestedQuantity": 1000,
+      "deliveredQuantity": null,
+      "deliveredAt": null,
+      "departedAt": null,
+      "cargoValidated": false,
+      "createdAt": "2026-09-28T00:00:00.000Z"
+    },
+    {
+      "id": 14,
+      "managerId": 2,
+      "vehicleId": 5,
+      "destinationId": 6,
+      "scheduledDate": "2026-09-30",
+      "status": "AUTHORIZED",
+      "priority": "STANDARD",
+      "estimatedWeight": 1760,
+      "requestedQuantity": 1600,
+      "deliveredQuantity": null,
+      "deliveredAt": null,
+      "departedAt": null,
+      "cargoValidated": true,
+      "createdAt": "2026-09-28T00:00:00.000Z"
+    },
+    {
+      "id": 15,
+      "managerId": 4,
+      "vehicleId": null,
+      "destinationId": 1,
+      "scheduledDate": "2026-10-01",
+      "status": "SCHEDULED",
+      "priority": "STANDARD",
+      "estimatedWeight": 1320,
+      "requestedQuantity": 1200,
+      "deliveredQuantity": null,
+      "deliveredAt": null,
+      "departedAt": null,
+      "cargoValidated": false,
+      "createdAt": "2026-09-29T00:00:00.000Z"
+    },
+    {
+      "id": 16,
+      "managerId": 2,
+      "vehicleId": null,
+      "destinationId": 7,
+      "scheduledDate": "2026-10-02",
+      "status": "SCHEDULED",
+      "priority": "LOGISTICS",
+      "estimatedWeight": 990,
+      "requestedQuantity": 900,
+      "deliveredQuantity": null,
+      "deliveredAt": null,
+      "departedAt": null,
+      "cargoValidated": false,
+      "createdAt": "2026-09-30T00:00:00.000Z"
+    },
+    {
+      "id": 17,
+      "managerId": 4,
+      "vehicleId": null,
+      "destinationId": 8,
+      "scheduledDate": "2026-10-03",
+      "status": "SCHEDULED",
+      "priority": "URGENT",
+      "estimatedWeight": 660,
+      "requestedQuantity": 600,
+      "deliveredQuantity": null,
+      "deliveredAt": null,
+      "departedAt": null,
+      "cargoValidated": false,
+      "createdAt": "2026-10-01T00:00:00.000Z"
+    }
+  ],
+  "cargo-assignments": [
+    {
+      "id": 1,
+      "dispatchOrderId": 1,
+      "batchId": 1,
+      "quantity": 1200,
+      "totalWeight": 1320,
+      "palletCount": 3
+    },
+    {
+      "id": 2,
+      "dispatchOrderId": 2,
+      "batchId": 2,
+      "quantity": 900,
+      "totalWeight": 990,
+      "palletCount": 2
+    },
+    {
+      "id": 3,
+      "dispatchOrderId": 3,
+      "batchId": 3,
+      "quantity": 600,
+      "totalWeight": 660,
+      "palletCount": 2
+    },
+    {
+      "id": 4,
+      "dispatchOrderId": 4,
+      "batchId": 3,
+      "quantity": 1000,
+      "totalWeight": 1100,
+      "palletCount": 3
+    },
+    {
+      "id": 5,
+      "dispatchOrderId": 4,
+      "batchId": 4,
+      "quantity": 1000,
+      "totalWeight": 1100,
+      "palletCount": 3
+    },
+    {
+      "id": 6,
+      "dispatchOrderId": 5,
+      "batchId": 5,
+      "quantity": 800,
+      "totalWeight": 880,
+      "palletCount": 2
+    },
+    {
+      "id": 7,
+      "dispatchOrderId": 6,
+      "batchId": 6,
+      "quantity": 1500,
+      "totalWeight": 1650,
+      "palletCount": 4
+    },
+    {
+      "id": 8,
+      "dispatchOrderId": 7,
+      "batchId": 7,
+      "quantity": 2400,
+      "totalWeight": 2640,
+      "palletCount": 6
+    },
+    {
+      "id": 9,
+      "dispatchOrderId": 8,
+      "batchId": 9,
+      "quantity": 1000,
+      "totalWeight": 1100,
+      "palletCount": 3
+    },
+    {
+      "id": 10,
+      "dispatchOrderId": 9,
+      "batchId": 1,
+      "quantity": 700,
+      "totalWeight": 770,
+      "palletCount": 2
+    },
+    {
+      "id": 11,
+      "dispatchOrderId": 10,
+      "batchId": 2,
+      "quantity": 1100,
+      "totalWeight": 1210,
+      "palletCount": 3
+    },
+    {
+      "id": 12,
+      "dispatchOrderId": 11,
+      "batchId": 3,
+      "quantity": 900,
+      "totalWeight": 990,
+      "palletCount": 2
+    },
+    {
+      "id": 13,
+      "dispatchOrderId": 12,
+      "batchId": 7,
+      "quantity": 1400,
+      "totalWeight": 1540,
+      "palletCount": 4
+    },
+    {
+      "id": 14,
+      "dispatchOrderId": 13,
+      "batchId": 9,
+      "quantity": 1000,
+      "totalWeight": 1100,
+      "palletCount": 3
+    },
+    {
+      "id": 15,
+      "dispatchOrderId": 14,
+      "batchId": 4,
+      "quantity": 800,
+      "totalWeight": 880,
+      "palletCount": 2
+    },
+    {
+      "id": 16,
+      "dispatchOrderId": 14,
+      "batchId": 10,
+      "quantity": 800,
+      "totalWeight": 880,
+      "palletCount": 2
+    },
+    {
+      "id": 17,
+      "dispatchOrderId": 15,
+      "batchId": 1,
+      "quantity": 1200,
+      "totalWeight": 1320,
+      "palletCount": 3
+    },
+    {
+      "id": 18,
+      "dispatchOrderId": 16,
+      "batchId": 6,
+      "quantity": 900,
+      "totalWeight": 990,
+      "palletCount": 2
+    },
+    {
+      "id": 19,
+      "dispatchOrderId": 17,
+      "batchId": 11,
+      "quantity": 600,
+      "totalWeight": 660,
+      "palletCount": 2
+    }
+  ],
+  "logs": [
+    {
+      "id": 1,
+      "dispatchOrderId": 11,
+      "currentStatus": "IN_TRANSIT",
+      "startTime": "2026-09-30T01:36:25.591Z",
+      "endTime": null,
+      "estimatedArrival": "2026-09-30T05:36:25.591Z",
+      "currentLatitude": -12.068974,
+      "currentLongitude": -76.970941,
+      "rejectionReason": null,
+      "orderPriority": "URGENT",
+      "destinationName": "Tambo+ Miraflores",
+      "vehiclePlate": "BTV-101",
+      "deviceId": 1
+    },
+    {
+      "id": 2,
+      "dispatchOrderId": 12,
+      "currentStatus": "IN_TRANSIT",
+      "startTime": "2026-09-30T00:41:25.591Z",
+      "endTime": null,
+      "estimatedArrival": "2026-09-30T04:41:25.591Z",
+      "currentLatitude": -12.010102,
+      "currentLongitude": -77.01921999999999,
+      "rejectionReason": null,
+      "orderPriority": "STANDARD",
+      "destinationName": "Tottus Independencia",
+      "vehiclePlate": "BTV-103",
+      "deviceId": 3
+    },
+    {
+      "id": 3,
+      "dispatchOrderId": 7,
+      "currentStatus": "COMPLETED",
+      "startTime": "2026-09-11T07:00:00.000Z",
+      "endTime": "2026-09-12T17:00:00.000Z",
+      "estimatedArrival": "2026-09-11T11:00:00.000Z",
+      "currentLatitude": -12.064,
+      "currentLongitude": -77.01,
+      "rejectionReason": null,
+      "orderPriority": "LOGISTICS",
+      "destinationName": "Mercado Mayorista La Parada",
+      "vehiclePlate": "BTV-104",
+      "deviceId": 4
+    },
+    {
+      "id": 4,
+      "dispatchOrderId": 8,
+      "currentStatus": "COMPLETED",
+      "startTime": "2026-09-16T07:00:00.000Z",
+      "endTime": "2026-09-16T15:00:00.000Z",
+      "estimatedArrival": "2026-09-16T11:00:00.000Z",
+      "currentLatitude": -11.933,
+      "currentLongitude": -76.697,
+      "rejectionReason": null,
+      "orderPriority": "STANDARD",
+      "destinationName": "Hiper Chosica",
+      "vehiclePlate": "BTV-105",
+      "deviceId": 5
+    },
+    {
+      "id": 5,
+      "dispatchOrderId": 9,
+      "currentStatus": "COMPLETED",
+      "startTime": "2026-09-21T07:00:00.000Z",
+      "endTime": "2026-09-21T15:00:00.000Z",
+      "estimatedArrival": "2026-09-21T11:00:00.000Z",
+      "currentLatitude": -12.077,
+      "currentLongitude": -77.091,
+      "rejectionReason": null,
+      "orderPriority": "URGENT",
+      "destinationName": "Supermercados Metro San Miguel",
+      "vehiclePlate": "BTV-102",
+      "deviceId": 2
+    },
+    {
+      "id": 6,
+      "dispatchOrderId": 10,
+      "currentStatus": "COMPLETED",
+      "startTime": "2026-09-26T07:00:00.000Z",
+      "endTime": "2026-09-26T15:00:00.000Z",
+      "estimatedArrival": "2026-09-26T11:00:00.000Z",
+      "currentLatitude": -11.937,
+      "currentLongitude": -77.056,
+      "rejectionReason": null,
+      "orderPriority": "STANDARD",
+      "destinationName": "Plaza Vea Comas",
+      "vehiclePlate": "BTV-101",
+      "deviceId": 1
+    }
+  ],
+  "route-checkpoints": [
+    {
+      "id": 1,
+      "logId": 1,
+      "sequence": 1,
+      "locationName": "BevTrace Central Warehouse - Ate - Departure",
+      "latitude": -12.0433,
+      "longitude": -76.942,
+      "status": "REACHED",
+      "reachedAt": "2026-09-30T01:36:25.591Z",
+      "observation": null
+    },
+    {
+      "id": 2,
+      "logId": 1,
+      "sequence": 2,
+      "locationName": "Av. Nicolás Ayllón Checkpoint",
+      "latitude": -12.068974,
+      "longitude": -76.970941,
+      "status": "REACHED",
+      "reachedAt": "2026-09-30T02:31:25.591Z",
+      "observation": null
+    },
+    {
+      "id": 3,
+      "logId": 1,
+      "sequence": 3,
+      "locationName": "Panamericana Checkpoint",
+      "latitude": -12.094648,
+      "longitude": -76.999882,
+      "status": "PENDING",
+      "reachedAt": null,
+      "observation": null
+    },
+    {
+      "id": 4,
+      "logId": 1,
+      "sequence": 4,
+      "locationName": "Tambo+ Miraflores",
+      "latitude": -12.1211,
+      "longitude": -77.0297,
+      "status": "PENDING",
+      "reachedAt": null,
+      "observation": null
+    },
+    {
+      "id": 5,
+      "logId": 2,
+      "sequence": 1,
+      "locationName": "BevTrace Central Warehouse - Ate - Departure",
+      "latitude": -12.0433,
+      "longitude": -76.942,
+      "status": "REACHED",
+      "reachedAt": "2026-09-30T00:41:25.591Z",
+      "observation": null
+    },
+    {
+      "id": 6,
+      "logId": 2,
+      "sequence": 2,
+      "locationName": "Av. Javier Prado Checkpoint",
+      "latitude": -12.026701000000001,
+      "longitude": -76.98061,
+      "status": "REACHED",
+      "reachedAt": "2026-09-30T01:36:25.591Z",
+      "observation": null
+    },
+    {
+      "id": 7,
+      "logId": 2,
+      "sequence": 3,
+      "locationName": "Vía Expresa Checkpoint",
+      "latitude": -12.010102,
+      "longitude": -77.01921999999999,
+      "status": "REACHED",
+      "reachedAt": "2026-09-30T02:31:25.591Z",
+      "observation": null
+    },
+    {
+      "id": 8,
+      "logId": 2,
+      "sequence": 4,
+      "locationName": "Tottus Independencia",
+      "latitude": -11.993,
+      "longitude": -77.059,
+      "status": "PENDING",
+      "reachedAt": null,
+      "observation": null
+    },
+    {
+      "id": 9,
+      "logId": 3,
+      "sequence": 1,
+      "locationName": "BevTrace Central Warehouse - Ate - Departure",
+      "latitude": -12.0433,
+      "longitude": -76.942,
+      "status": "REACHED",
+      "reachedAt": "2026-09-11T07:00:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 10,
+      "logId": 3,
+      "sequence": 2,
+      "locationName": "Av. Nicolás Ayllón Checkpoint",
+      "latitude": -12.050131,
+      "longitude": -76.96444,
+      "status": "REACHED",
+      "reachedAt": "2026-09-11T07:55:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 11,
+      "logId": 3,
+      "sequence": 3,
+      "locationName": "Panamericana Checkpoint",
+      "latitude": -12.056962,
+      "longitude": -76.98688,
+      "status": "REACHED",
+      "reachedAt": "2026-09-11T08:50:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 12,
+      "logId": 3,
+      "sequence": 4,
+      "locationName": "Mercado Mayorista La Parada",
+      "latitude": -12.064,
+      "longitude": -77.01,
+      "status": "REACHED",
+      "reachedAt": "2026-09-11T09:45:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 13,
+      "logId": 4,
+      "sequence": 1,
+      "locationName": "BevTrace Central Warehouse - Ate - Departure",
+      "latitude": -12.0433,
+      "longitude": -76.942,
+      "status": "REACHED",
+      "reachedAt": "2026-09-16T07:00:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 14,
+      "logId": 4,
+      "sequence": 2,
+      "locationName": "Av. Javier Prado Checkpoint",
+      "latitude": -12.006901000000001,
+      "longitude": -76.86115,
+      "status": "REACHED",
+      "reachedAt": "2026-09-16T07:55:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 15,
+      "logId": 4,
+      "sequence": 3,
+      "locationName": "Vía Expresa Checkpoint",
+      "latitude": -11.970502,
+      "longitude": -76.7803,
+      "status": "REACHED",
+      "reachedAt": "2026-09-16T08:50:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 16,
+      "logId": 4,
+      "sequence": 4,
+      "locationName": "Hiper Chosica",
+      "latitude": -11.933,
+      "longitude": -76.697,
+      "status": "REACHED",
+      "reachedAt": "2026-09-16T09:45:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 17,
+      "logId": 5,
+      "sequence": 1,
+      "locationName": "BevTrace Central Warehouse - Ate - Departure",
+      "latitude": -12.0433,
+      "longitude": -76.942,
+      "status": "REACHED",
+      "reachedAt": "2026-09-21T07:00:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 18,
+      "logId": 5,
+      "sequence": 2,
+      "locationName": "Av. Nicolás Ayllón Checkpoint",
+      "latitude": -12.054421,
+      "longitude": -76.99117,
+      "status": "REACHED",
+      "reachedAt": "2026-09-21T07:55:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 19,
+      "logId": 5,
+      "sequence": 3,
+      "locationName": "Panamericana Checkpoint",
+      "latitude": -12.065542,
+      "longitude": -77.04034,
+      "status": "REACHED",
+      "reachedAt": "2026-09-21T08:50:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 20,
+      "logId": 5,
+      "sequence": 4,
+      "locationName": "Supermercados Metro San Miguel",
+      "latitude": -12.077,
+      "longitude": -77.091,
+      "status": "REACHED",
+      "reachedAt": "2026-09-21T09:45:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 21,
+      "logId": 6,
+      "sequence": 1,
+      "locationName": "BevTrace Central Warehouse - Ate - Departure",
+      "latitude": -12.0433,
+      "longitude": -76.942,
+      "status": "REACHED",
+      "reachedAt": "2026-09-26T07:00:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 22,
+      "logId": 6,
+      "sequence": 2,
+      "locationName": "Av. Javier Prado Checkpoint",
+      "latitude": -12.008221,
+      "longitude": -76.97962,
+      "status": "REACHED",
+      "reachedAt": "2026-09-26T07:55:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 23,
+      "logId": 6,
+      "sequence": 3,
+      "locationName": "Vía Expresa Checkpoint",
+      "latitude": -11.973142,
+      "longitude": -77.01724,
+      "status": "REACHED",
+      "reachedAt": "2026-09-26T08:50:00.000Z",
+      "observation": null
+    },
+    {
+      "id": 24,
+      "logId": 6,
+      "sequence": 4,
+      "locationName": "Plaza Vea Comas",
+      "latitude": -11.937,
+      "longitude": -77.056,
+      "status": "REACHED",
+      "reachedAt": "2026-09-26T09:45:00.000Z",
+      "observation": null
+    }
+  ],
+  "delivery-records": [
+    {
+      "id": 1,
+      "logId": 3,
+      "receivedBy": "Store Manager - Mercado Mayorista La Parada",
+      "signatureUrl": null,
+      "deliveredAt": "2026-09-12T17:00:00.000Z",
+      "status": "DELIVERED",
+      "rejectionReason": null
+    },
+    {
+      "id": 2,
+      "logId": 4,
+      "receivedBy": "Store Manager - Hiper Chosica",
+      "signatureUrl": null,
+      "deliveredAt": "2026-09-16T15:00:00.000Z",
+      "status": "DELIVERED",
+      "rejectionReason": null
+    },
+    {
+      "id": 3,
+      "logId": 5,
+      "receivedBy": "Store Manager - Supermercados Metro San Miguel",
+      "signatureUrl": null,
+      "deliveredAt": "2026-09-21T15:00:00.000Z",
+      "status": "DELIVERED",
+      "rejectionReason": null
+    },
+    {
+      "id": 4,
+      "logId": 6,
+      "receivedBy": "Store Manager - Plaza Vea Comas",
+      "signatureUrl": null,
+      "deliveredAt": "2026-09-26T15:00:00.000Z",
+      "status": "DELIVERED",
+      "rejectionReason": null
+    }
+  ],
+  "location-streams": [
+    {
+      "id": 1,
+      "deviceId": 1,
+      "latitude": -12.048746,
+      "longitude": -76.948139,
+      "speed": 32,
+      "temperature": 24,
+      "timestamp": "2026-09-30T01:51:25.591Z"
+    },
+    {
+      "id": 2,
+      "deviceId": 1,
+      "latitude": -12.054192,
+      "longitude": -76.954278,
+      "speed": 39,
+      "temperature": 25,
+      "timestamp": "2026-09-30T02:01:25.591Z"
+    },
+    {
+      "id": 3,
+      "deviceId": 1,
+      "latitude": -12.059638,
+      "longitude": -76.960417,
+      "speed": 46,
+      "temperature": 26,
+      "timestamp": "2026-09-30T02:11:25.591Z"
+    },
+    {
+      "id": 4,
+      "deviceId": 1,
+      "latitude": -12.065084,
+      "longitude": -76.966556,
+      "speed": 35,
+      "temperature": 27,
+      "timestamp": "2026-09-30T02:21:25.591Z"
+    },
+    {
+      "id": 5,
+      "deviceId": 1,
+      "latitude": -12.07053,
+      "longitude": -76.972695,
+      "speed": 42,
+      "temperature": 24,
+      "timestamp": "2026-09-30T02:31:25.591Z"
+    },
+    {
+      "id": 6,
+      "deviceId": 1,
+      "latitude": -12.075976,
+      "longitude": -76.978834,
+      "speed": 49,
+      "temperature": 25,
+      "timestamp": "2026-09-30T02:41:25.591Z"
+    },
+    {
+      "id": 7,
+      "deviceId": 1,
+      "latitude": -12.081422,
+      "longitude": -76.984973,
+      "speed": 38,
+      "temperature": 26,
+      "timestamp": "2026-09-30T02:51:25.591Z"
+    },
+    {
+      "id": 8,
+      "deviceId": 1,
+      "latitude": -12.086868,
+      "longitude": -76.991112,
+      "speed": 45,
+      "temperature": 34.5,
+      "timestamp": "2026-09-30T03:01:25.591Z"
+    },
+    {
+      "id": 9,
+      "deviceId": 3,
+      "latitude": -12.039779,
+      "longitude": -76.95019,
+      "speed": 32,
+      "temperature": 24,
+      "timestamp": "2026-09-30T00:51:25.591Z"
+    },
+    {
+      "id": 10,
+      "deviceId": 3,
+      "latitude": -12.036258,
+      "longitude": -76.95838,
+      "speed": 39,
+      "temperature": 25,
+      "timestamp": "2026-09-30T01:01:25.591Z"
+    },
+    {
+      "id": 11,
+      "deviceId": 3,
+      "latitude": -12.032737,
+      "longitude": -76.96657,
+      "speed": 46,
+      "temperature": 26,
+      "timestamp": "2026-09-30T01:11:25.591Z"
+    },
+    {
+      "id": 12,
+      "deviceId": 3,
+      "latitude": -12.029216,
+      "longitude": -76.97476,
+      "speed": 35,
+      "temperature": 27,
+      "timestamp": "2026-09-30T01:21:25.591Z"
+    },
+    {
+      "id": 13,
+      "deviceId": 3,
+      "latitude": -12.025695,
+      "longitude": -76.98295,
+      "speed": 42,
+      "temperature": 24,
+      "timestamp": "2026-09-30T01:31:25.591Z"
+    },
+    {
+      "id": 14,
+      "deviceId": 3,
+      "latitude": -12.022174,
+      "longitude": -76.99114,
+      "speed": 49,
+      "temperature": 25,
+      "timestamp": "2026-09-30T01:41:25.591Z"
+    },
+    {
+      "id": 15,
+      "deviceId": 3,
+      "latitude": -12.018653,
+      "longitude": -76.99933,
+      "speed": 38,
+      "temperature": 26,
+      "timestamp": "2026-09-30T01:51:25.591Z"
+    },
+    {
+      "id": 16,
+      "deviceId": 3,
+      "latitude": -12.015132,
+      "longitude": -77.00752,
+      "speed": 45,
+      "temperature": 27.5,
+      "timestamp": "2026-09-30T02:01:25.591Z"
+    },
+    {
+      "id": 17,
+      "deviceId": 2,
+      "latitude": -12.0433,
+      "longitude": -76.942,
+      "speed": 0,
+      "temperature": 23,
+      "timestamp": "2026-09-30T02:11:25.591Z"
+    },
+    {
+      "id": 18,
+      "deviceId": 2,
+      "latitude": -12.0403,
+      "longitude": -76.939,
+      "speed": 0,
+      "temperature": 24,
+      "timestamp": "2026-09-30T02:26:25.591Z"
+    },
+    {
+      "id": 19,
+      "deviceId": 2,
+      "latitude": -12.0373,
+      "longitude": -76.93599999999999,
+      "speed": 0,
+      "temperature": 25,
+      "timestamp": "2026-09-30T02:41:25.591Z"
+    },
+    {
+      "id": 20,
+      "deviceId": 4,
+      "latitude": -12.0433,
+      "longitude": -76.942,
+      "speed": 0,
+      "temperature": 23,
+      "timestamp": "2026-09-30T02:11:25.591Z"
+    },
+    {
+      "id": 21,
+      "deviceId": 4,
+      "latitude": -12.0403,
+      "longitude": -76.939,
+      "speed": 0,
+      "temperature": 24,
+      "timestamp": "2026-09-30T02:26:25.591Z"
+    },
+    {
+      "id": 22,
+      "deviceId": 4,
+      "latitude": -12.0373,
+      "longitude": -76.93599999999999,
+      "speed": 0,
+      "temperature": 25,
+      "timestamp": "2026-09-30T02:41:25.591Z"
+    },
+    {
+      "id": 23,
+      "deviceId": 5,
+      "latitude": -12.0433,
+      "longitude": -76.942,
+      "speed": 0,
+      "temperature": 23,
+      "timestamp": "2026-09-30T02:11:25.591Z"
+    },
+    {
+      "id": 24,
+      "deviceId": 5,
+      "latitude": -12.0403,
+      "longitude": -76.939,
+      "speed": 0,
+      "temperature": 24,
+      "timestamp": "2026-09-30T02:26:25.591Z"
+    },
+    {
+      "id": 25,
+      "deviceId": 5,
+      "latitude": -12.0373,
+      "longitude": -76.93599999999999,
+      "speed": 0,
+      "temperature": 25,
+      "timestamp": "2026-09-30T02:41:25.591Z"
+    },
+    {
+      "id": 26,
+      "deviceId": 6,
+      "latitude": -12.0433,
+      "longitude": -76.942,
+      "speed": 0,
+      "temperature": 23,
+      "timestamp": "2026-09-30T02:11:25.591Z"
+    },
+    {
+      "id": 27,
+      "deviceId": 6,
+      "latitude": -12.0403,
+      "longitude": -76.939,
+      "speed": 0,
+      "temperature": 24,
+      "timestamp": "2026-09-30T02:26:25.591Z"
+    },
+    {
+      "id": 28,
+      "deviceId": 6,
+      "latitude": -12.0373,
+      "longitude": -76.93599999999999,
+      "speed": 0,
+      "temperature": 25,
+      "timestamp": "2026-09-30T02:41:25.591Z"
+    }
+  ],
+  "rules": [
+    {
+      "id": 1,
+      "conditionType": "TEMPERATURE_MAX",
+      "threshold": 30,
+      "severity": "HIGH",
+      "description": "Cargo temperature above the allowed maximum",
+      "active": true
+    },
+    {
+      "id": 2,
+      "conditionType": "DELAY_MINUTES",
+      "threshold": 45,
+      "severity": "MEDIUM",
+      "description": "Shipment delayed beyond the estimated arrival",
+      "active": true
+    },
+    {
+      "id": 3,
+      "conditionType": "SIGNAL_LOSS_MINUTES",
+      "threshold": 30,
+      "severity": "CRITICAL",
+      "description": "IoT device without signal for a prolonged period",
+      "active": true
+    }
+  ],
+  "incidents": [
+    {
+      "id": 1,
+      "logId": 2,
+      "ruleId": 3,
+      "anomalyType": "SIGNAL_LOSS_MINUTES",
+      "severity": "CRITICAL",
+      "status": "OPEN",
+      "detectedAt": "2026-09-30T02:54:25.591Z",
+      "description": "Device IOT-1003 has not reported signal for over 30 minutes.",
+      "acknowledgedBy": null,
+      "acknowledgedAt": null,
+      "resolvedAt": null,
+      "reopenCount": 0
+    },
+    {
+      "id": 2,
+      "logId": 1,
+      "ruleId": 2,
+      "anomalyType": "DELAY_MINUTES",
+      "severity": "MEDIUM",
+      "status": "ACKNOWLEDGED",
+      "detectedAt": "2026-09-30T01:41:25.591Z",
+      "description": "Shipment to Tambo+ Miraflores is delayed against the estimated route time.",
+      "acknowledgedBy": 2,
+      "acknowledgedAt": "2026-09-30T02:01:25.591Z",
+      "resolvedAt": null,
+      "reopenCount": 0
+    },
+    {
+      "id": 3,
+      "logId": 5,
+      "ruleId": 1,
+      "anomalyType": "TEMPERATURE_MAX",
+      "severity": "HIGH",
+      "status": "RESOLVED",
+      "detectedAt": "2026-09-29T17:11:25.591Z",
+      "description": "Cargo temperature reached 33.1 °C during the route.",
+      "acknowledgedBy": 2,
+      "acknowledgedAt": "2026-09-29T17:21:25.591Z",
+      "resolvedAt": "2026-09-30T00:11:25.591Z",
+      "reopenCount": 0
+    },
+    {
+      "id": 4,
+      "logId": 4,
+      "ruleId": 2,
+      "anomalyType": "DELAY_MINUTES",
+      "severity": "MEDIUM",
+      "status": "RESOLVED",
+      "detectedAt": "2026-09-27T12:00:00.000Z",
+      "description": "Delay of 120 minutes detected on route.",
+      "acknowledgedBy": 2,
+      "acknowledgedAt": "2026-09-27T12:00:00.000Z",
+      "resolvedAt": "2026-09-27T15:00:00.000Z",
+      "reopenCount": 0
+    }
+  ],
+  "corrective-actions": [
+    {
+      "id": 1,
+      "incidentId": 3,
+      "userId": 2,
+      "description": "Driver moved cargo to the shaded section and adjusted ventilation.",
+      "appliedAt": "2026-09-29T23:51:25.591Z"
+    },
+    {
+      "id": 2,
+      "incidentId": 4,
+      "userId": 2,
+      "description": "Alternative route assigned to avoid traffic congestion.",
+      "appliedAt": "2026-09-27T14:00:00.000Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": 1,
+      "recipientRole": "ROLE_LOGISTICS_MANAGER",
+      "type": "INCIDENT",
+      "title": "Signal lost",
+      "message": "Device IOT-1003 lost connectivity while carrying dispatch #12.",
+      "createdAt": "2026-09-30T02:54:25.591Z",
+      "read": false
+    },
+    {
+      "id": 2,
+      "recipientRole": "ROLE_LOGISTICS_MANAGER",
+      "type": "INVENTORY",
+      "title": "Inventory discrepancy",
+      "message": "Batch LT-2609-009 has a discrepancy of 18 units after the daily reconciliation.",
+      "createdAt": "2026-09-29T18:00:00.000Z",
+      "read": false
+    },
+    {
+      "id": 3,
+      "recipientRole": "ROLE_WAREHOUSE_OPERATOR",
+      "type": "DISPATCH",
+      "title": "Dispatch authorized",
+      "message": "Dispatch #13 was authorized. Validate the loaded pallets before departure.",
+      "createdAt": "2026-09-30T02:36:25.591Z",
+      "read": false
+    },
+    {
+      "id": 4,
+      "recipientRole": "ROLE_LOGISTICS_MANAGER",
+      "type": "INCIDENT",
+      "title": "Incident resolved",
+      "message": "The temperature incident on dispatch #9 was resolved.",
+      "createdAt": "2026-09-30T00:11:25.591Z",
+      "read": true
+    }
+  ],
+  "logistics-reports": [
+    {
+      "id": 1,
+      "userId": 2,
+      "periodStart": "2026-08-01",
+      "periodEnd": "2026-08-30",
+      "createdAt": "2026-08-31T09:00:00.000Z",
+      "kpis": [
+        {
+          "metricName": "OTIF",
+          "actualValue": 100
+        },
+        {
+          "metricName": "FILL_RATE",
+          "actualValue": 97.6
+        },
+        {
+          "metricName": "ERI",
+          "actualValue": 95.5
+        },
+        {
+          "metricName": "INVENTORY_ROTATION",
+          "actualValue": 0.42
+        }
+      ]
+    }
+  ],
+  "subscription-plans": [
+    {
+      "id": 1,
+      "code": "ESSENTIAL",
+      "name": "Essential",
+      "descriptionKey": "plans.essential.description",
+      "priceAmount": 299,
+      "currency": "PEN",
+      "billingPeriod": "MONTHLY",
+      "maxRoutes": 5,
+      "maxDevices": 100,
+      "maxUsers": 5,
+      "featureKeys": [
+        "plans.features.routes5",
+        "plans.features.basicQueue",
+        "plans.features.emailSupport",
+        "plans.features.dailyReports",
+        "plans.features.devices100"
+      ],
+      "highlighted": false,
+      "custom": false,
+      "active": true
+    },
+    {
+      "id": 2,
+      "code": "ESSENTIAL",
+      "name": "Essential",
+      "descriptionKey": "plans.essential.description",
+      "priceAmount": 2870,
+      "currency": "PEN",
+      "billingPeriod": "YEARLY",
+      "maxRoutes": 5,
+      "maxDevices": 100,
+      "maxUsers": 5,
+      "featureKeys": [
+        "plans.features.routes5",
+        "plans.features.basicQueue",
+        "plans.features.emailSupport",
+        "plans.features.dailyReports",
+        "plans.features.devices100"
+      ],
+      "highlighted": false,
+      "custom": false,
+      "active": true
+    },
+    {
+      "id": 3,
+      "code": "PROFESSIONAL",
+      "name": "Professional",
+      "descriptionKey": "plans.professional.description",
+      "priceAmount": 699,
+      "currency": "PEN",
+      "billingPeriod": "MONTHLY",
+      "maxRoutes": 999,
+      "maxDevices": 500,
+      "maxUsers": 25,
+      "featureKeys": [
+        "plans.features.routesUnlimited",
+        "plans.features.realtimeMap",
+        "plans.features.prioritySupport",
+        "plans.features.customKpi",
+        "plans.features.devices500",
+        "plans.features.advancedApi"
+      ],
+      "highlighted": true,
+      "custom": false,
+      "active": true
+    },
+    {
+      "id": 4,
+      "code": "PROFESSIONAL",
+      "name": "Professional",
+      "descriptionKey": "plans.professional.description",
+      "priceAmount": 6710,
+      "currency": "PEN",
+      "billingPeriod": "YEARLY",
+      "maxRoutes": 999,
+      "maxDevices": 500,
+      "maxUsers": 25,
+      "featureKeys": [
+        "plans.features.routesUnlimited",
+        "plans.features.realtimeMap",
+        "plans.features.prioritySupport",
+        "plans.features.customKpi",
+        "plans.features.devices500",
+        "plans.features.advancedApi"
+      ],
+      "highlighted": true,
+      "custom": false,
+      "active": true
+    },
+    {
+      "id": 5,
+      "code": "ENTERPRISE",
+      "name": "Enterprise",
+      "descriptionKey": "plans.enterprise.description",
+      "priceAmount": 0,
+      "currency": "PEN",
+      "billingPeriod": "MONTHLY",
+      "maxRoutes": 9999,
+      "maxDevices": 9999,
+      "maxUsers": 999,
+      "featureKeys": [
+        "plans.features.multiWarehouse",
+        "plans.features.customIntegration",
+        "plans.features.accountManager",
+        "plans.features.onPremise",
+        "plans.features.whiteLabel",
+        "plans.features.sla"
+      ],
+      "highlighted": false,
+      "custom": true,
+      "active": true
+    },
+    {
+      "id": 6,
+      "code": "ENTERPRISE",
+      "name": "Enterprise",
+      "descriptionKey": "plans.enterprise.description",
+      "priceAmount": 0,
+      "currency": "PEN",
+      "billingPeriod": "YEARLY",
+      "maxRoutes": 9999,
+      "maxDevices": 9999,
+      "maxUsers": 999,
+      "featureKeys": [
+        "plans.features.multiWarehouse",
+        "plans.features.customIntegration",
+        "plans.features.accountManager",
+        "plans.features.onPremise",
+        "plans.features.whiteLabel",
+        "plans.features.sla"
+      ],
+      "highlighted": false,
+      "custom": true,
+      "active": true
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": 1,
+      "userId": 2,
+      "companyName": "BevTrace Demo Distribuidora",
+      "planCode": "PROFESSIONAL",
+      "billingCycle": "MONTHLY",
+      "status": "ACTIVE",
+      "currentPeriodStart": "2026-09-18T10:00:00.000Z",
+      "currentPeriodEnd": "2026-10-18T10:00:00.000Z",
+      "cancelledAt": null
+    },
+    {
+      "id": 2,
+      "userId": 4,
+      "companyName": "Andina Beverages S.A.C.",
+      "planCode": "ESSENTIAL",
+      "billingCycle": "YEARLY",
+      "status": "ACTIVE",
+      "currentPeriodStart": "2026-06-22T10:00:00.000Z",
+      "currentPeriodEnd": "2027-06-22T10:00:00.000Z",
+      "cancelledAt": null
+    },
+    {
+      "id": 3,
+      "userId": 5,
+      "companyName": "Andina Beverages S.A.C.",
+      "planCode": "PROFESSIONAL",
+      "billingCycle": "MONTHLY",
+      "status": "PAST_DUE",
+      "currentPeriodStart": "2026-08-26T10:00:00.000Z",
+      "currentPeriodEnd": "2026-09-25T10:00:00.000Z",
+      "cancelledAt": null
+    }
+  ],
+  "payments": [
+    {
+      "id": 1,
+      "subscriptionId": 1,
+      "amount": 699,
+      "currency": "PEN",
+      "status": "PAID",
+      "cardLast4": "4242",
+      "paidAt": "2026-09-18T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "subscriptionId": 1,
+      "amount": 699,
+      "currency": "PEN",
+      "status": "PAID",
+      "cardLast4": "4242",
+      "paidAt": "2026-08-19T10:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "subscriptionId": 2,
+      "amount": 2870,
+      "currency": "PEN",
+      "status": "PAID",
+      "cardLast4": "1881",
+      "paidAt": "2026-06-22T10:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "subscriptionId": 3,
+      "amount": 699,
+      "currency": "PEN",
+      "status": "FAILED",
+      "cardLast4": "0002",
+      "paidAt": "2026-09-25T10:00:00.000Z"
+    }
+  ],
+  "newsletter-subscribers": [
+    {
+      "id": 1,
+      "email": "compras@distribuidoralima.pe",
+      "subscribedAt": "2026-09-10T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "email": "logistica@embotelladora.pe",
+      "subscribedAt": "2026-09-21T10:00:00.000Z"
+    }
+  ],
+  "contact-requests": [
+    {
+      "id": 1,
+      "fullName": "Rosa Medina",
+      "email": "rmedina@bebidasdelsur.pe",
+      "company": "Bebidas del Sur",
+      "message": "We would like a live demo for our 3 warehouses.",
+      "createdAt": "2026-09-24T10:00:00.000Z"
+    }
+  ]
+}
