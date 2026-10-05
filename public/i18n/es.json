@@ -1,0 +1,717 @@
+{
+  "common": {
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "all": "Todos",
+    "all-statuses": "Todos los estados",
+    "back": "Volver",
+    "back-home": "Volver al inicio",
+    "created": "Creado",
+    "date": "Fecha",
+    "description": "Descripción",
+    "no-results": "No se encontraron resultados.",
+    "page-not-found": "La página que buscas no existe.",
+    "select": "Seleccionar...",
+    "status": "Estado"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "inventory": "Inventario",
+    "dispatch": "Despachos",
+    "traceability": "Trazabilidad",
+    "telemetry": "Dispositivos (IoT)",
+    "incidents": "Incidentes",
+    "analytics": "Analítica",
+    "subscription": "Suscripción",
+    "administration": "Administración",
+    "sign-out": "Cerrar sesión"
+  },
+  "roles": {
+    "ROLE_ADMIN": "Administrador",
+    "ROLE_LOGISTICS_MANAGER": "Jefe de Logística",
+    "ROLE_WAREHOUSE_OPERATOR": "Operario de Almacén"
+  },
+  "status": {
+    "AVAILABLE": "Disponible",
+    "EXPECTED": "Esperado",
+    "DEPLETED": "Agotado",
+    "IN_REVIEW": "En revisión",
+    "RECONCILED": "Conciliado",
+    "OPEN": "Abierto",
+    "RESOLVED": "Resuelto",
+    "SCHEDULED": "Programado",
+    "AUTHORIZED": "Autorizado",
+    "IN_TRANSIT": "En tránsito",
+    "DELIVERED": "Entregado",
+    "CANCELLED": "Cancelado",
+    "STANDARD": "Estándar",
+    "LOGISTICS": "Logística",
+    "URGENT": "Urgente",
+    "DELIVERY_REJECTED": "Entrega rechazada",
+    "COMPLETED": "Completado",
+    "PENDING": "Pendiente",
+    "REACHED": "Alcanzado",
+    "OMITTED": "Omitido",
+    "CONNECTED": "Conectado",
+    "DISCONNECTED": "Desconectado",
+    "ACTIVE": "Activo",
+    "ON_LEAVE": "De descanso",
+    "LOW": "Baja",
+    "MEDIUM": "Media",
+    "HIGH": "Alta",
+    "CRITICAL": "Crítica",
+    "ACKNOWLEDGED": "Reconocido",
+    "PAST_DUE": "Vencido",
+    "PAID": "Pagado",
+    "FAILED": "Fallido",
+    "REJECTED": "Rechazado",
+    "AVAILABLE_DATA": "Disponible",
+    "UNAVAILABLE": "Datos no disponibles"
+  },
+  "iam": {
+    "fields": {
+      "name": "Nombre completo",
+      "email": "Correo electrónico",
+      "email-placeholder": "nombre@empresa.com",
+      "phone": "Teléfono",
+      "role": "Rol",
+      "password": "Contraseña",
+      "password-placeholder": "Tu contraseña",
+      "confirm-password": "Confirmar contraseña",
+      "show": "Mostrar",
+      "hide": "Ocultar"
+    },
+    "sign-in": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Inicia sesión para gestionar tu logística de bebidas",
+      "button": "Iniciar sesión",
+      "no-account": "¿No tienes una cuenta?",
+      "create-account": "Crear cuenta"
+    },
+    "sign-up": {
+      "title": "Crea tu cuenta",
+      "subtitle": "Únete a BevTrace y traza cada envase",
+      "button": "Crear cuenta",
+      "have-account": "¿Ya tienes una cuenta?",
+      "success": "Cuenta creada. Ya puedes iniciar sesión."
+    },
+    "rules": {
+      "min-length": "Más de 8 caracteres",
+      "uppercase": "Al menos 1 mayúscula",
+      "number": "Al menos 1 número"
+    },
+    "errors": {
+      "email-required": "El correo es obligatorio.",
+      "email-format": "Ingresa un correo válido que contenga \"@\" (nombre@empresa.com).",
+      "password-required": "La contraseña es obligatoria.",
+      "password-mismatch": "Las contraseñas no coinciden.",
+      "name-required": "Ingresa tu nombre completo (mín. 3 caracteres).",
+      "phone-format": "Ingresa un teléfono válido.",
+      "invalid-credentials": "Correo o contraseña incorrectos.",
+      "account-disabled": "Esta cuenta está deshabilitada. Contacta a un administrador.",
+      "locked": "Demasiados intentos fallidos. Inténtalo de nuevo en {{seconds}} segundos.",
+      "cannot-edit-self": "No puedes cambiar tu propio rol ni estado.",
+      "generic": "Algo salió mal. Si el correo ya está registrado, inicia sesión."
+    },
+    "users": {
+      "title": "Usuarios y Roles",
+      "subtitle": "Gestiona el acceso a la plataforma (IAM)",
+      "role-updated": "Rol actualizado.",
+      "status-updated": "Estado de la cuenta actualizado."
+    }
+  },
+  "inventory": {
+    "fields": {
+      "batch": "Lote",
+      "product": "Producto",
+      "zone": "Zona",
+      "stock": "Stock",
+      "quantity": "Cantidad",
+      "expiration": "Vencimiento"
+    },
+    "catalog": {
+      "title": "Catálogo de Inventario y Mermas",
+      "subtitle": "Registros auditables y niveles de stock en tiempo real con detección automática de pérdidas.",
+      "total-units": "Unidades totales",
+      "active-batches": "Lotes activos",
+      "expected": "{{count}} esperando ingreso",
+      "shrinkage-rate": "Tasa de merma",
+      "units-lost": "{{count}} unidades perdidas",
+      "open-discrepancies": "Discrepancias abiertas",
+      "search": "Buscar por lote, SKU o producto...",
+      "all-zones": "Todas las zonas"
+    },
+    "entry": {
+      "title": "Ingreso de lotes",
+      "subtitle": "Registra un lote escaneando su código.",
+      "scan": "Escanear código de lote",
+      "code": "Código de lote",
+      "placeholder": "p. ej. LT-2609-101",
+      "register": "Registrar ingreso",
+      "expected-title": "Lotes esperando ingreso",
+      "expected-hint": "Haz clic en un lote para llenar el código, como lo haría un escáner.",
+      "none-expected": "No hay lotes esperando ingreso.",
+      "success": "El lote {{code}} ingresó al almacén y el stock fue actualizado."
+    },
+    "batch-form": {
+      "title": "Registrar lote esperado",
+      "subtitle": "Anuncia un lote que llega desde la planta.",
+      "save": "Registrar lote",
+      "success": "Lote {{code}} registrado. Ya se puede escanear en el muelle."
+    },
+    "waste": {
+      "title": "Registro de mermas",
+      "subtitle": "Registra pérdidas de producto con su motivo.",
+      "history": "Historial de mermas",
+      "register": "Registrar merma",
+      "reason": "Motivo",
+      "reported-by": "Reportado por",
+      "save": "Guardar merma",
+      "success": "Merma registrada y stock actualizado."
+    },
+    "reconciliation": {
+      "title": "Conciliación de inventario",
+      "subtitle": "Compara el conteo físico con el stock del sistema.",
+      "count": "Conteo físico",
+      "fill": "Llenar con stock del sistema",
+      "run": "Ejecutar conciliación",
+      "system-qty": "Sistema",
+      "counted-qty": "Contado",
+      "difference": "Diferencia",
+      "discrepancies": "Discrepancias",
+      "no-discrepancies": "No hay discrepancias registradas.",
+      "history": "Historial de conciliaciones",
+      "batches": "Lotes coincidentes",
+      "note": "Nota de resolución",
+      "resolve": "Resolver",
+      "confirm": "Confirmar",
+      "open-alert": "{{count}} discrepancias deben resolverse antes de confirmar la conciliación.",
+      "run-success": "Conciliación completada.",
+      "confirm-success": "Conciliación confirmada.",
+      "resolve-success": "Discrepancia resuelta y stock ajustado."
+    },
+    "errors": {
+      "load": "No se pudo cargar el inventario. {{detail}}",
+      "generic": "La operación de inventario falló. {{detail}}",
+      "code-format": "Usa de 4 a 30 letras, números o guiones.",
+      "invalid-code": "El código {{code}} no corresponde a ningún lote registrado. Verifícalo manualmente.",
+      "already-received": "El lote {{code}} ya fue recibido.",
+      "batch-duplicated": "El lote {{code}} ya está registrado.",
+      "batch-not-available": "El lote no está disponible en el almacén.",
+      "waste-exceeds-stock": "La merma excede el stock disponible de {{code}} ({{available}} unidades).",
+      "quantity-invalid": "Ingresa un número entero mayor a cero.",
+      "reason-required": "El motivo es obligatorio (mín. 5 caracteres).",
+      "no-counts": "Ingresa al menos un conteo físico.",
+      "pending-discrepancies": "Aún hay {{count}} discrepancias abiertas. Resuélvelas primero.",
+      "note-required": "Ingresa una nota de resolución (mín. 3 caracteres).",
+      "stock-insufficient": "Stock insuficiente."
+    }
+  },
+  "dispatch": {
+    "fields": {
+      "destination": "Destino",
+      "date": "Fecha",
+      "priority": "Prioridad",
+      "units": "Unidades",
+      "vehicle": "Vehículo",
+      "weight": "Peso",
+      "pallets": "Paletas"
+    },
+    "queue": {
+      "title": "Cola de Despachos",
+      "subtitle": "Gestiona y prioriza los envíos entrantes y salientes.",
+      "new": "Programar despacho",
+      "in-queue": "En cola",
+      "units": "{{count}} unidades",
+      "in-transit": "En tránsito",
+      "delivered": "Entregados",
+      "fleet": "Flota",
+      "available": "vehículos disponibles",
+      "manage": "Gestionar"
+    },
+    "form": {
+      "title": "Programar despacho",
+      "subtitle": "Elige el destino, los lotes y la prioridad.",
+      "cargo": "Carga",
+      "add-line": "Agregar lote",
+      "total": "Total: {{count}} unidades",
+      "save": "Programar despacho",
+      "success": "Despacho programado."
+    },
+    "detail": {
+      "title": "Despacho",
+      "subtitle": "Datos del envío, prioridad operativa y liberación.",
+      "shipment": "Datos del envío",
+      "priority": "Prioridad operativa",
+      "priority-hint": "Define cómo se atiende el despacho en la cola.",
+      "priority-STANDARD": "Atención regular dentro del horario diario.",
+      "priority-LOGISTICS": "Agrupado con rutas cercanas para optimizar la flota.",
+      "priority-URGENT": "Sale primero; el cliente está esperando.",
+      "priority-updated": "Prioridad actualizada.",
+      "suggested-route": "Ruta sugerida",
+      "eta": "Tiempo estimado de viaje: {{minutes}} min",
+      "assign": "Asignar vehículo",
+      "authorize": "Asignar y autorizar",
+      "vehicle-assigned": "Vehículo asignado. El despacho está autorizado.",
+      "manager-only": "Solo un jefe de logística puede asignar vehículos.",
+      "validated": "Carga validada",
+      "validate": "Validar paletas cargadas",
+      "validate-hint": "Escanea las {{count}} paletas cargadas en el vehículo (una etiqueta por línea).",
+      "pallet-placeholder": "LT-2609-001-P1\nLT-2609-001-P2",
+      "simulate-ok": "Simular escaneo correcto",
+      "simulate-wrong": "Simular paleta errónea",
+      "validate-button": "Validar carga",
+      "cargo-validated": "Carga validada contra el pedido.",
+      "operator-only": "Solo un operario de almacén puede validar la carga.",
+      "depart": "Registrar salida",
+      "depart-blocked": "Valida la carga antes de la salida.",
+      "departed": "Salida registrada. La trazabilidad inició.",
+      "tracking": "Seguimiento",
+      "tracking-hint": "El envío está siendo trazado en su ruta.",
+      "open-tracking": "Abrir mapa de rutas",
+      "cancel": "Cancelar despacho",
+      "cancelled": "Despacho cancelado.",
+      "not-found": "Despacho no encontrado."
+    },
+    "errors": {
+      "load": "No se pudieron cargar los despachos. {{detail}}",
+      "generic": "La operación de despacho falló. {{detail}}",
+      "past-date": "La fecha del despacho no puede estar en el pasado.",
+      "no-items": "Agrega al menos un lote a la carga.",
+      "batch-unavailable": "El lote seleccionado no está disponible.",
+      "stock-insufficient": "Stock insuficiente en el lote {{code}}. Disponible: {{available}} unidades.",
+      "not-scheduled": "Solo los despachos programados pueden recibir un vehículo.",
+      "vehicle-unavailable": "El vehículo {{plate}} no está disponible.",
+      "driver-unavailable": "El conductor del vehículo no está disponible.",
+      "capacity-exceeded": "La carga ({{weight}} kg) excede la capacidad del vehículo ({{capacity}} kg).",
+      "not-authorized": "El despacho debe estar autorizado primero.",
+      "pallet-mismatch": "Las paletas no coinciden con el pedido. Inesperadas: {{unexpected}}. Faltantes: {{missing}}.",
+      "cargo-not-validated": "La carga debe validarse antes de la salida.",
+      "not-editable": "El despacho ya no se puede modificar."
+    }
+  },
+  "traceability": {
+    "map": {
+      "title": "Mapa de Trazabilidad de Rutas Activas",
+      "subtitle": "Monitoreo IoT en tiempo real de cada ruta en tránsito.",
+      "active": "Envíos activos",
+      "details": "Detalle",
+      "empty": "No hay envíos activos.",
+      "log": "Registro detallado de telemetría"
+    },
+    "fields": {
+      "started": "Salida",
+      "progress": "Avance",
+      "finished": "Llegada"
+    },
+    "history": {
+      "title": "Historial de entregas",
+      "subtitle": "Envíos cerrados y sus registros de entrega."
+    },
+    "detail": {
+      "title": "Trazabilidad",
+      "map": "Ruta",
+      "checkpoints": "Puntos de control",
+      "simulate-reach": "Simular llegada",
+      "reached": "Punto de control registrado.",
+      "reached-with-omitted": "Punto de control registrado. {{count}} puntos saltados se marcaron como omitidos.",
+      "delivery": "Entrega en destino",
+      "not-arrived": "El vehículo aún no llega al destino.",
+      "received-by": "Recibido por",
+      "confirm": "Confirmar entrega",
+      "reject-reason": "Motivo del rechazo",
+      "reject": "Registrar rechazo",
+      "delivered": "Entrega confirmada y despacho cerrado.",
+      "rejected": "Rechazo registrado. El envío sigue abierto.",
+      "rejection": "Rechazo",
+      "record": "Registro de entrega",
+      "not-found": "Registro de trazabilidad no encontrado."
+    },
+    "errors": {
+      "load": "No se pudo cargar la trazabilidad. {{detail}}",
+      "generic": "La operación de trazabilidad falló. {{detail}}",
+      "not-in-transit": "El envío no está en tránsito.",
+      "checkpoint-invalid": "El punto de control no está disponible.",
+      "already-completed": "El envío ya fue completado.",
+      "not-arrived": "No se alcanzó el punto de control del destino.",
+      "receiver-required": "Ingresa quién recibió la entrega (mín. 3 caracteres).",
+      "reason-required": "Ingresa el motivo del rechazo (mín. 5 caracteres)."
+    }
+  },
+  "telemetry": {
+    "fields": {
+      "code": "Código del dispositivo",
+      "model": "Modelo",
+      "connection": "Conexión",
+      "last-signal": "Última señal",
+      "latitude": "Latitud",
+      "longitude": "Longitud",
+      "speed": "Velocidad",
+      "temperature": "Temperatura"
+    },
+    "panel": {
+      "title": "Conectividad de dispositivos",
+      "subtitle": "Estado de los nodos IoT instalados en la flota.",
+      "critical": "Críticos",
+      "critical-hint": "Más de 30 minutos sin señal",
+      "critical-alert": "{{count}} dispositivos llevan más de 30 minutos sin señal.",
+      "minutes": "{{count}} min sin señal",
+      "inspect": "Inspeccionar",
+      "simulator": "Simulador IoT",
+      "simulator-hint": "Simula el gateway mientras no hay hardware real.",
+      "incomplete": "Reconectar con datos incompletos",
+      "send-reading": "Enviar lectura",
+      "disconnect": "Perder señal",
+      "reconnect": "Restaurar señal",
+      "disconnections": "Historial de desconexiones",
+      "ongoing": "en curso",
+      "no-disconnections": "No hay desconexiones registradas.",
+      "readings": "Últimas lecturas",
+      "reading-sent": "Lectura recibida.",
+      "disconnected": "El dispositivo perdió la señal.",
+      "reconnected": "El dispositivo se reconectó y se notificó al equipo."
+    },
+    "form": {
+      "title": "Aprovisionar dispositivo",
+      "subtitle": "Instala un nodo IoT en un vehículo.",
+      "save": "Aprovisionar dispositivo",
+      "success": "Dispositivo {{code}} aprovisionado.",
+      "all-equipped": "Todos los vehículos ya tienen dispositivo."
+    },
+    "errors": {
+      "load": "No se pudieron cargar los dispositivos. {{detail}}",
+      "generic": "La operación de telemetría falló. {{detail}}",
+      "code-format": "Usa de 4 a 20 letras, números o guiones.",
+      "duplicated-code": "Ya existe un dispositivo con el código {{code}}.",
+      "vehicle-has-device": "El vehículo ya tiene un dispositivo instalado.",
+      "device-disconnected": "El dispositivo está desconectado y no puede enviar lecturas.",
+      "already-disconnected": "El dispositivo ya está desconectado.",
+      "already-connected": "El dispositivo ya está conectado."
+    }
+  },
+  "incident": {
+    "conditions": {
+      "TEMPERATURE_MAX": "Temperatura máxima",
+      "DELAY_MINUTES": "Retraso (minutos)",
+      "SIGNAL_LOSS_MINUTES": "Pérdida de señal (minutos)"
+    },
+    "fields": {
+      "severity": "Severidad",
+      "anomaly": "Anomalía",
+      "detected": "Detectado",
+      "condition": "Condición",
+      "threshold": "Umbral"
+    },
+    "dashboard": {
+      "title": "Incidentes",
+      "subtitle": "Anomalías detectadas en rutas activas y su resolución.",
+      "detect": "Ejecutar detección de anomalías",
+      "critical": "Críticos / altos",
+      "active": "Activos",
+      "resolved-total": "Resueltos",
+      "filter-active": "Activos",
+      "filter-resolved": "Resueltos",
+      "empty": "No hay incidentes para mostrar.",
+      "select": "Selecciona un incidente para gestionarlo.",
+      "detail": "Detalle del incidente",
+      "actions": "Acciones correctivas",
+      "no-actions": "Aún no hay acciones correctivas.",
+      "action-placeholder": "Describe la acción correctiva (mín. 10 caracteres)",
+      "acknowledge": "Reconocer",
+      "save-action": "Guardar acción",
+      "resolve": "Resolver incidente",
+      "reopened": "Reabierto {{count}} vez/veces",
+      "detected": "{{created}} incidentes nuevos y {{reopened}} reabiertos detectados.",
+      "none-detected": "No se detectaron nuevas anomalías.",
+      "acknowledged": "Incidente reconocido.",
+      "action-saved": "Acción correctiva guardada.",
+      "resolved": "Incidente resuelto y equipo notificado."
+    },
+    "rules": {
+      "title": "Reglas de alerta",
+      "subtitle": "Tolerancias que usa la detección de anomalías.",
+      "new": "Nueva regla",
+      "save": "Guardar regla",
+      "saved": "Regla guardada."
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "subtitle": "Alertas dirigidas a tu rol.",
+      "empty": "No tienes notificaciones.",
+      "mark-read": "Marcar como leída"
+    },
+    "errors": {
+      "load": "No se pudieron cargar los incidentes. {{detail}}",
+      "generic": "La operación de incidentes falló. {{detail}}",
+      "not-open": "Solo se pueden reconocer incidentes abiertos.",
+      "already-resolved": "El incidente ya está resuelto.",
+      "description-short": "La acción correctiva necesita al menos 10 caracteres.",
+      "action-required": "Registra al menos una acción correctiva antes de resolver.",
+      "threshold-invalid": "El umbral debe ser mayor a cero."
+    }
+  },
+  "analytics": {
+    "dashboard": {
+      "title": "Panel de Desempeño Logístico",
+      "last-days": "Últimos {{days}} días",
+      "no-data": "No hay datos operativos en el periodo seleccionado.",
+      "rotation": "Rotación de inventario",
+      "shrinkage": "Tasa de merma",
+      "vs-previous": "vs periodo anterior",
+      "trend": "Tendencia semanal de mermas",
+      "regional": "Desempeño de entregas por región",
+      "zones": "Resumen por zona de almacén",
+      "batches": "Lotes",
+      "lost": "Unidades perdidas"
+    },
+    "reports": {
+      "title": "Reportes logísticos",
+      "subtitle": "Consolida OTIF, Fill Rate, ERI, rotación y merma de un periodo.",
+      "from": "Desde",
+      "to": "Hasta",
+      "generate": "Generar reporte",
+      "history": "Reportes generados",
+      "period": "Periodo",
+      "generated": "Generado",
+      "success": "Reporte generado."
+    },
+    "errors": {
+      "load": "No se pudo cargar la analítica. {{detail}}",
+      "generic": "No se pudo generar el reporte. {{detail}}",
+      "invalid-period": "La fecha final no puede ser anterior a la inicial.",
+      "no-data": "No hay datos operativos en el periodo seleccionado, por lo que no se generó el reporte."
+    }
+  },
+  "subscription": {
+    "plans": {
+      "title": "Planes",
+      "subtitle": "Elige el plan que se ajusta a tu operación.",
+      "choose": "Elegir plan",
+      "plan": "Plan"
+    },
+    "checkout": {
+      "title": "Pago",
+      "subtitle": "Pasarela de pago simulada.",
+      "company": "Empresa",
+      "holder": "Titular de la tarjeta",
+      "card": "Número de tarjeta",
+      "test-cards": "Tarjetas de prueba: 4242 4242 4242 4242 (aprobada) y 4000 0000 0000 0002 (rechazada). El número nunca se guarda.",
+      "pay": "Pagar y suscribirse",
+      "summary": "Resumen del pedido",
+      "no-plan": "Selecciona un plan primero.",
+      "success": "Pago aprobado. Tu suscripción está activa."
+    },
+    "billing": {
+      "title": "Facturación",
+      "subtitle": "Tu suscripción e historial de pagos.",
+      "cycle": "Ciclo de facturación",
+      "renews": "Se renueva el",
+      "cancel": "Cancelar suscripción",
+      "cancelled": "Suscripción cancelada.",
+      "payments": "Pagos",
+      "amount": "Monto",
+      "card": "Tarjeta",
+      "none": "No tienes una suscripción activa.",
+      "choose": "Ver planes"
+    },
+    "admin": {
+      "title": "Resumen de suscripciones",
+      "subtitle": "Suscripciones, prospectos y usuarios por rol.",
+      "active": "Suscripciones activas",
+      "revenue": "Ingresos cobrados",
+      "newsletter": "Suscriptores del newsletter",
+      "contacts": "Solicitudes de contacto",
+      "subscriptions": "Suscripciones",
+      "users": "usuarios"
+    },
+    "newsletter": {
+      "success": "Estás suscrito. ¡Gracias!"
+    },
+    "contact": {
+      "success": "¡Gracias! Te contactaremos pronto."
+    },
+    "errors": {
+      "load": "No se pudieron cargar las suscripciones. {{detail}}",
+      "generic": "La operación falló. {{detail}}",
+      "plan-not-purchasable": "Este plan no se puede comprar en línea. Contacta a ventas.",
+      "holder-required": "Ingresa el nombre del titular de la tarjeta.",
+      "card-invalid": "Ingresa un número de tarjeta válido de 16 dígitos.",
+      "already-active": "Ya tienes una suscripción activa. Cancélala antes de elegir otro plan.",
+      "payment-declined": "El pago fue rechazado por el banco.",
+      "email-invalid": "Ingresa un correo válido que contenga \"@\".",
+      "newsletter-duplicated": "Este correo ya está suscrito.",
+      "contact-incomplete": "Completa tu nombre y un mensaje de al menos 10 caracteres."
+    }
+  },
+  "plans": {
+    "monthly": "Mensual",
+    "yearly": "Anual (-20%)",
+    "month": "mes",
+    "year": "año",
+    "most-popular": "Más popular",
+    "custom": "A medida",
+    "start-trial": "Iniciar prueba gratis",
+    "contact-sales": "Contactar a ventas",
+    "essential": {
+      "description": "Ideal para distribuidores regionales pequeños que buscan digitalizar el seguimiento básico."
+    },
+    "professional": {
+      "description": "Visibilidad total para plantas de bebidas medianas en crecimiento."
+    },
+    "enterprise": {
+      "description": "Infraestructura logística global con integraciones a medida y soporte en sitio."
+    },
+    "features": {
+      "routes5": "Hasta 5 rutas activas",
+      "basicQueue": "Cola de despachos básica",
+      "emailSupport": "Soporte por correo",
+      "dailyReports": "Reportes diarios de desempeño",
+      "devices100": "100 conexiones de nodos IoT",
+      "routesUnlimited": "Rutas activas ilimitadas",
+      "realtimeMap": "Mapa de trazabilidad en tiempo real",
+      "prioritySupport": "Soporte prioritario 24/7",
+      "customKpi": "Paneles de KPI personalizados",
+      "devices500": "500 conexiones de nodos IoT",
+      "advancedApi": "Acceso avanzado a la API",
+      "multiWarehouse": "Gestión multi-almacén",
+      "customIntegration": "Integración de hardware IoT a medida",
+      "accountManager": "Gerente de cuenta dedicado",
+      "onPremise": "Opción de despliegue on-premise",
+      "whiteLabel": "Capacidades de marca blanca",
+      "sla": "Garantías de SLA"
+    }
+  },
+  "dashboard": {
+    "welcome": "Bienvenido, {{name}}",
+    "subtitle": "Resumen operativo de tu logística de bebidas.",
+    "units": "Unidades en stock",
+    "shrinkage": "Merma {{rate}}%",
+    "queue": "Cola de despachos",
+    "in-transit": "{{count}} en tránsito",
+    "routes": "Rutas activas",
+    "devices": "Dispositivos conectados",
+    "critical-devices": "{{count}} críticos",
+    "incidents": "Incidentes activos",
+    "critical-incidents": "{{count}} críticos o altos",
+    "discrepancies": "Discrepancias de inventario",
+    "next-dispatches": "Próximos despachos",
+    "latest-incidents": "Últimos incidentes"
+  },
+  "landing": {
+    "nav": {
+      "home": "Inicio",
+      "about": "Nosotros",
+      "features": "Funciones",
+      "plans": "Planes",
+      "team": "Equipo",
+      "contact": "Contacto",
+      "login": "Iniciar sesión",
+      "register": "Registrarse"
+    },
+    "hero": {
+      "tag": "SaaS logístico · Equipo CodeCraft",
+      "title-1": "El Futuro de la",
+      "title-2": "Logística de",
+      "title-3": "Bebidas Automatizada",
+      "description": "BevTrace digitaliza la cadena de suministro de embotelladoras y distribuidoras de bebidas en envases PET no retornables, uniendo gestión operativa e Internet de las Cosas en un solo sistema.",
+      "manager": "Soy Jefe de Almacén",
+      "driver": "Soy Conductor",
+      "image-alt": "Vista aérea de un patio de contenedores",
+      "headline-1": "Cero mermas.",
+      "headline-2": "Trazabilidad total.",
+      "cta-solution": "Ver la solución",
+      "cta-team": "Conoce al equipo",
+      "footnote": "Proyecto académico de Ingeniería de Software · CodeCraft"
+    },
+    "segments": {
+      "manager": {
+        "title": "Para jefes de almacén",
+        "text": "Prioriza la cola de despachos, controla stock y mermas, y sigue cada ruta desde un solo panel."
+      },
+      "driver": {
+        "title": "Para conductores",
+        "text": "Recibe despachos autorizados, paletas verificadas y puntos de control claros para confirmar cada entrega sin papeleo."
+      }
+    },
+    "shift": {
+      "title": "El Cambio en la Trazabilidad",
+      "text": "El registro manual tradicional es el cuello de botella de la logística moderna. BevTrace reemplaza hojas de cálculo fragmentadas con un ecosistema IoT integrado, asegurando que cada envase PET esté controlado desde la producción hasta el minorista final.",
+      "manual-title": "Fragmentación Manual",
+      "manual-text": "Datos de merma imprecisos, actualizaciones de ruta tardías y falta de visibilidad en tiempo real generan hasta 15% de pérdidas en el sector de bebidas.",
+      "iot-title": "Automatización IoT",
+      "iot-text": "BevTrace automatiza la clasificación y el seguimiento de activos, ofreciendo una única fuente de verdad para jefes y conductores."
+    },
+    "features": {
+      "title": "Funciones de Misión Crítica",
+      "subtitle": "Herramientas diseñadas para las demandas de la distribución de bebidas de alto volumen y la gestión de almacenes.",
+      "queue": {
+        "title": "Cola de Despachos",
+        "text": "Gestiona y prioriza envíos entrantes y salientes con visibilidad unificada."
+      },
+      "map": {
+        "title": "Mapa de Trazabilidad de Rutas",
+        "text": "Seguimiento en tiempo real y monitoreo de sensores IoT en cada ruta activa."
+      },
+      "classification": {
+        "title": "Clasificación de Despachos",
+        "text": "Clasificación automática de SKU y seguimiento por paleta con envases PET habilitados con IoT."
+      },
+      "kpi": {
+        "title": "Panel de Desempeño y KPI",
+        "text": "Analítica profunda de eficiencia operativa, tiempos de rotación y huella de CO2."
+      },
+      "catalog": {
+        "title": "Catálogo de Inventario y Mermas",
+        "text": "Registros auditables y niveles de stock en tiempo real con detección automática de pérdidas."
+      }
+    },
+    "pricing": {
+      "title": "Precios Simples y Escalables",
+      "subtitle": "Elige el plan que mejor se ajuste a tu escala operativa. Todos los planes incluyen conectividad IoT básica y registros de trazabilidad."
+    },
+    "team": {
+      "title": "Conoce al Equipo CodeCraft",
+      "subtitle": "Un grupo dedicado de ingenieros de software de la Universidad Peruana de Ciencias Aplicadas enfocados en la innovación de la cadena de suministro.",
+      "members": {
+        "mauricio": {
+          "area": "Ingeniería de Software",
+          "role": "Arquitecto líder enfocado en la integración IoT y la escalabilidad del backend."
+        },
+        "danitza": {
+          "area": "Ingeniería de Software",
+          "role": "Especialista UI/UX que asegura una experiencia fluida para el personal logístico."
+        },
+        "enrique": {
+          "area": "Ingeniería de Software",
+          "role": "Científico de datos que optimiza algoritmos de ruteo y analítica predictiva."
+        }
+      }
+    },
+    "cta": {
+      "title": "¿Listo para optimizar tu cadena de suministro?",
+      "text": "Únete a las principales empresas de bebidas que ya usan BevTrace para eliminar errores manuales y ganar transparencia operativa total.",
+      "demo": "Solicita una Demo en Vivo"
+    },
+    "contact": {
+      "name": "Nombre completo",
+      "company": "Empresa",
+      "message": "¿Cómo podemos ayudarte?",
+      "send": "Enviar solicitud"
+    },
+    "newsletter": {
+      "title": "Novedades comerciales",
+      "text": "Suscríbete para recibir novedades del producto y ofertas.",
+      "placeholder": "Tu correo",
+      "button": "Suscribirme"
+    },
+    "footer": {
+      "tagline": "Optimizando la logística de bebidas con trazabilidad IoT.",
+      "terms": "Términos y Condiciones",
+      "privacy": "Política de Privacidad",
+      "security": "Seguridad"
+    },
+    "audience": {
+      "title": "¿A quién sirve BevTrace?"
+    }
+  }
+}
