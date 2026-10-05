@@ -1,0 +1,27 @@
+<div class="plan" [class.highlighted]="plan().highlighted">
+  @if (plan().highlighted) {
+    <span class="badge">{{ 'plans.most-popular' | translate }}</span>
+  }
+  <h3>{{ plan().name }}</h3>
+
+  @if (plan().custom) {
+    <div class="price">{{ 'plans.custom' | translate }}</div>
+  } @else {
+    <div class="price">
+      S/ {{ plan().priceAmount | number }}
+      <span>/ {{ (plan().billingPeriod === 'MONTHLY' ? 'plans.month' : 'plans.year') | translate }}</span>
+    </div>
+  }
+
+  <p class="description">{{ plan().descriptionKey | translate }}</p>
+
+  <ul>
+    @for (feature of plan().featureKeys; track feature) {
+      <li><mat-icon>check</mat-icon>{{ feature | translate }}</li>
+    }
+  </ul>
+
+  <button type="button" [class]="plan().highlighted ? 'btn-action' : 'btn-secondary'" (click)="chosen.emit(plan())">
+    {{ (plan().custom ? 'plans.contact-sales' : actionKey()) | translate }}
+  </button>
+</div>
