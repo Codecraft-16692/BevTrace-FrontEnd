@@ -1,0 +1,22 @@
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover,
+.selected {
+  background: #f0fafb;
+}
+
+.sub-title {
+  margin: 20px 0 8px;
+  font-size: 0.95rem;
+}
+
+.action-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}

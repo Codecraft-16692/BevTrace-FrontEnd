@@ -1,0 +1,115 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>warning_amber</mat-icon>
+      <div>
+        <h2>{{ 'incident.dashboard.title' | translate }}</h2>
+        <p>{{ 'incident.dashboard.subtitle' | translate }}</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-action" [disabled]="store.isLoading()" (click)="onDetect()">
+        {{ 'incident.dashboard.detect' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  <div class="kpi-grid">
+    <div class="kpi-card" [class.error]="store.criticalCount() > 0">
+      <span class="kpi-label">{{ 'incident.dashboard.critical' | translate }}</span>
+      <span class="kpi-value">{{ store.criticalCount() }}</span>
+    </div>
+    <div class="kpi-card warn">
+      <span class="kpi-label">{{ 'incident.dashboard.active' | translate }}</span>
+      <span class="kpi-value">{{ store.activeIncidents().length }}</span>
+    </div>
+    <div class="kpi-card ok">
+      <span class="kpi-label">{{ 'incident.dashboard.resolved-total' | translate }}</span>
+      <span class="kpi-value">{{ store.incidents().length - store.activeIncidents().length }}</span>
+    </div>
+  </div>
+
+  <div class="grid-main">
+    <div class="table-card">
+      @if (store.isLoading()) {
+        <div class="loading-overlay"><mat-spinner diameter="36"></mat-spinner></div>
+      }
+      <div class="filters">
+        <button type="button" [class]="filter() === 'active' ? 'btn-action' : 'btn-secondary'" (click)="filter.set('active')">{{ 'incident.dashboard.filter-active' | translate }}</button>
+        <button type="button" [class]="filter() === 'resolved' ? 'btn-action' : 'btn-secondary'" (click)="filter.set('resolved')">{{ 'incident.dashboard.filter-resolved' | translate }}</button>
+        <button type="button" [class]="filter() === 'all' ? 'btn-action' : 'btn-secondary'" (click)="filter.set('all')">{{ 'common.all' | translate }}</button>
+      </div>
+
+      <table mat-table [dataSource]="filtered()" class="full-width-table">
+        <ng-container matColumnDef="severity">
+          <th mat-header-cell *matHeaderCellDef>{{ 'incident.fields.severity' | translate }}</th>
+          <td mat-cell *matCellDef="let item"><app-status-chip [status]="item.severity" /></td>
+        </ng-container>
+        <ng-container matColumnDef="anomalyType">
+          <th mat-header-cell *matHeaderCellDef>{{ 'incident.fields.anomaly' | translate }}</th>
+          <td mat-cell *matCellDef="let item" class="bold-cell">{{ 'incident.conditions.' + item.anomalyType | translate }}</td>
+        </ng-container>
+        <ng-container matColumnDef="destinationName">
+          <th mat-header-cell *matHeaderCellDef>{{ 'dispatch.fields.destination' | translate }}</th>
+          <td mat-cell *matCellDef="let item">{{ item.destinationName }}</td>
+        </ng-container>
+        <ng-container matColumnDef="vehiclePlate">
+          <th mat-header-cell *matHeaderCellDef>{{ 'dispatch.fields.vehicle' | translate }}</th>
+          <td mat-cell *matCellDef="let item" class="mono">{{ item.vehiclePlate }}</td>
+        </ng-container>
+        <ng-container matColumnDef="detectedAt">
+          <th mat-header-cell *matHeaderCellDef>{{ 'incident.fields.detected' | translate }}</th>
+          <td mat-cell *matCellDef="let item">{{ item.detectedAt | date: 'MMM d, HH:mm' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>{{ 'common.status' | translate }}</th>
+          <td mat-cell *matCellDef="let item"><app-status-chip [status]="item.status" /></td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="clickable" [class.selected]="row.id === selectedId()" (click)="select(row)"></tr>
+      </table>
+      @if (filtered().length === 0) {
+        <div class="empty-state">{{ 'incident.dashboard.empty' | translate }}</div>
+      }
+    </div>
+
+    <div class="card">
+      @if (selected(); as incident) {
+        <h3>{{ 'incident.dashboard.detail' | translate }}</h3>
+        <p>{{ incident.description }}</p>
+        @if (incident.reopenCount > 0) {
+          <span class="chip chip-warn">{{ 'incident.dashboard.reopened' | translate: { count: incident.reopenCount } }}</span>
+        }
+
+        <h4 class="sub-title">{{ 'incident.dashboard.actions' | translate }}</h4>
+        @for (action of store.actionsOf(incident.id); track action.id) {
+          <div class="action-item">
+            <strong>{{ action.appliedByName }}</strong>
+            <span class="muted">{{ action.appliedAt | date: 'MMM d, HH:mm' }}</span>
+            <div>{{ action.description }}</div>
+          </div>
+        } @empty {
+          <p class="muted">{{ 'incident.dashboard.no-actions' | translate }}</p>
+        }
+
+        @if (incident.status !== 'RESOLVED') {
+          <div class="form-group">
+            <textarea rows="3" [value]="actionText()" [placeholder]="'incident.dashboard.action-placeholder' | translate" (input)="actionText.set($any($event.target).value)"></textarea>
+          </div>
+          <div class="inline-actions">
+            @if (incident.status === 'OPEN') {
+              <button type="button" class="btn-secondary" (click)="onAcknowledge()">{{ 'incident.dashboard.acknowledge' | translate }}</button>
+            }
+            <button type="button" class="btn-secondary" (click)="onSaveAction()">{{ 'incident.dashboard.save-action' | translate }}</button>
+            <button type="button" class="btn-action" (click)="onResolve()">{{ 'incident.dashboard.resolve' | translate }}</button>
+          </div>
+        }
+      } @else {
+        <div class="empty-state">{{ 'incident.dashboard.select' | translate }}</div>
+      }
+    </div>
+  </div>
+</div>

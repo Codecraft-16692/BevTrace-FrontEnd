@@ -1,0 +1,31 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>notifications</mat-icon>
+      <div>
+        <h2>{{ 'incident.notifications.title' | translate }}</h2>
+        <p>{{ 'incident.notifications.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    @for (item of visible(); track item.id) {
+      <div class="notification-row" [class.unread]="!item.read">
+        <mat-icon>{{ iconOf(item.type) }}</mat-icon>
+        <div class="notification-copy">
+          <strong>{{ item.title }}</strong>
+          <span>{{ item.message }}</span>
+          <span class="muted">{{ item.createdAt | date: 'MMM d, HH:mm' }}</span>
+        </div>
+        @if (!item.read) {
+          <button type="button" class="btn-secondary" (click)="store.markNotificationRead(item.id)">
+            {{ 'incident.notifications.mark-read' | translate }}
+          </button>
+        }
+      </div>
+    } @empty {
+      <div class="empty-state">{{ 'incident.notifications.empty' | translate }}</div>
+    }
+  </div>
+</div>
