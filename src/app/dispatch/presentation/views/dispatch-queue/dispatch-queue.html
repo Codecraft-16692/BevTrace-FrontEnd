@@ -1,0 +1,99 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>local_shipping</mat-icon>
+      <div>
+        <h2>{{ 'dispatch.queue.title' | translate }}</h2>
+        <p>{{ 'dispatch.queue.subtitle' | translate }}</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-action" (click)="create()">{{ 'dispatch.queue.new' | translate }}</button>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">{{ 'dispatch.queue.in-queue' | translate }}</span>
+      <span class="kpi-value">{{ store.queue().length }}</span>
+      <span class="kpi-hint">{{ 'dispatch.queue.units' | translate: { count: queuedUnits() } }}</span>
+    </div>
+    <div class="kpi-card warn">
+      <span class="kpi-label">{{ 'dispatch.queue.in-transit' | translate }}</span>
+      <span class="kpi-value">{{ store.inTransit().length }}</span>
+    </div>
+    <div class="kpi-card ok">
+      <span class="kpi-label">{{ 'dispatch.queue.delivered' | translate }}</span>
+      <span class="kpi-value">{{ store.delivered().length }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">{{ 'dispatch.queue.fleet' | translate }}</span>
+      <span class="kpi-value">{{ store.availableVehicles().length }} / {{ store.vehicles().length }}</span>
+      <span class="kpi-hint">{{ 'dispatch.queue.available' | translate }}</span>
+    </div>
+  </div>
+
+  <div class="table-card">
+    @if (store.isLoading()) {
+      <div class="loading-overlay"><mat-spinner diameter="36"></mat-spinner></div>
+    }
+    <div class="filters">
+      <select [value]="statusFilter()" (change)="statusFilter.set($any($event.target).value)">
+        <option value="">{{ 'common.all-statuses' | translate }}</option>
+        <option value="SCHEDULED">{{ 'status.SCHEDULED' | translate }}</option>
+        <option value="AUTHORIZED">{{ 'status.AUTHORIZED' | translate }}</option>
+        <option value="IN_TRANSIT">{{ 'status.IN_TRANSIT' | translate }}</option>
+        <option value="DELIVERED">{{ 'status.DELIVERED' | translate }}</option>
+        <option value="CANCELLED">{{ 'status.CANCELLED' | translate }}</option>
+      </select>
+    </div>
+
+    <table mat-table [dataSource]="filtered()" class="full-width-table">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let order" class="bold-cell mono">#{{ order.id }}</td>
+      </ng-container>
+      <ng-container matColumnDef="priority">
+        <th mat-header-cell *matHeaderCellDef>{{ 'dispatch.fields.priority' | translate }}</th>
+        <td mat-cell *matCellDef="let order"><app-status-chip [status]="order.priority" /></td>
+      </ng-container>
+      <ng-container matColumnDef="destination">
+        <th mat-header-cell *matHeaderCellDef>{{ 'dispatch.fields.destination' | translate }}</th>
+        <td mat-cell *matCellDef="let order">
+          {{ order.destinationName }}
+          <div class="muted">{{ order.destinationRegion }}</div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="scheduledDate">
+        <th mat-header-cell *matHeaderCellDef>{{ 'dispatch.fields.date' | translate }}</th>
+        <td mat-cell *matCellDef="let order">{{ order.scheduledDate }}</td>
+      </ng-container>
+      <ng-container matColumnDef="units">
+        <th mat-header-cell *matHeaderCellDef>{{ 'dispatch.fields.units' | translate }}</th>
+        <td mat-cell *matCellDef="let order">{{ order.requestedQuantity | number }}</td>
+      </ng-container>
+      <ng-container matColumnDef="vehicle">
+        <th mat-header-cell *matHeaderCellDef>{{ 'dispatch.fields.vehicle' | translate }}</th>
+        <td mat-cell *matCellDef="let order" class="mono">{{ order.vehiclePlate || '—' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.status' | translate }}</th>
+        <td mat-cell *matCellDef="let order"><app-status-chip [status]="order.status" /></td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let order">
+          <button type="button" class="btn-secondary" (click)="open(order)">{{ 'dispatch.queue.manage' | translate }}</button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    @if (filtered().length === 0 && !store.isLoading()) {
+      <div class="empty-state">{{ 'common.no-results' | translate }}</div>
+    }
+  </div>
+</div>
