@@ -1,0 +1,79 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <div>
+        <h2>{{ 'iam.users.title' | translate }}</h2>
+        <p>{{ 'iam.users.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  <div class="kpi-grid">
+    @for (role of store.roles(); track role.id) {
+      <div class="kpi-card">
+        <span class="kpi-label">{{ 'roles.' + role.name | translate }}</span>
+        <span class="kpi-value">{{ countByRole(role.id) }}</span>
+        <span class="kpi-hint mono">{{ role.name }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="table-card">
+    @if (store.isLoading()) {
+      <div class="loading-overlay"><mat-spinner diameter="36"></mat-spinner></div>
+    }
+
+    <table mat-table [dataSource]="store.users()" class="full-width-table">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>{{ 'iam.fields.name' | translate }}</th>
+        <td mat-cell *matCellDef="let user" class="bold-cell">{{ user.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>{{ 'iam.fields.email' | translate }}</th>
+        <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>{{ 'iam.fields.role' | translate }}</th>
+        <td mat-cell *matCellDef="let user">
+          <mat-select
+            class="role-select"
+            [value]="user.roleId"
+            [disabled]="user.id === store.currentUserId()"
+            (selectionChange)="onRoleChange(user.id, $event.value)"
+          >
+            @for (role of store.roles(); track role.id) {
+              <mat-option [value]="role.id">{{ 'roles.' + role.name | translate }}</mat-option>
+            }
+          </mat-select>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.status' | translate }}</th>
+        <td mat-cell *matCellDef="let user">
+          <mat-slide-toggle
+            [checked]="user.active"
+            [disabled]="user.id === store.currentUserId()"
+            (change)="onStatusChange(user.id, $event.checked)"
+          >
+            {{ (user.active ? 'common.active' : 'common.inactive') | translate }}
+          </mat-slide-toggle>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.created' | translate }}</th>
+        <td mat-cell *matCellDef="let user">{{ user.createdAt.slice(0, 10) }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+<app-toolbar />
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="card-header">
+      <img src="/bevtrace-logo.png" alt="BevTrace" class="card-logo" />
+      <h1>{{ 'iam.sign-in.title' | translate }}</h1>
+      <p>{{ 'iam.sign-in.subtitle' | translate }}</p>
+    </div>
+
+    <app-message-banner [message]="store.successMsg()" type="success" />
+    <app-message-banner [message]="store.error()" type="error" />
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-group">
+        <label for="email">{{ 'iam.fields.email' | translate }}</label>
+        <input
+          id="email"
+          type="email"
+          autocomplete="email"
+          formControlName="email"
+          [placeholder]="'iam.fields.email-placeholder' | translate"
+          [class.invalid]="form.controls.email.invalid && form.controls.email.touched"
+        />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <span class="error-message">{{ getEmailErrorKey() | translate }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">{{ 'iam.fields.password' | translate }}</label>
+        <div class="password-wrapper">
+          <input
+            id="password"
+            autocomplete="current-password"
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            [placeholder]="'iam.fields.password-placeholder' | translate"
+            [class.invalid]="form.controls.password.invalid && form.controls.password.touched"
+          />
+          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+            {{ (hidePassword ? 'iam.fields.show' : 'iam.fields.hide') | translate }}
+          </button>
+        </div>
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <span class="error-message">{{ 'iam.errors.password-required' | translate }}</span>
+        }
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="store.isLoading()">
+        @if (!store.isLoading()) {
+          <span>{{ 'iam.sign-in.button' | translate }}</span>
+        } @else {
+          <mat-spinner diameter="20"></mat-spinner>
+        }
+      </button>
+    </form>
+
+    <div class="footer-link">
+      <p>
+        {{ 'iam.sign-in.no-account' | translate }}
+        <a routerLink="/iam/sign-up">{{ 'iam.sign-in.create-account' | translate }}</a>
+      </p>
+    </div>
+  </div>
+</div>
