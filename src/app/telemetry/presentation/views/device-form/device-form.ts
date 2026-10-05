@@ -51,6 +51,10 @@ export class DeviceForm implements OnInit {
    * Submits the device form.
    */
   protected onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     const value = this.form.getRawValue();
     this.store.provisionDevice({
       deviceCode: value.deviceCode,
