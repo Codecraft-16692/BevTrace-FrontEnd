@@ -1,0 +1,12 @@
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.data-grid div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
