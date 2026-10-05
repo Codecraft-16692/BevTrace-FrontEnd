@@ -1,0 +1,146 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>sensors</mat-icon>
+      <div>
+        <h2>{{ 'telemetry.panel.title' | translate }}</h2>
+        <p>{{ 'telemetry.panel.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  @if (store.criticalCount() > 0) {
+    <div class="banner banner-error">
+      <mat-icon>signal_wifi_off</mat-icon>
+      <span>{{ 'telemetry.panel.critical-alert' | translate: { count: store.criticalCount() } }}</span>
+    </div>
+  }
+
+  <div class="kpi-grid">
+    <div class="kpi-card ok">
+      <span class="kpi-label">{{ 'status.CONNECTED' | translate }}</span>
+      <span class="kpi-value">{{ store.connectedCount() }}</span>
+    </div>
+    <div class="kpi-card warn">
+      <span class="kpi-label">{{ 'status.DISCONNECTED' | translate }}</span>
+      <span class="kpi-value">{{ store.disconnectedCount() }}</span>
+    </div>
+    <div class="kpi-card error">
+      <span class="kpi-label">{{ 'telemetry.panel.critical' | translate }}</span>
+      <span class="kpi-value">{{ store.criticalCount() }}</span>
+      <span class="kpi-hint">{{ 'telemetry.panel.critical-hint' | translate }}</span>
+    </div>
+  </div>
+
+  <div class="table-card">
+    @if (store.isLoading()) {
+      <div class="loading-overlay"><mat-spinner diameter="36"></mat-spinner></div>
+    }
+    <table mat-table [dataSource]="store.devices()" class="full-width-table">
+      <ng-container matColumnDef="deviceCode">
+        <th mat-header-cell *matHeaderCellDef>{{ 'telemetry.fields.code' | translate }}</th>
+        <td mat-cell *matCellDef="let device" class="bold-cell mono">{{ device.deviceCode }}</td>
+      </ng-container>
+      <ng-container matColumnDef="vehicle">
+        <th mat-header-cell *matHeaderCellDef>{{ 'dispatch.fields.vehicle' | translate }}</th>
+        <td mat-cell *matCellDef="let device" class="mono">{{ device.vehiclePlate }}</td>
+      </ng-container>
+      <ng-container matColumnDef="model">
+        <th mat-header-cell *matHeaderCellDef>{{ 'telemetry.fields.model' | translate }}</th>
+        <td mat-cell *matCellDef="let device">{{ device.modelName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="connection">
+        <th mat-header-cell *matHeaderCellDef>{{ 'telemetry.fields.connection' | translate }}</th>
+        <td mat-cell *matCellDef="let device"><app-status-chip [status]="device.connectionStatus" /></td>
+      </ng-container>
+      <ng-container matColumnDef="lastSignal">
+        <th mat-header-cell *matHeaderCellDef>{{ 'telemetry.fields.last-signal' | translate }}</th>
+        <td mat-cell *matCellDef="let device">
+          {{ device.lastSignalAt | date: 'HH:mm:ss' }}
+          @if (device.connectionStatus === 'DISCONNECTED') {
+            <span [class]="isCritical(device) ? 'chip chip-error' : 'chip chip-warn'">
+              {{ 'telemetry.panel.minutes' | translate: { count: minutes(device) } }}
+            </span>
+          }
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let device">
+          <button type="button" class="btn-secondary" (click)="select(device)">{{ 'telemetry.panel.inspect' | translate }}</button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.row-critical]="isCritical(row)"></tr>
+    </table>
+  </div>
+
+  @if (selected(); as device) {
+    <div class="grid-2">
+      <div class="card">
+        <h3>{{ 'telemetry.panel.simulator' | translate }} · <span class="mono">{{ device.deviceCode }}</span></h3>
+        <p class="muted">{{ 'telemetry.panel.simulator-hint' | translate }}</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="temperature">{{ 'telemetry.fields.temperature' | translate }} (°C)</label>
+            <input id="temperature" type="number" [value]="temperature()" (input)="temperature.set($any($event.target).value)" />
+          </div>
+          <div class="form-group">
+            <label for="speed">{{ 'telemetry.fields.speed' | translate }} (km/h)</label>
+            <input id="speed" type="number" min="0" [value]="speed()" (input)="speed.set($any($event.target).value)" />
+          </div>
+        </div>
+        <label class="check-row">
+          <input type="checkbox" [checked]="incompleteData()" (change)="incompleteData.set($any($event.target).checked)" />
+          {{ 'telemetry.panel.incomplete' | translate }}
+        </label>
+        <div class="inline-actions">
+          <button type="button" class="btn-action" (click)="onSendReading()">{{ 'telemetry.panel.send-reading' | translate }}</button>
+          <button type="button" class="btn-secondary" (click)="onDisconnect()">{{ 'telemetry.panel.disconnect' | translate }}</button>
+          <button type="button" class="btn-secondary" (click)="onReconnect()">{{ 'telemetry.panel.reconnect' | translate }}</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>{{ 'telemetry.panel.disconnections' | translate }}</h3>
+        @for (period of store.disconnectionsOf(device.id); track period.id) {
+          <div class="period-row">
+            <span>{{ period.startedAt | date: 'MMM d, HH:mm' }} → {{ period.endedAt ? (period.endedAt | date: 'HH:mm') : ('telemetry.panel.ongoing' | translate) }}</span>
+            <app-status-chip [status]="period.dataStatus === 'UNAVAILABLE' ? 'UNAVAILABLE' : 'AVAILABLE'" />
+          </div>
+        } @empty {
+          <p class="muted">{{ 'telemetry.panel.no-disconnections' | translate }}</p>
+        }
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3 class="table-title">{{ 'telemetry.panel.readings' | translate }}</h3>
+      <table class="simple-table">
+        <thead>
+          <tr>
+            <th>{{ 'common.date' | translate }}</th>
+            <th>{{ 'telemetry.fields.latitude' | translate }}</th>
+            <th>{{ 'telemetry.fields.longitude' | translate }}</th>
+            <th>{{ 'telemetry.fields.speed' | translate }}</th>
+            <th>{{ 'telemetry.fields.temperature' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (stream of store.streamsOf(device.id).slice(0, 8); track stream.id) {
+            <tr>
+              <td>{{ stream.timestamp | date: 'MMM d, HH:mm:ss' }}</td>
+              <td class="mono">{{ stream.latitude }}</td>
+              <td class="mono">{{ stream.longitude }}</td>
+              <td>{{ stream.speed }}</td>
+              <td>{{ stream.temperature }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
