@@ -1,0 +1,76 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>alt_route</mat-icon>
+      <div>
+        <h2>{{ 'traceability.map.title' | translate }}</h2>
+        <p>{{ 'traceability.map.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+
+  <div class="grid-main">
+    <div class="card">
+      @if (store.isLoading()) {
+        <div class="empty-state"><mat-spinner diameter="36"></mat-spinner></div>
+      }
+      <app-route-canvas [routes]="routes()" [selectedId]="selectedId()" (routeSelected)="select($event)" />
+      <div class="legend">
+        <span><i class="dot reached"></i>{{ 'status.REACHED' | translate }}</span>
+        <span><i class="dot pending"></i>{{ 'status.PENDING' | translate }}</span>
+        <span><i class="dot omitted"></i>{{ 'status.OMITTED' | translate }}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>{{ 'traceability.map.active' | translate }} ({{ store.activeLogs().length }})</h3>
+      @for (log of store.activeLogs(); track log.id; let i = $index) {
+        <div class="route-item" [class.selected]="selectedId() === log.id" (click)="select(log.id)">
+          <div class="route-head">
+            <i class="swatch" [style.background]="colorOf(i)"></i>
+            <strong class="mono">{{ log.vehiclePlate }}</strong>
+            <app-status-chip [status]="log.currentStatus" />
+          </div>
+          <div class="muted">{{ log.destinationName }}</div>
+          <div class="bar"><div class="bar-fill" [style.width.%]="progress(log.id)"></div></div>
+          <div class="route-foot">
+            <span class="muted">ETA {{ log.estimatedArrival | date: 'HH:mm' }}</span>
+            <button type="button" class="btn-secondary" (click)="open(log.id); $event.stopPropagation()">{{ 'traceability.map.details' | translate }}</button>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">{{ 'traceability.map.empty' | translate }}</div>
+      }
+    </div>
+  </div>
+
+  <div class="table-card">
+    <h3 class="table-title">{{ 'traceability.map.log' | translate }}</h3>
+    <table class="simple-table">
+      <thead>
+        <tr>
+          <th>{{ 'dispatch.fields.vehicle' | translate }}</th>
+          <th>{{ 'dispatch.fields.destination' | translate }}</th>
+          <th>{{ 'dispatch.fields.priority' | translate }}</th>
+          <th>{{ 'traceability.fields.started' | translate }}</th>
+          <th>{{ 'traceability.fields.progress' | translate }}</th>
+          <th>{{ 'common.status' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of store.activeLogs(); track log.id) {
+          <tr class="clickable" (click)="open(log.id)">
+            <td class="bold-cell mono">{{ log.vehiclePlate }}</td>
+            <td>{{ log.destinationName }}</td>
+            <td><app-status-chip [status]="log.orderPriority" /></td>
+            <td>{{ log.startTime | date: 'MMM d, HH:mm' }}</td>
+            <td>{{ progress(log.id) }}%</td>
+            <td><app-status-chip [status]="log.currentStatus" /></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+.meta {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.checkpoint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.index {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #eceff1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cp-REACHED .index {
+  background: var(--bt-success);
+  color: #fff;
+}
+
+.cp-OMITTED .index {
+  background: var(--bt-error);
+  color: #fff;
+}
+
+.cp-copy {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}

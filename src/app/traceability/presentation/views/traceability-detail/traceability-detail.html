@@ -1,0 +1,94 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>pin_drop</mat-icon>
+      <div>
+        <h2>{{ 'traceability.detail.title' | translate }} #{{ logId() }}</h2>
+        <p>{{ log()?.destinationName }}</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-secondary" (click)="back()">{{ 'common.back' | translate }}</button>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  @if (log(); as log) {
+    <div class="grid-main">
+      <div class="card">
+        <h3>{{ 'traceability.detail.map' | translate }}</h3>
+        <app-route-canvas [routes]="mapRoute()" />
+        <div class="meta">
+          <span><span class="kpi-label">{{ 'dispatch.fields.vehicle' | translate }}</span> <strong class="mono">{{ log.vehiclePlate }}</strong></span>
+          <span><span class="kpi-label">ETA</span> <strong>{{ log.estimatedArrival | date: 'MMM d, HH:mm' }}</strong></span>
+          <app-status-chip [status]="log.currentStatus" />
+        </div>
+        @if (log.rejectionReason) {
+          <div class="banner banner-warn"><mat-icon>report</mat-icon><span>{{ 'traceability.detail.rejection' | translate }}: {{ log.rejectionReason }}</span></div>
+        }
+      </div>
+
+      <div class="card">
+        <h3>{{ 'traceability.detail.checkpoints' | translate }}</h3>
+        @for (checkpoint of checkpoints(); track checkpoint.id) {
+          <div class="checkpoint" [class]="'checkpoint cp-' + checkpoint.status">
+            <span class="index">{{ checkpoint.sequence }}</span>
+            <div class="cp-copy">
+              <strong>{{ checkpoint.locationName }}</strong>
+              @if (checkpoint.reachedAt) {
+                <span class="muted">{{ checkpoint.reachedAt | date: 'HH:mm' }}</span>
+              }
+              @if (checkpoint.observation) {
+                <span class="muted">{{ checkpoint.observation }}</span>
+              }
+            </div>
+            @if (checkpoint.status === 'PENDING' && log.currentStatus === 'IN_TRANSIT') {
+              <button type="button" class="btn-secondary" [disabled]="store.isLoading()" (click)="onReach(checkpoint.sequence)">
+                {{ 'traceability.detail.simulate-reach' | translate }}
+              </button>
+            } @else {
+              <app-status-chip [status]="checkpoint.status" />
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (log.currentStatus !== 'COMPLETED') {
+      <div class="card">
+        <h3>{{ 'traceability.detail.delivery' | translate }}</h3>
+        @if (!atDestination()) {
+          <p class="muted">{{ 'traceability.detail.not-arrived' | translate }}</p>
+        } @else {
+          <div class="grid-2">
+            <div>
+              <div class="form-group">
+                <label for="receivedBy">{{ 'traceability.detail.received-by' | translate }}</label>
+                <input id="receivedBy" type="text" [value]="receivedBy()" (input)="receivedBy.set($any($event.target).value)" />
+              </div>
+              <button type="button" class="btn-action" [disabled]="store.isLoading()" (click)="onDeliver()">{{ 'traceability.detail.confirm' | translate }}</button>
+            </div>
+            <div>
+              <div class="form-group">
+                <label for="reason">{{ 'traceability.detail.reject-reason' | translate }}</label>
+                <input id="reason" type="text" [value]="rejectionReason()" (input)="rejectionReason.set($any($event.target).value)" />
+              </div>
+              <button type="button" class="btn-secondary" [disabled]="store.isLoading()" (click)="onReject()">{{ 'traceability.detail.reject' | translate }}</button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @for (record of store.recordsOf(log.id); track record.id) {
+      <div class="card">
+        <h3>{{ 'traceability.detail.record' | translate }} <app-status-chip [status]="record.status" /></h3>
+        <p>{{ record.deliveredAt | date: 'MMM d, HH:mm' }} · {{ record.status === 'DELIVERED' ? record.receivedBy : record.rejectionReason }}</p>
+      </div>
+    }
+  } @else if (!store.isLoading()) {
+    <div class="empty-state">{{ 'traceability.detail.not-found' | translate }}</div>
+  }
+</div>
