@@ -1,0 +1,717 @@
+{
+  "common": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "all": "All",
+    "all-statuses": "All statuses",
+    "back": "Back",
+    "back-home": "Back to home",
+    "created": "Created",
+    "date": "Date",
+    "description": "Description",
+    "no-results": "No results found.",
+    "page-not-found": "The page you are looking for does not exist.",
+    "select": "Select...",
+    "status": "Status"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "dispatch": "Dispatch",
+    "traceability": "Traceability",
+    "telemetry": "Devices (IoT)",
+    "incidents": "Incidents",
+    "analytics": "Analytics",
+    "subscription": "Subscription",
+    "administration": "Administration",
+    "sign-out": "Sign out"
+  },
+  "roles": {
+    "ROLE_ADMIN": "Administrator",
+    "ROLE_LOGISTICS_MANAGER": "Logistics Manager",
+    "ROLE_WAREHOUSE_OPERATOR": "Warehouse Operator"
+  },
+  "status": {
+    "AVAILABLE": "Available",
+    "EXPECTED": "Expected",
+    "DEPLETED": "Depleted",
+    "IN_REVIEW": "In review",
+    "RECONCILED": "Reconciled",
+    "OPEN": "Open",
+    "RESOLVED": "Resolved",
+    "SCHEDULED": "Scheduled",
+    "AUTHORIZED": "Authorized",
+    "IN_TRANSIT": "In transit",
+    "DELIVERED": "Delivered",
+    "CANCELLED": "Cancelled",
+    "STANDARD": "Standard",
+    "LOGISTICS": "Logistics",
+    "URGENT": "Urgent",
+    "DELIVERY_REJECTED": "Delivery rejected",
+    "COMPLETED": "Completed",
+    "PENDING": "Pending",
+    "REACHED": "Reached",
+    "OMITTED": "Omitted",
+    "CONNECTED": "Connected",
+    "DISCONNECTED": "Disconnected",
+    "ACTIVE": "Active",
+    "ON_LEAVE": "On leave",
+    "LOW": "Low",
+    "MEDIUM": "Medium",
+    "HIGH": "High",
+    "CRITICAL": "Critical",
+    "ACKNOWLEDGED": "Acknowledged",
+    "PAST_DUE": "Past due",
+    "PAID": "Paid",
+    "FAILED": "Failed",
+    "REJECTED": "Rejected",
+    "AVAILABLE_DATA": "Available",
+    "UNAVAILABLE": "Data unavailable"
+  },
+  "iam": {
+    "fields": {
+      "name": "Full name",
+      "email": "E-mail",
+      "email-placeholder": "name@company.com",
+      "phone": "Phone",
+      "role": "Role",
+      "password": "Password",
+      "password-placeholder": "Your password",
+      "confirm-password": "Confirm password",
+      "show": "Show",
+      "hide": "Hide"
+    },
+    "sign-in": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to manage your beverage logistics",
+      "button": "Sign in",
+      "no-account": "Don't have an account?",
+      "create-account": "Create one"
+    },
+    "sign-up": {
+      "title": "Create your account",
+      "subtitle": "Join BevTrace and trace every container",
+      "button": "Create account",
+      "have-account": "Already have an account?",
+      "success": "Account created. You can sign in now."
+    },
+    "rules": {
+      "min-length": "More than 8 characters",
+      "uppercase": "At least 1 uppercase letter",
+      "number": "At least 1 number"
+    },
+    "errors": {
+      "email-required": "E-mail is required.",
+      "email-format": "Enter a valid e-mail that contains \"@\" (name@company.com).",
+      "password-required": "Password is required.",
+      "password-mismatch": "Passwords do not match.",
+      "name-required": "Enter your full name (min. 3 characters).",
+      "phone-format": "Enter a valid phone number.",
+      "invalid-credentials": "Invalid e-mail or password.",
+      "account-disabled": "This account is disabled. Contact an administrator.",
+      "locked": "Too many failed attempts. Try again in {{seconds}} seconds.",
+      "cannot-edit-self": "You cannot change your own role or status.",
+      "generic": "Something went wrong. If the e-mail is already registered, sign in instead."
+    },
+    "users": {
+      "title": "Users & Roles",
+      "subtitle": "Manage access to the platform (IAM)",
+      "role-updated": "Role updated.",
+      "status-updated": "Account status updated."
+    }
+  },
+  "inventory": {
+    "fields": {
+      "batch": "Batch",
+      "product": "Product",
+      "zone": "Zone",
+      "stock": "Stock",
+      "quantity": "Quantity",
+      "expiration": "Expiration"
+    },
+    "catalog": {
+      "title": "Inventory & Shrinkage Catalog",
+      "subtitle": "Audit-ready logs and real-time stock levels with automated loss detection.",
+      "total-units": "Total units",
+      "active-batches": "Active batches",
+      "expected": "{{count}} waiting for entry",
+      "shrinkage-rate": "Shrinkage rate",
+      "units-lost": "{{count}} units lost",
+      "open-discrepancies": "Open discrepancies",
+      "search": "Search by batch, SKU or product...",
+      "all-zones": "All zones"
+    },
+    "entry": {
+      "title": "Batch entry",
+      "subtitle": "Register a batch by scanning its code.",
+      "scan": "Scan batch code",
+      "code": "Batch code",
+      "placeholder": "e.g. LT-2609-101",
+      "register": "Register entry",
+      "expected-title": "Batches waiting for entry",
+      "expected-hint": "Click a batch to fill the code, as a scanner would.",
+      "none-expected": "No batches are waiting for entry.",
+      "success": "Batch {{code}} entered the warehouse and stock was updated."
+    },
+    "batch-form": {
+      "title": "Register expected batch",
+      "subtitle": "Announce a batch coming from the plant.",
+      "save": "Register batch",
+      "success": "Batch {{code}} registered. It can now be scanned at the dock."
+    },
+    "waste": {
+      "title": "Waste registry",
+      "subtitle": "Register product losses with their reason.",
+      "history": "Waste history",
+      "register": "Register waste",
+      "reason": "Reason",
+      "reported-by": "Reported by",
+      "save": "Save waste",
+      "success": "Waste registered and stock updated."
+    },
+    "reconciliation": {
+      "title": "Inventory reconciliation",
+      "subtitle": "Compare the physical count with the system stock.",
+      "count": "Physical count",
+      "fill": "Fill with system stock",
+      "run": "Run reconciliation",
+      "system-qty": "System",
+      "counted-qty": "Counted",
+      "difference": "Difference",
+      "discrepancies": "Discrepancies",
+      "no-discrepancies": "No discrepancies registered.",
+      "history": "Reconciliation history",
+      "batches": "Matching batches",
+      "note": "Resolution note",
+      "resolve": "Resolve",
+      "confirm": "Confirm",
+      "open-alert": "{{count}} discrepancies need to be resolved before confirming the reconciliation.",
+      "run-success": "Reconciliation completed.",
+      "confirm-success": "Reconciliation confirmed.",
+      "resolve-success": "Discrepancy resolved and stock adjusted."
+    },
+    "errors": {
+      "load": "Could not load the inventory. {{detail}}",
+      "generic": "The inventory operation failed. {{detail}}",
+      "code-format": "Use 4 to 30 letters, numbers or dashes.",
+      "invalid-code": "Code {{code}} does not match any registered batch. Verify it manually.",
+      "already-received": "Batch {{code}} was already received.",
+      "batch-duplicated": "Batch {{code}} is already registered.",
+      "batch-not-available": "The batch is not available in the warehouse.",
+      "waste-exceeds-stock": "The waste exceeds the available stock of {{code}} ({{available}} units).",
+      "quantity-invalid": "Enter a whole number greater than zero.",
+      "reason-required": "The reason is required (min. 5 characters).",
+      "no-counts": "Enter at least one physical count.",
+      "pending-discrepancies": "{{count}} discrepancies are still open. Resolve them first.",
+      "note-required": "Enter a resolution note (min. 3 characters).",
+      "stock-insufficient": "Insufficient stock."
+    }
+  },
+  "dispatch": {
+    "fields": {
+      "destination": "Destination",
+      "date": "Date",
+      "priority": "Priority",
+      "units": "Units",
+      "vehicle": "Vehicle",
+      "weight": "Weight",
+      "pallets": "Pallets"
+    },
+    "queue": {
+      "title": "Dispatch Queue",
+      "subtitle": "Manage and prioritize inbound and outbound shipments.",
+      "new": "Schedule dispatch",
+      "in-queue": "In queue",
+      "units": "{{count}} units",
+      "in-transit": "In transit",
+      "delivered": "Delivered",
+      "fleet": "Fleet",
+      "available": "vehicles available",
+      "manage": "Manage"
+    },
+    "form": {
+      "title": "Schedule dispatch",
+      "subtitle": "Choose the destination, the batches and the priority.",
+      "cargo": "Cargo",
+      "add-line": "Add batch",
+      "total": "Total: {{count}} units",
+      "save": "Schedule dispatch",
+      "success": "Dispatch scheduled."
+    },
+    "detail": {
+      "title": "Dispatch",
+      "subtitle": "Shipment data, operational priority and release.",
+      "shipment": "Shipment data",
+      "priority": "Operational priority",
+      "priority-hint": "Define how the dispatch is handled in the queue.",
+      "priority-STANDARD": "Regular handling within the daily schedule.",
+      "priority-LOGISTICS": "Grouped with nearby routes to optimize the fleet.",
+      "priority-URGENT": "Leaves first; the client is waiting.",
+      "priority-updated": "Priority updated.",
+      "suggested-route": "Suggested route",
+      "eta": "Estimated travel time: {{minutes}} min",
+      "assign": "Assign vehicle",
+      "authorize": "Assign and authorize",
+      "vehicle-assigned": "Vehicle assigned. The dispatch is authorized.",
+      "manager-only": "Only a logistics manager can assign vehicles.",
+      "validated": "Cargo validated",
+      "validate": "Validate loaded pallets",
+      "validate-hint": "Scan the {{count}} pallets loaded in the vehicle (one label per line).",
+      "pallet-placeholder": "LT-2609-001-P1\nLT-2609-001-P2",
+      "simulate-ok": "Simulate correct scan",
+      "simulate-wrong": "Simulate wrong pallet",
+      "validate-button": "Validate cargo",
+      "cargo-validated": "Cargo validated against the order.",
+      "operator-only": "Only a warehouse operator can validate the cargo.",
+      "depart": "Register departure",
+      "depart-blocked": "Validate the cargo before departure.",
+      "departed": "Departure registered. Traceability started.",
+      "tracking": "Tracking",
+      "tracking-hint": "The shipment is being traced on its route.",
+      "open-tracking": "Open route map",
+      "cancel": "Cancel dispatch",
+      "cancelled": "Dispatch cancelled.",
+      "not-found": "Dispatch not found."
+    },
+    "errors": {
+      "load": "Could not load the dispatches. {{detail}}",
+      "generic": "The dispatch operation failed. {{detail}}",
+      "past-date": "The dispatch date cannot be in the past.",
+      "no-items": "Add at least one batch to the cargo.",
+      "batch-unavailable": "The selected batch is not available.",
+      "stock-insufficient": "Insufficient stock in batch {{code}}. Available: {{available}} units.",
+      "not-scheduled": "Only scheduled dispatches can receive a vehicle.",
+      "vehicle-unavailable": "Vehicle {{plate}} is not available.",
+      "driver-unavailable": "The driver of the vehicle is not available.",
+      "capacity-exceeded": "The cargo ({{weight}} kg) exceeds the vehicle capacity ({{capacity}} kg).",
+      "not-authorized": "The dispatch must be authorized first.",
+      "pallet-mismatch": "The pallets do not match the order. Unexpected: {{unexpected}}. Missing: {{missing}}.",
+      "cargo-not-validated": "The cargo must be validated before departure.",
+      "not-editable": "The dispatch can no longer be changed."
+    }
+  },
+  "traceability": {
+    "map": {
+      "title": "Active Route Traceability Map",
+      "subtitle": "Real-time IoT monitoring of every transit route.",
+      "active": "Active shipments",
+      "details": "Details",
+      "empty": "There are no active shipments.",
+      "log": "Detailed telemetry log"
+    },
+    "fields": {
+      "started": "Departure",
+      "progress": "Progress",
+      "finished": "Arrival"
+    },
+    "history": {
+      "title": "Delivery history",
+      "subtitle": "Closed shipments and their delivery records."
+    },
+    "detail": {
+      "title": "Traceability",
+      "map": "Route",
+      "checkpoints": "Checkpoints",
+      "simulate-reach": "Simulate arrival",
+      "reached": "Checkpoint registered.",
+      "reached-with-omitted": "Checkpoint registered. {{count}} skipped checkpoints were marked as omitted.",
+      "delivery": "Delivery at destination",
+      "not-arrived": "The vehicle has not reached the destination yet.",
+      "received-by": "Received by",
+      "confirm": "Confirm delivery",
+      "reject-reason": "Rejection reason",
+      "reject": "Register rejection",
+      "delivered": "Delivery confirmed and the dispatch was closed.",
+      "rejected": "Rejection registered. The shipment stays open.",
+      "rejection": "Rejection",
+      "record": "Delivery record",
+      "not-found": "Traceability log not found."
+    },
+    "errors": {
+      "load": "Could not load the traceability. {{detail}}",
+      "generic": "The traceability operation failed. {{detail}}",
+      "not-in-transit": "The shipment is not in transit.",
+      "checkpoint-invalid": "The checkpoint is not available.",
+      "already-completed": "The shipment is already completed.",
+      "not-arrived": "The destination checkpoint has not been reached.",
+      "receiver-required": "Enter who received the delivery (min. 3 characters).",
+      "reason-required": "Enter the rejection reason (min. 5 characters)."
+    }
+  },
+  "telemetry": {
+    "fields": {
+      "code": "Device code",
+      "model": "Model",
+      "connection": "Connection",
+      "last-signal": "Last signal",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "speed": "Speed",
+      "temperature": "Temperature"
+    },
+    "panel": {
+      "title": "Device connectivity",
+      "subtitle": "Status of the IoT nodes installed in the fleet.",
+      "critical": "Critical",
+      "critical-hint": "More than 30 minutes without signal",
+      "critical-alert": "{{count}} devices have been without signal for more than 30 minutes.",
+      "minutes": "{{count}} min without signal",
+      "inspect": "Inspect",
+      "simulator": "IoT simulator",
+      "simulator-hint": "Simulates the gateway while there is no real hardware.",
+      "incomplete": "Reconnect with incomplete data",
+      "send-reading": "Send reading",
+      "disconnect": "Drop signal",
+      "reconnect": "Restore signal",
+      "disconnections": "Disconnection history",
+      "ongoing": "ongoing",
+      "no-disconnections": "No disconnections registered.",
+      "readings": "Latest readings",
+      "reading-sent": "Reading received.",
+      "disconnected": "The device lost its signal.",
+      "reconnected": "The device is connected again and the team was notified."
+    },
+    "form": {
+      "title": "Provision device",
+      "subtitle": "Install an IoT node in a vehicle.",
+      "save": "Provision device",
+      "success": "Device {{code}} provisioned.",
+      "all-equipped": "Every vehicle already has a device."
+    },
+    "errors": {
+      "load": "Could not load the devices. {{detail}}",
+      "generic": "The telemetry operation failed. {{detail}}",
+      "code-format": "Use 4 to 20 letters, numbers or dashes.",
+      "duplicated-code": "A device with code {{code}} already exists.",
+      "vehicle-has-device": "The vehicle already has a device installed.",
+      "device-disconnected": "The device is disconnected and cannot send readings.",
+      "already-disconnected": "The device is already disconnected.",
+      "already-connected": "The device is already connected."
+    }
+  },
+  "incident": {
+    "conditions": {
+      "TEMPERATURE_MAX": "Maximum temperature",
+      "DELAY_MINUTES": "Delay (minutes)",
+      "SIGNAL_LOSS_MINUTES": "Signal loss (minutes)"
+    },
+    "fields": {
+      "severity": "Severity",
+      "anomaly": "Anomaly",
+      "detected": "Detected",
+      "condition": "Condition",
+      "threshold": "Threshold"
+    },
+    "dashboard": {
+      "title": "Incidents",
+      "subtitle": "Detected anomalies on active routes and their resolution.",
+      "detect": "Run anomaly detection",
+      "critical": "Critical / high",
+      "active": "Active",
+      "resolved-total": "Resolved",
+      "filter-active": "Active",
+      "filter-resolved": "Resolved",
+      "empty": "No incidents to show.",
+      "select": "Select an incident to work on it.",
+      "detail": "Incident detail",
+      "actions": "Corrective actions",
+      "no-actions": "No corrective actions yet.",
+      "action-placeholder": "Describe the corrective action (min. 10 characters)",
+      "acknowledge": "Acknowledge",
+      "save-action": "Save action",
+      "resolve": "Resolve incident",
+      "reopened": "Reopened {{count}} time(s)",
+      "detected": "{{created}} new and {{reopened}} reopened incidents detected.",
+      "none-detected": "No new anomalies were detected.",
+      "acknowledged": "Incident acknowledged.",
+      "action-saved": "Corrective action saved.",
+      "resolved": "Incident resolved and the team was notified."
+    },
+    "rules": {
+      "title": "Alert rules",
+      "subtitle": "Tolerances used by the anomaly detection.",
+      "new": "New rule",
+      "save": "Save rule",
+      "saved": "Rule saved."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Alerts addressed to your role.",
+      "empty": "You have no notifications.",
+      "mark-read": "Mark as read"
+    },
+    "errors": {
+      "load": "Could not load the incidents. {{detail}}",
+      "generic": "The incident operation failed. {{detail}}",
+      "not-open": "Only open incidents can be acknowledged.",
+      "already-resolved": "The incident is already resolved.",
+      "description-short": "The corrective action needs at least 10 characters.",
+      "action-required": "Register at least one corrective action before resolving.",
+      "threshold-invalid": "The threshold must be greater than zero."
+    }
+  },
+  "analytics": {
+    "dashboard": {
+      "title": "Logistics Performance Dashboard",
+      "last-days": "Last {{days}} days",
+      "no-data": "There is no operational data in the selected period.",
+      "rotation": "Inventory rotation",
+      "shrinkage": "Shrinkage rate",
+      "vs-previous": "vs previous period",
+      "trend": "Weekly shrinkage trend",
+      "regional": "Regional delivery performance",
+      "zones": "Warehouse zones overview",
+      "batches": "Batches",
+      "lost": "Units lost"
+    },
+    "reports": {
+      "title": "Logistics reports",
+      "subtitle": "Consolidate OTIF, Fill Rate, ERI, rotation and shrinkage of a period.",
+      "from": "From",
+      "to": "To",
+      "generate": "Generate report",
+      "history": "Generated reports",
+      "period": "Period",
+      "generated": "Generated",
+      "success": "Report generated."
+    },
+    "errors": {
+      "load": "Could not load the analytics. {{detail}}",
+      "generic": "The report could not be generated. {{detail}}",
+      "invalid-period": "The end date must not be before the start date.",
+      "no-data": "There is no operational data in the selected period, so the report was not generated."
+    }
+  },
+  "subscription": {
+    "plans": {
+      "title": "Plans",
+      "subtitle": "Choose the plan that fits your operation.",
+      "choose": "Choose plan",
+      "plan": "Plan"
+    },
+    "checkout": {
+      "title": "Checkout",
+      "subtitle": "Simulated payment gateway.",
+      "company": "Company",
+      "holder": "Card holder",
+      "card": "Card number",
+      "test-cards": "Test cards: 4242 4242 4242 4242 (approved) and 4000 0000 0000 0002 (declined). The number is never stored.",
+      "pay": "Pay and subscribe",
+      "summary": "Order summary",
+      "no-plan": "Select a plan first.",
+      "success": "Payment approved. Your subscription is active."
+    },
+    "billing": {
+      "title": "Billing",
+      "subtitle": "Your subscription and payment history.",
+      "cycle": "Billing cycle",
+      "renews": "Renews on",
+      "cancel": "Cancel subscription",
+      "cancelled": "Subscription cancelled.",
+      "payments": "Payments",
+      "amount": "Amount",
+      "card": "Card",
+      "none": "You do not have an active subscription.",
+      "choose": "See plans"
+    },
+    "admin": {
+      "title": "Subscriptions overview",
+      "subtitle": "Subscriptions, prospects and users by role.",
+      "active": "Active subscriptions",
+      "revenue": "Revenue collected",
+      "newsletter": "Newsletter subscribers",
+      "contacts": "Contact requests",
+      "subscriptions": "Subscriptions",
+      "users": "users"
+    },
+    "newsletter": {
+      "success": "You are subscribed. Thank you!"
+    },
+    "contact": {
+      "success": "Thanks! We will contact you soon."
+    },
+    "errors": {
+      "load": "Could not load the subscriptions. {{detail}}",
+      "generic": "The operation failed. {{detail}}",
+      "plan-not-purchasable": "This plan cannot be purchased online. Contact sales.",
+      "holder-required": "Enter the name of the card holder.",
+      "card-invalid": "Enter a valid 16-digit card number.",
+      "already-active": "You already have an active subscription. Cancel it before choosing another plan.",
+      "payment-declined": "The payment was declined by the bank.",
+      "email-invalid": "Enter a valid e-mail that contains \"@\".",
+      "newsletter-duplicated": "This e-mail is already subscribed.",
+      "contact-incomplete": "Complete your name and a message of at least 10 characters."
+    }
+  },
+  "plans": {
+    "monthly": "Monthly",
+    "yearly": "Annual (-20%)",
+    "month": "month",
+    "year": "year",
+    "most-popular": "Most popular",
+    "custom": "Custom",
+    "start-trial": "Start free trial",
+    "contact-sales": "Contact sales",
+    "essential": {
+      "description": "Ideal for small regional distributors looking to digitize basic tracking."
+    },
+    "professional": {
+      "description": "Full visibility for growing medium-sized beverage plants."
+    },
+    "enterprise": {
+      "description": "Global logistics infrastructure with tailored integrations and on-site support."
+    },
+    "features": {
+      "routes5": "Up to 5 active routes",
+      "basicQueue": "Basic dispatch queue",
+      "emailSupport": "Email support",
+      "dailyReports": "Daily performance reports",
+      "devices100": "100 IoT node connections",
+      "routesUnlimited": "Unlimited active routes",
+      "realtimeMap": "Real-time traceability map",
+      "prioritySupport": "24/7 priority support",
+      "customKpi": "Custom KPI dashboards",
+      "devices500": "500 IoT node connections",
+      "advancedApi": "Advanced API access",
+      "multiWarehouse": "Multi-warehouse management",
+      "customIntegration": "Custom IoT hardware integration",
+      "accountManager": "Dedicated account manager",
+      "onPremise": "On-premise deployment option",
+      "whiteLabel": "White-label capabilities",
+      "sla": "SLA guarantees"
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}",
+    "subtitle": "Operational summary of your beverage logistics.",
+    "units": "Units in stock",
+    "shrinkage": "Shrinkage {{rate}}%",
+    "queue": "Dispatch queue",
+    "in-transit": "{{count}} in transit",
+    "routes": "Active routes",
+    "devices": "Connected devices",
+    "critical-devices": "{{count}} critical",
+    "incidents": "Active incidents",
+    "critical-incidents": "{{count}} critical or high",
+    "discrepancies": "Inventory discrepancies",
+    "next-dispatches": "Next dispatches",
+    "latest-incidents": "Latest incidents"
+  },
+  "landing": {
+    "nav": {
+      "home": "Home",
+      "about": "About",
+      "features": "Features",
+      "plans": "Plans",
+      "team": "Team",
+      "contact": "Contact",
+      "login": "Log in",
+      "register": "Register"
+    },
+    "hero": {
+      "tag": "Logistics SaaS · CodeCraft Team",
+      "title-1": "The Future of",
+      "title-2": "Beverage",
+      "title-3": "Logistics Automation",
+      "description": "BevTrace digitizes the supply chain of bottlers and beverage distributors using non-returnable PET containers, joining operations management and the Internet of Things in a single system.",
+      "manager": "I'm a Warehouse Manager",
+      "driver": "I'm a Driver",
+      "image-alt": "Aerial view of a container yard",
+      "headline-1": "Zero shrinkage.",
+      "headline-2": "Total traceability.",
+      "cta-solution": "See the solution",
+      "cta-team": "Meet the team",
+      "footnote": "Software Engineering academic project · CodeCraft"
+    },
+    "segments": {
+      "manager": {
+        "title": "For warehouse managers",
+        "text": "Prioritize the dispatch queue, control stock and shrinkage, and follow every route from one dashboard."
+      },
+      "driver": {
+        "title": "For drivers",
+        "text": "Get authorized dispatches, verified pallets and clear checkpoints so every delivery is confirmed without paperwork."
+      }
+    },
+    "shift": {
+      "title": "The Traceability Shift",
+      "text": "Traditional manual logging is the bottleneck of modern logistics. BevTrace replaces fragmented spreadsheets with a seamless IoT ecosystem, ensuring every PET container is accounted for from production to the final retailer.",
+      "manual-title": "Manual Fragmentation",
+      "manual-text": "Inaccurate shrinkage data, delayed route updates, and lack of real-time visibility lead to up to 15% loss in the beverage sector.",
+      "iot-title": "IoT Automation",
+      "iot-text": "BevTrace automates asset classification and tracking, providing a single source of truth for managers and drivers alike."
+    },
+    "features": {
+      "title": "Mission-Critical Features",
+      "subtitle": "Purpose-built tools designed for the unique demands of high-volume beverage distribution and warehouse management.",
+      "queue": {
+        "title": "Dispatch Queue",
+        "text": "Manage and prioritize inbound and outbound shipments with a unified visibility buffer."
+      },
+      "map": {
+        "title": "Active Route Traceability Map",
+        "text": "Real-time tracking and IoT sensor monitoring for every active transit route."
+      },
+      "classification": {
+        "title": "Dispatch Classification",
+        "text": "Automated SKU sorting and pallet-level tracking using IoT-enabled PET containers."
+      },
+      "kpi": {
+        "title": "Logistics Performance & KPI Dashboard",
+        "text": "Deep-dive analytics into operational efficiency, turnaround times, and CO2 footprint."
+      },
+      "catalog": {
+        "title": "Inventory & Shrinkage Catalog",
+        "text": "Audit-ready logs and real-time stock levels with automated loss detection."
+      }
+    },
+    "pricing": {
+      "title": "Simple, Scalable Pricing",
+      "subtitle": "Choose the plan that best suits your operational scale. All plans include core IoT connectivity and basic traceability logs."
+    },
+    "team": {
+      "title": "Meet the CodeCraft Team",
+      "subtitle": "A dedicated group of software engineers from Universidad Peruana de Ciencias Aplicadas focused on supply chain innovation.",
+      "members": {
+        "mauricio": {
+          "area": "Software Engineering",
+          "role": "Lead Architect focused on IoT integration and backend scalability."
+        },
+        "danitza": {
+          "area": "Software Engineering",
+          "role": "UI/UX Specialist ensuring a seamless experience for logistics personnel."
+        },
+        "enrique": {
+          "area": "Software Engineering",
+          "role": "Data scientist optimizing routing algorithms and predictive analytics."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to optimize your supply chain?",
+      "text": "Join leading beverage companies already using BevTrace to eliminate manual errors and gain full operational transparency.",
+      "demo": "Request a Live Demo"
+    },
+    "contact": {
+      "name": "Full name",
+      "company": "Company",
+      "message": "How can we help you?",
+      "send": "Send request"
+    },
+    "newsletter": {
+      "title": "Commercial news",
+      "text": "Subscribe to receive product updates and offers.",
+      "placeholder": "Your e-mail",
+      "button": "Subscribe"
+    },
+    "footer": {
+      "tagline": "Optimizing beverage logistics through IoT traceability.",
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy",
+      "security": "Security"
+    },
+    "audience": {
+      "title": "Who is BevTrace for?"
+    }
+  }
+}
