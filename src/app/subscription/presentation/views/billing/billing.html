@@ -1,0 +1,55 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>payments</mat-icon>
+      <div>
+        <h2>{{ 'subscription.billing.title' | translate }}</h2>
+        <p>{{ 'subscription.billing.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  @if (current(); as subscription) {
+    <div class="card">
+      <h3>{{ subscription.planCode }} <app-status-chip [status]="subscription.status" /></h3>
+      <div class="data-grid">
+        <div><span class="kpi-label">{{ 'subscription.checkout.company' | translate }}</span><strong>{{ subscription.companyName }}</strong></div>
+        <div><span class="kpi-label">{{ 'subscription.billing.cycle' | translate }}</span><strong>{{ (subscription.billingCycle === 'MONTHLY' ? 'plans.monthly' : 'plans.yearly') | translate }}</strong></div>
+        <div><span class="kpi-label">{{ 'subscription.billing.renews' | translate }}</span><strong>{{ subscription.currentPeriodEnd | date: 'mediumDate' }}</strong></div>
+      </div>
+      <button type="button" class="btn-secondary" (click)="onCancel(subscription.id)">{{ 'subscription.billing.cancel' | translate }}</button>
+    </div>
+
+    <div class="table-card">
+      <h3 class="table-title">{{ 'subscription.billing.payments' | translate }}</h3>
+      <table class="simple-table">
+        <thead>
+          <tr>
+            <th>{{ 'common.date' | translate }}</th>
+            <th>{{ 'subscription.billing.amount' | translate }}</th>
+            <th>{{ 'subscription.billing.card' | translate }}</th>
+            <th>{{ 'common.status' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (payment of store.paymentsOf(subscription.id); track payment.id) {
+            <tr>
+              <td>{{ payment.paidAt | date: 'mediumDate' }}</td>
+              <td class="bold-cell">S/ {{ payment.amount | number }}</td>
+              <td class="mono">•••• {{ payment.cardLast4 }}</td>
+              <td><app-status-chip [status]="payment.status" /></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="card empty-state">
+      <p>{{ 'subscription.billing.none' | translate }}</p>
+      <button type="button" class="btn-action" (click)="viewPlans()">{{ 'subscription.billing.choose' | translate }}</button>
+    </div>
+  }
+</div>
