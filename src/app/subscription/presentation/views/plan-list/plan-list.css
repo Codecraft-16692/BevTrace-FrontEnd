@@ -1,0 +1,21 @@
+.cycle-toggle {
+  display: inline-flex;
+  border: 1px solid var(--bt-primary);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.cycle-toggle button {
+  border: none;
+  background: #fff;
+  color: var(--bt-primary);
+  padding: 8px 18px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cycle-toggle button.active {
+  background: var(--bt-primary);
+  color: #fff;
+}
