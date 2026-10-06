@@ -1,0 +1,55 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>credit_card</mat-icon>
+      <div>
+        <h2>{{ 'subscription.checkout.title' | translate }}</h2>
+        <p>{{ 'subscription.checkout.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  <div class="grid-main">
+    <div class="card">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-group">
+          <label for="companyName">{{ 'subscription.checkout.company' | translate }}</label>
+          <input id="companyName" type="text" formControlName="companyName" [class.invalid]="form.controls.companyName.invalid && form.controls.companyName.touched" />
+        </div>
+        <div class="form-group">
+          <label for="cardHolder">{{ 'subscription.checkout.holder' | translate }}</label>
+          <input id="cardHolder" type="text" autocomplete="cc-name" formControlName="cardHolder" [class.invalid]="form.controls.cardHolder.invalid && form.controls.cardHolder.touched" />
+        </div>
+        <div class="form-group">
+          <label for="cardNumber">{{ 'subscription.checkout.card' | translate }}</label>
+          <input id="cardNumber" type="text" inputmode="numeric" autocomplete="cc-number" class="mono" formControlName="cardNumber" placeholder="4242 4242 4242 4242" [class.invalid]="form.controls.cardNumber.invalid && form.controls.cardNumber.touched" />
+          @if (form.controls.cardNumber.invalid && form.controls.cardNumber.touched) {
+            <span class="error-message">{{ 'subscription.errors.card-invalid' | translate }}</span>
+          }
+        </div>
+        <p class="muted">{{ 'subscription.checkout.test-cards' | translate }}</p>
+        <button type="submit" class="btn-primary" [disabled]="store.isLoading() || !plan()">
+          {{ 'subscription.checkout.pay' | translate }}
+        </button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>{{ 'subscription.checkout.summary' | translate }}</h3>
+      @if (plan(); as plan) {
+        <p><strong>{{ plan.name }}</strong> · {{ (plan.billingPeriod === 'MONTHLY' ? 'plans.monthly' : 'plans.yearly') | translate }}</p>
+        <p class="total">S/ {{ plan.priceAmount | number }}</p>
+        <ul class="features">
+          @for (feature of plan.featureKeys; track feature) {
+            <li>{{ feature | translate }}</li>
+          }
+        </ul>
+      } @else {
+        <p class="muted">{{ 'subscription.checkout.no-plan' | translate }}</p>
+      }
+    </div>
+  </div>
+</div>
