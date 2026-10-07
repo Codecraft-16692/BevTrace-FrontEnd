@@ -1,0 +1,21 @@
+.card-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.card-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.card-header h1 {
+  margin: 8px 0 4px;
+  font-size: 1.75rem;
+  color: var(--bt-primary);
+}
+
+.card-header p {
+  margin: 0;
+  color: #5f6368;
+}
