@@ -1,0 +1,22 @@
+@if (store.isSignedIn()) {
+  <div class="user-session">
+    <div class="user-avatar" aria-hidden="true">{{ store.currentUserInitials() }}</div>
+
+    <div class="user-copy">
+      <span class="user-name">{{ store.currentUsername() }}</span>
+      @if (store.currentRoleKey(); as roleKey) {
+        <span class="user-role">{{ roleKey | translate }}</span>
+      }
+    </div>
+
+    <button
+      mat-icon-button
+      type="button"
+      [matTooltip]="'nav.sign-out' | translate"
+      [attr.aria-label]="'nav.sign-out' | translate"
+      (click)="signOut()"
+    >
+      <mat-icon>logout</mat-icon>
+    </button>
+  </div>
+}

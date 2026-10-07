@@ -1,0 +1,41 @@
+.user-session {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bt-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.user-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bt-dark);
+}
+
+.user-role {
+  font-size: 11px;
+  color: #5f6368;
+}
+
+@media (max-width: 768px) {
+  .user-copy {
+    display: none;
+  }
+}
