@@ -1,0 +1,120 @@
+<app-toolbar />
+
+<div class="auth-page">
+  <div class="auth-card wide">
+    <div class="card-header">
+      <h1>{{ 'iam.sign-up.title' | translate }}</h1>
+      <p>{{ 'iam.sign-up.subtitle' | translate }}</p>
+    </div>
+
+    <app-message-banner [message]="store.error()" type="error" />
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-group">
+        <label for="name">{{ 'iam.fields.name' | translate }}</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          [class.invalid]="form.controls.name.invalid && form.controls.name.touched"
+        />
+        @if (form.controls.name.invalid && form.controls.name.touched) {
+          <span class="error-message">{{ 'iam.errors.name-required' | translate }}</span>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">{{ 'iam.fields.email' | translate }}</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            [placeholder]="'iam.fields.email-placeholder' | translate"
+            [class.invalid]="form.controls.email.invalid && form.controls.email.touched"
+          />
+          @if (form.controls.email.invalid && form.controls.email.touched) {
+            <span class="error-message">{{ getEmailErrorKey() | translate }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="phone">{{ 'iam.fields.phone' | translate }}</label>
+          <input
+            id="phone"
+            type="tel"
+            formControlName="phone"
+            [class.invalid]="form.controls.phone.invalid && form.controls.phone.touched"
+          />
+          @if (form.controls.phone.invalid && form.controls.phone.touched) {
+            <span class="error-message">{{ 'iam.errors.phone-format' | translate }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="role">{{ 'iam.fields.role' | translate }}</label>
+        <select id="role" formControlName="roleId">
+          @for (option of roleOptions; track option.id) {
+            <option [ngValue]="option.id">{{ option.label | translate }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="password">{{ 'iam.fields.password' | translate }}</label>
+          <div class="password-wrapper">
+            <input
+              id="password"
+              autocomplete="new-password"
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              [class.invalid]="form.controls.password.invalid && form.controls.password.touched"
+            />
+            <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+              {{ (hidePassword ? 'iam.fields.show' : 'iam.fields.hide') | translate }}
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">{{ 'iam.fields.confirm-password' | translate }}</label>
+          <input
+            id="confirmPassword"
+            autocomplete="new-password"
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="confirmPassword"
+            [class.invalid]="form.hasError('mismatch') && form.controls.confirmPassword.touched"
+          />
+          @if (form.hasError('mismatch') && form.controls.confirmPassword.touched) {
+            <span class="error-message">{{ 'iam.errors.password-mismatch' | translate }}</span>
+          }
+        </div>
+      </div>
+
+      <ul class="rules-list">
+        @for (rule of passwordRules; track rule) {
+          <li [class.met]="isRuleMet(rule)">
+            {{ 'iam.rules.' + rule | translate }}
+          </li>
+        }
+      </ul>
+
+      <button type="submit" class="btn-primary" [disabled]="store.isLoading()">
+        @if (!store.isLoading()) {
+          <span>{{ 'iam.sign-up.button' | translate }}</span>
+        } @else {
+          <mat-spinner diameter="20"></mat-spinner>
+        }
+      </button>
+    </form>
+
+    <div class="footer-link">
+      <p>
+        {{ 'iam.sign-up.have-account' | translate }}
+        <a routerLink="/iam/sign-in">{{ 'iam.sign-in.button' | translate }}</a>
+      </p>
+    </div>
+  </div>
+</div>
