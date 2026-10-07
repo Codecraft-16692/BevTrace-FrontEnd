@@ -2,7 +2,7 @@ export const environment = {
   production: true,
 
   // Base API URL
-  serverBasePath: 'http://localhost:3000/api/v1',
+  serverBasePath: 'https://bevtrace-backend-production.up.railway.app/api/v1',
 
   // IAM
   usersEndpointPath: '/users',
