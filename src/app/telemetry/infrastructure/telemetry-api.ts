@@ -24,8 +24,8 @@ import { CreateDisconnectionPeriodRequest } from './disconnection-period.request
  * @remarks
  * In a Domain-Driven Design (DDD) architecture, this service belongs to the
  * infrastructure layer and acts as a facade over device, model, reading and
- * disconnection endpoint clients. The IoT gateway is simulated by the mock
- * REST API until real hardware is connected.
+ * disconnection endpoint clients. Telemetry is produced by the IoT gateway and
+ * persisted by the REST API; the frontend only reads it.
  */
 @Injectable({ providedIn: 'root' })
 export class TelemetryApi extends BaseApi {

@@ -7,10 +7,14 @@
         <p>{{ 'telemetry.panel.subtitle' | translate }}</p>
       </div>
     </div>
+    <div class="header-actions">
+      <button type="button" class="btn-secondary" [disabled]="store.isLoading()" (click)="onRefresh()">
+        <mat-icon>refresh</mat-icon> {{ 'common.refresh' | translate }}
+      </button>
+    </div>
   </div>
 
   <app-message-banner [message]="store.error()" type="error" />
-  <app-message-banner [message]="store.successMsg()" type="success" />
 
   @if (store.criticalCount() > 0) {
     <div class="banner banner-error">
@@ -81,27 +85,17 @@
   @if (selected(); as device) {
     <div class="grid-2">
       <div class="card">
-        <h3>{{ 'telemetry.panel.simulator' | translate }} · <span class="mono">{{ device.deviceCode }}</span></h3>
-        <p class="muted">{{ 'telemetry.panel.simulator-hint' | translate }}</p>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="temperature">{{ 'telemetry.fields.temperature' | translate }} (°C)</label>
-            <input id="temperature" type="number" [value]="temperature()" (input)="temperature.set($any($event.target).value)" />
+        <h3>{{ 'telemetry.panel.last-reading' | translate }} · <span class="mono">{{ device.deviceCode }}</span></h3>
+        @if (store.streamsOf(device.id)[0]; as last) {
+          <div class="data-grid">
+            <div><span class="kpi-label">{{ 'common.date' | translate }}</span><strong>{{ last.timestamp | date: 'MMM d, HH:mm:ss' }}</strong></div>
+            <div><span class="kpi-label">{{ 'telemetry.fields.latitude' | translate }} / {{ 'telemetry.fields.longitude' | translate }}</span><strong class="mono">{{ last.latitude }}, {{ last.longitude }}</strong></div>
+            <div><span class="kpi-label">{{ 'telemetry.fields.speed' | translate }}</span><strong>{{ last.speed }} km/h</strong></div>
+            <div><span class="kpi-label">{{ 'telemetry.fields.temperature' | translate }}</span><strong>{{ last.temperature }} °C</strong></div>
           </div>
-          <div class="form-group">
-            <label for="speed">{{ 'telemetry.fields.speed' | translate }} (km/h)</label>
-            <input id="speed" type="number" min="0" [value]="speed()" (input)="speed.set($any($event.target).value)" />
-          </div>
-        </div>
-        <label class="check-row">
-          <input type="checkbox" [checked]="incompleteData()" (change)="incompleteData.set($any($event.target).checked)" />
-          {{ 'telemetry.panel.incomplete' | translate }}
-        </label>
-        <div class="inline-actions">
-          <button type="button" class="btn-action" (click)="onSendReading()">{{ 'telemetry.panel.send-reading' | translate }}</button>
-          <button type="button" class="btn-secondary" (click)="onDisconnect()">{{ 'telemetry.panel.disconnect' | translate }}</button>
-          <button type="button" class="btn-secondary" (click)="onReconnect()">{{ 'telemetry.panel.reconnect' | translate }}</button>
-        </div>
+        } @else {
+          <p class="muted">{{ 'telemetry.panel.no-readings' | translate }}</p>
+        }
       </div>
 
       <div class="card">
