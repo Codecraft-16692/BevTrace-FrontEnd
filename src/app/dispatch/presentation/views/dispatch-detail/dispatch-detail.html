@@ -107,8 +107,6 @@
               <textarea rows="5" class="mono" [value]="palletText()" [placeholder]="'dispatch.detail.pallet-placeholder' | translate" (input)="palletText.set($any($event.target).value)"></textarea>
             </div>
             <div class="inline-actions">
-              <button type="button" class="btn-secondary" (click)="simulateScan()">{{ 'dispatch.detail.simulate-ok' | translate }}</button>
-              <button type="button" class="btn-secondary" (click)="simulateWrongScan()">{{ 'dispatch.detail.simulate-wrong' | translate }}</button>
               <button type="button" class="btn-action" [disabled]="store.isLoading()" (click)="onValidate()">{{ 'dispatch.detail.validate-button' | translate }}</button>
             </div>
           } @else {
