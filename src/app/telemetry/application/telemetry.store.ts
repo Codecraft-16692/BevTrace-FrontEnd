@@ -1,5 +1,5 @@
-import { computed, inject, Injectable, Injector, signal } from '@angular/core';
-import { defer, forkJoin, Observable, of, switchMap, throwError } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { forkJoin, switchMap, throwError } from 'rxjs';
 
 import { BaseStore } from '../../shared/application/base-store';
 import { BusinessError } from '../../shared/domain/model/business-error';
@@ -10,14 +10,10 @@ import { LocationStream } from '../domain/model/location-stream.entity';
 import { DisconnectionPeriod } from '../domain/model/disconnection-period.entity';
 import { ConnectivityPolicy } from '../domain/model/connectivity-policy';
 import { ProvisionDeviceCommand } from '../domain/model/provision-device.command';
-import { SendTelemetryReadingCommand } from '../domain/model/send-telemetry-reading.command';
-import { LoseConnectivityCommand } from '../domain/model/lose-connectivity.command';
-import { RestoreConnectivityCommand } from '../domain/model/restore-connectivity.command';
 
 import { TelemetryApi } from '../infrastructure/telemetry-api';
 import { DispatchApi } from '../../dispatch/infrastructure/dispatch-api';
 import { TransportVehicle } from '../../dispatch/domain/model/transport-vehicle.entity';
-import { IncidentStore } from '../../incident/application/incident.store';
 
 /**
  * Signal-based application store for the Telemetry bounded context.
@@ -25,8 +21,9 @@ import { IncidentStore } from '../../incident/application/incident.store';
  * @remarks
  * This store manages the IoT devices, their connectivity status (critical
  * after 30 minutes without signal), the telemetry readings and the
- * disconnection history. The IoT gateway is simulated: readings, signal loss
- * and reconnection are triggered from the presentation layer.
+ * disconnection history. Readings, signal loss and reconnection are produced
+ * by the IoT gateway and persisted by the backend: this store only reads them
+ * (see `loadAll` and `reload`) and provisions new devices.
  */
 @Injectable({ providedIn: 'root' })
 export class TelemetryStore extends BaseStore {
@@ -39,11 +36,6 @@ export class TelemetryStore extends BaseStore {
    * API facade used to read vehicles from the dispatch context.
    */
   private readonly dispatchApi = inject(DispatchApi);
-
-  /**
-   * Injector used to reach other bounded contexts lazily.
-   */
-  private readonly injector = inject(Injector);
 
   /**
    * Internal signal containing the device models.
@@ -199,119 +191,21 @@ export class TelemetryStore extends BaseStore {
       }),
     );
 
-    this.write(operation, 'telemetry.errors.generic', () => this.refresh(), {
+    this.write(operation, 'telemetry.errors.generic', () => this.reload(), {
       key: 'telemetry.form.success',
       params: { code: deviceCode },
     });
   }
 
   /**
-   * Ingests a telemetry reading emitted by a connected device.
+   * Reloads the telemetry data silently (no loading overlay).
    *
-   * @param command - Command containing the reading
+   * @remarks
+   * Used by the views to keep the panel up to date: readings, connection
+   * status and disconnection periods are produced by the IoT backend and are
+   * only read here.
    */
-  sendReading(command: SendTelemetryReadingCommand): void {
-    const operation = defer(() => {
-      const device = this.devicesSignal().find((item) => item.id === command.deviceId);
-      if (!device || device.connectionStatus !== 'CONNECTED') {
-        return throwError(() => new BusinessError('telemetry.errors.device-disconnected'));
-      }
-      const timestamp = new Date().toISOString();
-      return this.api
-        .createStream({
-          deviceId: device.id,
-          latitude: command.latitude,
-          longitude: command.longitude,
-          speed: command.speed,
-          temperature: command.temperature,
-          timestamp,
-        })
-        .pipe(switchMap(() => this.api.updateDevice(device.id, { lastSignalAt: timestamp })));
-    });
-
-    this.write(operation, 'telemetry.errors.generic', () => this.refresh(), {
-      key: 'telemetry.panel.reading-sent',
-    });
-  }
-
-  /**
-   * Marks a device as disconnected and opens a disconnection period.
-   *
-   * @param command - Command containing the device
-   */
-  loseConnectivity(command: LoseConnectivityCommand): void {
-    const operation = defer(() => {
-      const device = this.devicesSignal().find((item) => item.id === command.deviceId);
-      if (!device || device.connectionStatus === 'DISCONNECTED') {
-        return throwError(() => new BusinessError('telemetry.errors.already-disconnected'));
-      }
-      return this.api.updateDevice(device.id, { connectionStatus: 'DISCONNECTED' }).pipe(
-        switchMap(() =>
-          this.api.createDisconnection({
-            deviceId: device.id,
-            startedAt: new Date().toISOString(),
-            endedAt: null,
-            dataStatus: 'AVAILABLE',
-          }),
-        ),
-      );
-    });
-
-    this.write(operation, 'telemetry.errors.generic', () => this.refresh(), {
-      key: 'telemetry.panel.disconnected',
-    });
-  }
-
-  /**
-   * Marks a device as reconnected, closes the disconnection period and notifies the team.
-   *
-   * @param command - Command containing the device and the completeness of its data
-   */
-  restoreConnectivity(command: RestoreConnectivityCommand): void {
-    const operation = defer(() => {
-      const device = this.devicesSignal().find((item) => item.id === command.deviceId);
-      if (!device || device.connectionStatus === 'CONNECTED') {
-        return throwError(() => new BusinessError('telemetry.errors.already-connected'));
-      }
-      const now = new Date().toISOString();
-      const openPeriod = this.disconnectionsSignal().find(
-        (period) => period.deviceId === device.id && period.endedAt === null,
-      );
-      const closePeriod: Observable<unknown> = openPeriod
-        ? this.api.closeDisconnection(openPeriod.id, now, command.incompleteData ? 'UNAVAILABLE' : 'AVAILABLE')
-        : of(null);
-
-      return this.api
-        .updateDevice(device.id, { connectionStatus: 'CONNECTED', lastSignalAt: now })
-        .pipe(switchMap((updated) => closePeriod.pipe(switchMap(() => of(updated)))));
-    });
-
-    this.write(
-      operation,
-      'telemetry.errors.generic',
-      (device) => {
-        const suffix = command.incompleteData
-          ? 'Some telemetry of the disconnected period is unavailable.'
-          : 'Telemetry of the period is complete.';
-        const incidents = this.injector.get(IncidentStore);
-        ['ROLE_WAREHOUSE_OPERATOR', 'ROLE_LOGISTICS_MANAGER'].forEach((role) =>
-          incidents.notify({
-            recipientRole: role,
-            type: 'TELEMETRY',
-            title: 'Device reconnected',
-            message: `Device ${device.deviceCode} is connected again. ${suffix}`,
-          }),
-        );
-        this.refresh();
-      },
-      { key: 'telemetry.panel.reconnected' },
-    );
-  }
-
-  /**
-   * Reloads the telemetry data silently after a write operation.
-   */
-  private refresh(): void {
+  reload(): void {
     forkJoin({
       devices: this.api.getDevices(),
       streams: this.api.getStreams(),

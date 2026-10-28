@@ -106,11 +106,11 @@ export class Layout implements OnInit {
       icon: 'inventory_2',
       link: '/inventory',
       children: [
-        { label: 'inventory.catalog.title', link: '/inventory/catalog' },
-        { label: 'inventory.entry.title', link: '/inventory/batch-entry' },
-        { label: 'inventory.batch-form.title', link: '/inventory/batch-form' },
-        { label: 'inventory.waste.title', link: '/inventory/waste' },
-        { label: 'inventory.reconciliation.title', link: '/inventory/reconciliation' },
+        { label: 'inventory.catalog.title', link: '/inventory/products' },
+        { label: 'inventory.entry.title', link: '/inventory/batches' },
+        { label: 'inventory.batch-form.title', link: '/inventory/batches/new' },
+        { label: 'inventory.waste.title', link: '/inventory/waste-records' },
+        { label: 'inventory.reconciliation.title', link: '/inventory/reconciliations' },
       ],
     },
     {
@@ -118,8 +118,8 @@ export class Layout implements OnInit {
       icon: 'local_shipping',
       link: '/dispatch',
       children: [
-        { label: 'dispatch.queue.title', link: '/dispatch/queue' },
-        { label: 'dispatch.form.title', link: '/dispatch/new' },
+        { label: 'dispatch.queue.title', link: '/dispatch/orders' },
+        { label: 'dispatch.form.title', link: '/dispatch/orders/new' },
       ],
     },
     {
@@ -127,8 +127,8 @@ export class Layout implements OnInit {
       icon: 'alt_route',
       link: '/traceability',
       children: [
-        { label: 'traceability.map.title', link: '/traceability/route-map' },
-        { label: 'traceability.history.title', link: '/traceability/history' },
+        { label: 'traceability.map.title', link: '/traceability/logs' },
+        { label: 'traceability.history.title', link: '/traceability/delivery-records' },
       ],
     },
     {
@@ -137,17 +137,17 @@ export class Layout implements OnInit {
       link: '/telemetry',
       children: [
         { label: 'telemetry.panel.title', link: '/telemetry/devices' },
-        { label: 'telemetry.form.title', link: '/telemetry/device-form' },
+        { label: 'telemetry.form.title', link: '/telemetry/devices/new' },
       ],
     },
     {
       label: 'nav.incidents',
       icon: 'warning_amber',
-      link: '/incidents',
+      link: '/incident',
       children: [
-        { label: 'incident.dashboard.title', link: '/incidents/dashboard' },
-        { label: 'incident.rules.title', link: '/incidents/rules' },
-        { label: 'incident.notifications.title', link: '/incidents/notifications' },
+        { label: 'incident.dashboard.title', link: '/incident/incidents' },
+        { label: 'incident.rules.title', link: '/incident/alert-rules' },
+        { label: 'incident.notifications.title', link: '/incident/notifications' },
       ],
     },
     {
@@ -156,18 +156,18 @@ export class Layout implements OnInit {
       link: '/analytics',
       roles: [MANAGER],
       children: [
-        { label: 'analytics.dashboard.title', link: '/analytics/dashboard' },
+        { label: 'analytics.dashboard.title', link: '/analytics/kpis' },
         { label: 'analytics.reports.title', link: '/analytics/reports' },
       ],
     },
     {
       label: 'nav.subscription',
       icon: 'payments',
-      link: '/subscriptions',
+      link: '/subscription',
       roles: [MANAGER],
       children: [
-        { label: 'subscription.billing.title', link: '/subscriptions/billing' },
-        { label: 'subscription.plans.title', link: '/subscriptions/plans' },
+        { label: 'subscription.billing.title', link: '/subscription/subscriptions' },
+        { label: 'subscription.plans.title', link: '/subscription/plans' },
       ],
     },
     {
@@ -177,7 +177,7 @@ export class Layout implements OnInit {
       roles: ['ROLE_ADMIN'],
       children: [
         { label: 'iam.users.title', link: '/iam/users' },
-        { label: 'subscription.admin.title', link: '/subscriptions/admin' },
+        { label: 'subscription.admin.title', link: '/subscription/admin/subscriptions' },
       ],
     },
   ];
@@ -234,7 +234,12 @@ export class Layout implements OnInit {
    * @returns True when the current URL matches the link
    */
   protected isActive(link: string): boolean {
-    return this.router.url === link || this.router.url.startsWith(`${link}/`);
+    const path = this.router.url.split(/[?#]/)[0];
+    const matches = (candidate: string) => path === candidate || path.startsWith(`${candidate}/`);
+    if (!matches(link)) return false;
+    // Siblings such as /batches and /batches/new share a prefix: only the most specific one is active.
+    const links = this.allOptions.flatMap((option) => (option.children ?? []).map((child) => child.link));
+    return !links.some((other) => other.length > link.length && matches(other));
   }
 
   /**
@@ -254,6 +259,6 @@ export class Layout implements OnInit {
    */
   protected openNotification(notification: Notification): void {
     if (!notification.read) this.incidentStore.markNotificationRead(notification.id);
-    this.navigateTo('/incidents/notifications');
+    this.navigateTo('/incident/notifications');
   }
 }

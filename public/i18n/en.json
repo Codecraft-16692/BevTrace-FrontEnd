@@ -12,7 +12,8 @@
     "no-results": "No results found.",
     "page-not-found": "The page you are looking for does not exist.",
     "select": "Select...",
-    "status": "Status"
+    "status": "Status",
+    "refresh": "Refresh"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -258,8 +259,6 @@
       "validate": "Validate loaded pallets",
       "validate-hint": "Scan the {{count}} pallets loaded in the vehicle (one label per line).",
       "pallet-placeholder": "LT-2609-001-P1\nLT-2609-001-P2",
-      "simulate-ok": "Simulate correct scan",
-      "simulate-wrong": "Simulate wrong pallet",
       "validate-button": "Validate cargo",
       "cargo-validated": "Cargo validated against the order.",
       "operator-only": "Only a warehouse operator can validate the cargo.",
@@ -312,11 +311,7 @@
       "title": "Traceability",
       "map": "Route",
       "checkpoints": "Checkpoints",
-      "simulate-reach": "Simulate arrival",
-      "reached": "Checkpoint registered.",
-      "reached-with-omitted": "Checkpoint registered. {{count}} skipped checkpoints were marked as omitted.",
       "delivery": "Delivery at destination",
-      "not-arrived": "The vehicle has not reached the destination yet.",
       "received-by": "Received by",
       "confirm": "Confirm delivery",
       "reject-reason": "Rejection reason",
@@ -325,15 +320,13 @@
       "rejected": "Rejection registered. The shipment stays open.",
       "rejection": "Rejection",
       "record": "Delivery record",
-      "not-found": "Traceability log not found."
+      "not-found": "Traceability log not found.",
+      "delivery-hint": "Register the delivery when the client receives or rejects it."
     },
     "errors": {
       "load": "Could not load the traceability. {{detail}}",
       "generic": "The traceability operation failed. {{detail}}",
-      "not-in-transit": "The shipment is not in transit.",
-      "checkpoint-invalid": "The checkpoint is not available.",
       "already-completed": "The shipment is already completed.",
-      "not-arrived": "The destination checkpoint has not been reached.",
       "receiver-required": "Enter who received the delivery (min. 3 characters).",
       "reason-required": "Enter the rejection reason (min. 5 characters)."
     }
@@ -357,19 +350,12 @@
       "critical-alert": "{{count}} devices have been without signal for more than 30 minutes.",
       "minutes": "{{count}} min without signal",
       "inspect": "Inspect",
-      "simulator": "IoT simulator",
-      "simulator-hint": "Simulates the gateway while there is no real hardware.",
-      "incomplete": "Reconnect with incomplete data",
-      "send-reading": "Send reading",
-      "disconnect": "Drop signal",
-      "reconnect": "Restore signal",
       "disconnections": "Disconnection history",
       "ongoing": "ongoing",
       "no-disconnections": "No disconnections registered.",
       "readings": "Latest readings",
-      "reading-sent": "Reading received.",
-      "disconnected": "The device lost its signal.",
-      "reconnected": "The device is connected again and the team was notified."
+      "last-reading": "Latest reading",
+      "no-readings": "This device has not sent readings yet."
     },
     "form": {
       "title": "Provision device",
@@ -383,10 +369,7 @@
       "generic": "The telemetry operation failed. {{detail}}",
       "code-format": "Use 4 to 20 letters, numbers or dashes.",
       "duplicated-code": "A device with code {{code}} already exists.",
-      "vehicle-has-device": "The vehicle already has a device installed.",
-      "device-disconnected": "The device is disconnected and cannot send readings.",
-      "already-disconnected": "The device is already disconnected.",
-      "already-connected": "The device is already connected."
+      "vehicle-has-device": "The vehicle already has a device installed."
     }
   },
   "incident": {

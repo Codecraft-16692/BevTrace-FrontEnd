@@ -69,6 +69,6 @@ export class Billing implements OnInit {
    * Opens the plans view.
    */
   protected viewPlans(): void {
-    this.router.navigate(['/subscriptions/plans']).then();
+    this.router.navigate(['/subscription/plans']).then();
   }
 }

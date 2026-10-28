@@ -12,7 +12,8 @@
     "no-results": "No se encontraron resultados.",
     "page-not-found": "La página que buscas no existe.",
     "select": "Seleccionar...",
-    "status": "Estado"
+    "status": "Estado",
+    "refresh": "Actualizar"
   },
   "nav": {
     "dashboard": "Panel",
@@ -258,8 +259,6 @@
       "validate": "Validar paletas cargadas",
       "validate-hint": "Escanea las {{count}} paletas cargadas en el vehículo (una etiqueta por línea).",
       "pallet-placeholder": "LT-2609-001-P1\nLT-2609-001-P2",
-      "simulate-ok": "Simular escaneo correcto",
-      "simulate-wrong": "Simular paleta errónea",
       "validate-button": "Validar carga",
       "cargo-validated": "Carga validada contra el pedido.",
       "operator-only": "Solo un operario de almacén puede validar la carga.",
@@ -312,11 +311,7 @@
       "title": "Trazabilidad",
       "map": "Ruta",
       "checkpoints": "Puntos de control",
-      "simulate-reach": "Simular llegada",
-      "reached": "Punto de control registrado.",
-      "reached-with-omitted": "Punto de control registrado. {{count}} puntos saltados se marcaron como omitidos.",
       "delivery": "Entrega en destino",
-      "not-arrived": "El vehículo aún no llega al destino.",
       "received-by": "Recibido por",
       "confirm": "Confirmar entrega",
       "reject-reason": "Motivo del rechazo",
@@ -325,15 +320,13 @@
       "rejected": "Rechazo registrado. El envío sigue abierto.",
       "rejection": "Rechazo",
       "record": "Registro de entrega",
-      "not-found": "Registro de trazabilidad no encontrado."
+      "not-found": "Registro de trazabilidad no encontrado.",
+      "delivery-hint": "Registra la entrega cuando el cliente la recibe o la rechaza."
     },
     "errors": {
       "load": "No se pudo cargar la trazabilidad. {{detail}}",
       "generic": "La operación de trazabilidad falló. {{detail}}",
-      "not-in-transit": "El envío no está en tránsito.",
-      "checkpoint-invalid": "El punto de control no está disponible.",
       "already-completed": "El envío ya fue completado.",
-      "not-arrived": "No se alcanzó el punto de control del destino.",
       "receiver-required": "Ingresa quién recibió la entrega (mín. 3 caracteres).",
       "reason-required": "Ingresa el motivo del rechazo (mín. 5 caracteres)."
     }
@@ -357,19 +350,12 @@
       "critical-alert": "{{count}} dispositivos llevan más de 30 minutos sin señal.",
       "minutes": "{{count}} min sin señal",
       "inspect": "Inspeccionar",
-      "simulator": "Simulador IoT",
-      "simulator-hint": "Simula el gateway mientras no hay hardware real.",
-      "incomplete": "Reconectar con datos incompletos",
-      "send-reading": "Enviar lectura",
-      "disconnect": "Perder señal",
-      "reconnect": "Restaurar señal",
       "disconnections": "Historial de desconexiones",
       "ongoing": "en curso",
       "no-disconnections": "No hay desconexiones registradas.",
       "readings": "Últimas lecturas",
-      "reading-sent": "Lectura recibida.",
-      "disconnected": "El dispositivo perdió la señal.",
-      "reconnected": "El dispositivo se reconectó y se notificó al equipo."
+      "last-reading": "Última lectura",
+      "no-readings": "Aún no hay lecturas de este dispositivo."
     },
     "form": {
       "title": "Aprovisionar dispositivo",
@@ -383,10 +369,7 @@
       "generic": "La operación de telemetría falló. {{detail}}",
       "code-format": "Usa de 4 a 20 letras, números o guiones.",
       "duplicated-code": "Ya existe un dispositivo con el código {{code}}.",
-      "vehicle-has-device": "El vehículo ya tiene un dispositivo instalado.",
-      "device-disconnected": "El dispositivo está desconectado y no puede enviar lecturas.",
-      "already-disconnected": "El dispositivo ya está desconectado.",
-      "already-connected": "El dispositivo ya está conectado."
+      "vehicle-has-device": "El vehículo ya tiene un dispositivo instalado."
     }
   },
   "incident": {

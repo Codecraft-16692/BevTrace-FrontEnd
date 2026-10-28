@@ -175,7 +175,7 @@ export class Home implements OnInit {
     }
     if (this.iamStore.isSignedIn()) {
       this.router
-        .navigate(['/subscriptions/checkout'], { queryParams: { plan: plan.code, cycle: plan.billingPeriod } })
+        .navigate(['/subscription/subscriptions/new'], { queryParams: { plan: plan.code, cycle: plan.billingPeriod } })
         .then();
       return;
     }

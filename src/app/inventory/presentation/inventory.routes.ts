@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { Layout } from '../../shared/presentation/components/layout/layout';
-import { iamGuard } from '../../iam/infrastructure/iam-guard';
 
 /**
  * Lazy loads the inventory catalog view component.
@@ -49,21 +47,15 @@ const baseTitle = 'BevTrace';
  * Routing configuration for the Inventory bounded context.
  *
  * @remarks
- * These routes are lazy loaded inside the main Layout and protected by the
- * authentication guard.
+ * Every path names a plural resource (`/products`, `/batches`, `/waste-records`,
+ * `/reconciliations`). These routes are mounted by the root configuration
+ * inside the main Layout, which already requires an authenticated session.
  */
 export const inventoryRoutes: Routes = [
-  {
-    path: '',
-    component: Layout,
-    canActivate: [iamGuard],
-    children: [
-      { path: 'catalog', loadComponent: inventoryCatalog, title: `Inventory | ${baseTitle}` },
-      { path: 'batch-entry', loadComponent: batchEntry, title: `Batch Entry | ${baseTitle}` },
-      { path: 'batch-form', loadComponent: batchForm, title: `Register Batch | ${baseTitle}` },
-      { path: 'waste', loadComponent: wasteManagement, title: `Waste | ${baseTitle}` },
-      { path: 'reconciliation', loadComponent: reconciliation, title: `Reconciliation | ${baseTitle}` },
-      { path: '', redirectTo: 'catalog', pathMatch: 'full' },
-    ],
-  },
+  { path: 'products', loadComponent: inventoryCatalog, title: `Products | ${baseTitle}` },
+  { path: 'batches', loadComponent: batchEntry, title: `Batches | ${baseTitle}` },
+  { path: 'batches/new', loadComponent: batchForm, title: `Register Batch | ${baseTitle}` },
+  { path: 'waste-records', loadComponent: wasteManagement, title: `Waste Records | ${baseTitle}` },
+  { path: 'reconciliations', loadComponent: reconciliation, title: `Reconciliations | ${baseTitle}` },
+  { path: '', redirectTo: 'products', pathMatch: 'full' },
 ];

@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { Layout } from '../../shared/presentation/components/layout/layout';
-import { iamGuard } from '../../iam/infrastructure/iam-guard';
 import { roleGuard } from '../../iam/infrastructure/role-guard';
 
 /**
@@ -27,18 +25,21 @@ const baseTitle = 'BevTrace';
  * Routing configuration for the Analytics bounded context.
  *
  * @remarks
- * These routes are lazy loaded inside the main Layout and reserved to
- * logistics managers and administrators.
+ * Resources: `kpis` (performance indicators) and `reports`. Both are
+ * reserved to logistics managers and administrators.
  */
 export const analyticsRoutes: Routes = [
   {
-    path: '',
-    component: Layout,
-    canActivate: [iamGuard, roleGuard('ROLE_LOGISTICS_MANAGER')],
-    children: [
-      { path: 'dashboard', loadComponent: kpiDashboard, title: `Performance | ${baseTitle}` },
-      { path: 'reports', loadComponent: reportGenerator, title: `Reports | ${baseTitle}` },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    ],
+    path: 'kpis',
+    loadComponent: kpiDashboard,
+    canActivate: [roleGuard('ROLE_LOGISTICS_MANAGER')],
+    title: `KPIs | ${baseTitle}`,
   },
+  {
+    path: 'reports',
+    loadComponent: reportGenerator,
+    canActivate: [roleGuard('ROLE_LOGISTICS_MANAGER')],
+    title: `Logistics Reports | ${baseTitle}`,
+  },
+  { path: '', redirectTo: 'kpis', pathMatch: 'full' },
 ];

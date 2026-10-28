@@ -75,7 +75,7 @@ export class DispatchDetail implements OnInit {
   protected readonly vehicleId = signal<number | null>(null);
 
   /**
-   * Pallet labels typed or scanned by the operator, one per line.
+   * Pallet labels typed or scanned (barcode reader) by the operator, one per line.
    */
   protected readonly palletText = signal<string>('');
 
@@ -179,20 +179,6 @@ export class DispatchDetail implements OnInit {
   }
 
   /**
-   * Fills the scan box with every expected pallet, as a bulk scanner would do.
-   */
-  protected simulateScan(): void {
-    this.palletText.set(this.expectedPallets().join('\n'));
-  }
-
-  /**
-   * Fills the scan box with the expected pallets plus one that is not in the order.
-   */
-  protected simulateWrongScan(): void {
-    this.palletText.set([...this.expectedPallets(), 'LT-9999-P1'].join('\n'));
-  }
-
-  /**
    * Validates the pallets typed in the scan box.
    */
   protected onValidate(): void {
@@ -220,13 +206,13 @@ export class DispatchDetail implements OnInit {
    * Opens the route tracking map.
    */
   protected openTracking(): void {
-    this.router.navigate(['/traceability/route-map']).then();
+    this.router.navigate(['/traceability/logs']).then();
   }
 
   /**
    * Returns to the dispatch queue.
    */
   protected back(): void {
-    this.router.navigate(['/dispatch/queue']).then();
+    this.router.navigate(['/dispatch/orders']).then();
   }
 }

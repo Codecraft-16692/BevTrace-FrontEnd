@@ -41,10 +41,11 @@ const AVERAGE_SPEED_KMH = 28;
  * Domain service that plans the checkpoints and the estimated time of a route.
  *
  * @remarks
- * The external Maps API is simulated: the planner interpolates two
- * intermediate checkpoints between the warehouse and the destination and
- * estimates the travel time with the haversine distance. It can be replaced by
- * a real routing provider without changing the callers.
+ * The planner only states facts that are known when the dispatch departs: the
+ * warehouse (origin) and the destination of the client. It does not invent
+ * intermediate checkpoints nor track the vehicle. The travel time is an
+ * estimate based on the haversine distance; it can be replaced by a real
+ * routing provider without changing the callers.
  */
 export class RoutePlanner {
   /**
@@ -53,19 +54,12 @@ export class RoutePlanner {
    * @param destinationName - Name of the destination client
    * @param latitude - Latitude of the destination
    * @param longitude - Longitude of the destination
-   * @returns Ordered checkpoints, first the departure and last the destination
+   * @returns Origin (departure) and destination of the route
    */
   static plan(destinationName: string, latitude: number, longitude: number): PlannedPoint[] {
-    const at = (ratio: number) => ({
-      latitude: ORIGIN.latitude + (latitude - ORIGIN.latitude) * ratio,
-      longitude: ORIGIN.longitude + (longitude - ORIGIN.longitude) * ratio,
-    });
-
     return [
       { sequence: 1, locationName: `${ORIGIN.name} - Departure`, latitude: ORIGIN.latitude, longitude: ORIGIN.longitude },
-      { sequence: 2, locationName: 'Main Avenue Checkpoint', ...at(0.33) },
-      { sequence: 3, locationName: 'Expressway Checkpoint', ...at(0.66) },
-      { sequence: 4, locationName: destinationName, latitude, longitude },
+      { sequence: 2, locationName: destinationName, latitude, longitude },
     ];
   }
 

@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { TraceabilityStore } from '../../../application/traceability.store';
+import { autoRefresh } from '../../../../shared/application/auto-refresh';
 import { MapRoute } from '../../../../shared/domain/model/map-route';
 import { MessageBanner } from '../../../../shared/presentation/components/message-banner/message-banner';
 import { StatusChip } from '../../../../shared/presentation/components/status-chip/status-chip';
@@ -17,9 +18,9 @@ import { RouteCanvas } from '../../../../shared/presentation/components/route-ca
  *
  * @remarks
  * This presentation component supports the checkpoint and delivery user
- * stories. The GPS is simulated with buttons that mark a checkpoint as reached
- * (skipped checkpoints become omitted). At the destination the operator
- * confirms the delivery or registers a rejection with its reason.
+ * stories. The position and the checkpoints are read-only data supplied by the
+ * backend and reloaded periodically. At the destination the operator confirms
+ * the delivery or registers a rejection with its reason.
  */
 @Component({
   selector: 'app-traceability-detail',
@@ -82,21 +83,6 @@ export class TraceabilityDetail implements OnInit {
   protected readonly checkpoints = computed(() => this.store.checkpointsOf(this.logId()));
 
   /**
-   * Checkpoint that can be reached next.
-   */
-  protected readonly nextCheckpoint = computed(() =>
-    this.checkpoints().find((checkpoint) => checkpoint.status === 'PENDING') ?? null,
-  );
-
-  /**
-   * Indicates whether the destination was already reached.
-   */
-  protected readonly atDestination = computed(() => {
-    const route = this.checkpoints();
-    return route.length > 0 && route[route.length - 1].status === 'REACHED';
-  });
-
-  /**
    * Route drawn in the map.
    */
   protected readonly mapRoute = computed<MapRoute[]>(() => {
@@ -119,6 +105,13 @@ export class TraceabilityDetail implements OnInit {
   });
 
   /**
+   * Keeps the shipment up to date by reloading the data periodically.
+   */
+  constructor() {
+    autoRefresh(() => this.store.reload());
+  }
+
+  /**
    * Lifecycle hook that loads the traceability data and reads the log identifier.
    */
   ngOnInit(): void {
@@ -127,12 +120,10 @@ export class TraceabilityDetail implements OnInit {
   }
 
   /**
-   * Marks a checkpoint as reached.
-   *
-   * @param sequence - Sequence of the checkpoint
+   * Reloads the traceability data from the API.
    */
-  protected onReach(sequence: number): void {
-    this.store.reachCheckpoint({ logId: this.logId(), sequence });
+  protected onRefresh(): void {
+    this.store.loadAll();
   }
 
   /**
@@ -153,6 +144,6 @@ export class TraceabilityDetail implements OnInit {
    * Returns to the route map.
    */
   protected back(): void {
-    this.router.navigate(['/traceability/route-map']).then();
+    this.router.navigate(['/traceability/logs']).then();
   }
 }

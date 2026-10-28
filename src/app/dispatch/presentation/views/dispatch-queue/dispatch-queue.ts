@@ -83,13 +83,13 @@ export class DispatchQueue implements OnInit {
    * @param order - Order selected by the user
    */
   protected open(order: DispatchOrder): void {
-    this.router.navigate(['/dispatch', order.id]).then();
+    this.router.navigate(['/dispatch/orders', order.id]).then();
   }
 
   /**
    * Opens the scheduling form.
    */
   protected create(): void {
-    this.router.navigate(['/dispatch/new']).then();
+    this.router.navigate(['/dispatch/orders/new']).then();
   }
 }

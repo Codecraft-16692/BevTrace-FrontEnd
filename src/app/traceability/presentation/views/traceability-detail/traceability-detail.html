@@ -8,6 +8,9 @@
       </div>
     </div>
     <div class="header-actions">
+      <button type="button" class="btn-secondary" [disabled]="store.isLoading()" (click)="onRefresh()">
+        <mat-icon>refresh</mat-icon> {{ 'common.refresh' | translate }}
+      </button>
       <button type="button" class="btn-secondary" (click)="back()">{{ 'common.back' | translate }}</button>
     </div>
   </div>
@@ -44,13 +47,7 @@
                 <span class="muted">{{ checkpoint.observation }}</span>
               }
             </div>
-            @if (checkpoint.status === 'PENDING' && log.currentStatus === 'IN_TRANSIT') {
-              <button type="button" class="btn-secondary" [disabled]="store.isLoading()" (click)="onReach(checkpoint.sequence)">
-                {{ 'traceability.detail.simulate-reach' | translate }}
-              </button>
-            } @else {
-              <app-status-chip [status]="checkpoint.status" />
-            }
+            <app-status-chip [status]="checkpoint.status" />
           </div>
         }
       </div>
@@ -59,9 +56,7 @@
     @if (log.currentStatus !== 'COMPLETED') {
       <div class="card">
         <h3>{{ 'traceability.detail.delivery' | translate }}</h3>
-        @if (!atDestination()) {
-          <p class="muted">{{ 'traceability.detail.not-arrived' | translate }}</p>
-        } @else {
+        <p class="muted">{{ 'traceability.detail.delivery-hint' | translate }}</p>
           <div class="grid-2">
             <div>
               <div class="form-group">
@@ -78,7 +73,6 @@
               <button type="button" class="btn-secondary" [disabled]="store.isLoading()" (click)="onReject()">{{ 'traceability.detail.reject' | translate }}</button>
             </div>
           </div>
-        }
       </div>
     }
 

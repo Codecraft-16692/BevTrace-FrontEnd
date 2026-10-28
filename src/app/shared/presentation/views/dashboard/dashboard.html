@@ -10,17 +10,17 @@
   </div>
 
   <div class="kpi-grid">
-    <div class="kpi-card clickable" (click)="go('/inventory/catalog')">
+    <div class="kpi-card clickable" (click)="go('/inventory/products')">
       <span class="kpi-label">{{ 'dashboard.units' | translate }}</span>
       <span class="kpi-value">{{ inventory.totalUnits() | number }}</span>
       <span class="kpi-hint">{{ 'dashboard.shrinkage' | translate: { rate: inventory.shrinkageRate() } }}</span>
     </div>
-    <div class="kpi-card warn clickable" (click)="go('/dispatch/queue')">
+    <div class="kpi-card warn clickable" (click)="go('/dispatch/orders')">
       <span class="kpi-label">{{ 'dashboard.queue' | translate }}</span>
       <span class="kpi-value">{{ dispatch.queue().length }}</span>
       <span class="kpi-hint">{{ 'dashboard.in-transit' | translate: { count: dispatch.inTransit().length } }}</span>
     </div>
-    <div class="kpi-card ok clickable" (click)="go('/traceability/route-map')">
+    <div class="kpi-card ok clickable" (click)="go('/traceability/logs')">
       <span class="kpi-label">{{ 'dashboard.routes' | translate }}</span>
       <span class="kpi-value">{{ traceability.activeLogs().length }}</span>
     </div>
@@ -29,12 +29,12 @@
       <span class="kpi-value">{{ telemetry.connectedCount() }} / {{ telemetry.devices().length }}</span>
       <span class="kpi-hint">{{ 'dashboard.critical-devices' | translate: { count: telemetry.criticalCount() } }}</span>
     </div>
-    <div class="kpi-card clickable" [class.error]="incidents.criticalCount() > 0" (click)="go('/incidents/dashboard')">
+    <div class="kpi-card clickable" [class.error]="incidents.criticalCount() > 0" (click)="go('/incident/incidents')">
       <span class="kpi-label">{{ 'dashboard.incidents' | translate }}</span>
       <span class="kpi-value">{{ incidents.activeIncidents().length }}</span>
       <span class="kpi-hint">{{ 'dashboard.critical-incidents' | translate: { count: incidents.criticalCount() } }}</span>
     </div>
-    <div class="kpi-card clickable" [class.error]="inventory.openDiscrepancies().length > 0" (click)="go('/inventory/reconciliation')">
+    <div class="kpi-card clickable" [class.error]="inventory.openDiscrepancies().length > 0" (click)="go('/inventory/reconciliations')">
       <span class="kpi-label">{{ 'dashboard.discrepancies' | translate }}</span>
       <span class="kpi-value">{{ inventory.openDiscrepancies().length }}</span>
     </div>
@@ -46,7 +46,7 @@
       <table class="simple-table">
         <tbody>
           @for (order of nextDispatches(); track order.id) {
-            <tr class="clickable" (click)="go('/dispatch/' + order.id)">
+            <tr class="clickable" (click)="go('/dispatch/orders/' + order.id)">
               <td class="bold-cell mono">#{{ order.id }}</td>
               <td>{{ order.destinationName }}<div class="muted">{{ order.scheduledDate }}</div></td>
               <td><app-status-chip [status]="order.priority" /></td>
@@ -64,7 +64,7 @@
       <table class="simple-table">
         <tbody>
           @for (incident of latestIncidents(); track incident.id) {
-            <tr class="clickable" (click)="go('/incidents/dashboard')">
+            <tr class="clickable" (click)="go('/incident/incidents')">
               <td><app-status-chip [status]="incident.severity" /></td>
               <td>{{ 'incident.conditions.' + incident.anomalyType | translate }}<div class="muted">{{ incident.destinationName }}</div></td>
               <td class="muted">{{ incident.detectedAt | date: 'MMM d, HH:mm' }}</td>

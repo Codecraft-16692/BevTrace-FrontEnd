@@ -48,7 +48,7 @@ node server/seed.mjs
 | `inventory` | Catalog and shrinkage, batch intake by code, shrinkage logging, reconciliation and discrepancies |
 | `dispatch` | Dispatch queue, scheduling, classification, vehicle assignment, pallet validation, departure |
 | `traceability` | Active routes map, checkpoints, delivery / rejection, history |
-| `telemetry` | Connectivity dashboard (critical > 30 min), provisioning, IoT simulator |
+| `telemetry` | Connectivity dashboard (critical > 30 min), provisioning, read-only readings (auto-refresh) |
 | `incident` | Anomaly detection, rules, incidents, corrective actions, notifications |
 | `analytics` | KPI dashboard (OTIF, Fill Rate, ERI, rotation, shrinkage) and reports with CSV export |
 | `subscription` | Plans, simulated payment, billing, newsletter, contact and admin view |

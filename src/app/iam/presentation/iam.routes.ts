@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { Layout } from '../../shared/presentation/components/layout/layout';
-import { iamGuard } from '../infrastructure/iam-guard';
 import { roleGuard } from '../infrastructure/role-guard';
 
 /**
@@ -30,23 +28,28 @@ const userList = () => import('./views/user-list/user-list').then((m) => m.UserL
 const baseTitle = 'BevTrace';
 
 /**
- * Routing configuration for the Identity and Access Management bounded context.
+ * Public authentication routes.
  *
  * @remarks
- * These routes expose authentication views and the administrator-only user
- * management view. Authentication screens render their own public toolbar and
- * therefore do not use the main application layout.
+ * Authentication screens render their own public toolbar and therefore are not
+ * placed inside the main application layout.
  */
-export const iamRoutes: Routes = [
-  { path: 'sign-in', loadComponent: signInForm, title: `Sign In | ${baseTitle}` },
-  { path: 'sign-up', loadComponent: signUpForm, title: `Sign Up | ${baseTitle}` },
+export const authRoutes: Routes = [
+  { path: 'iam/sign-in', loadComponent: signInForm, title: `Sign In | ${baseTitle}` },
+  { path: 'iam/sign-up', loadComponent: signUpForm, title: `Sign Up | ${baseTitle}` },
+];
+
+/**
+ * Administrator-only routes of the Identity and Access Management context.
+ *
+ * @remarks
+ * The resource is the plural `users`, mounted under `/iam`.
+ */
+export const userRoutes: Routes = [
   {
-    path: '',
-    component: Layout,
-    canActivate: [iamGuard, roleGuard('ROLE_ADMIN')],
-    children: [
-      { path: 'users', loadComponent: userList, title: `Users & Roles | ${baseTitle}` },
-      { path: '', redirectTo: 'users', pathMatch: 'full' },
-    ],
+    path: 'iam/users',
+    loadComponent: userList,
+    canActivate: [roleGuard('ROLE_ADMIN')],
+    title: `Users & Roles | ${baseTitle}`,
   },
 ];
