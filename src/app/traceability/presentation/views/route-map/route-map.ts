@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { TraceabilityStore } from '../../../application/traceability.store';
+import { autoRefresh } from '../../../../shared/application/auto-refresh';
 import { MapRoute } from '../../../../shared/domain/model/map-route';
 import { MessageBanner } from '../../../../shared/presentation/components/message-banner/message-banner';
 import { StatusChip } from '../../../../shared/presentation/components/status-chip/status-chip';
@@ -24,7 +25,8 @@ const PALETTE = ['#0d5c63', '#e07b00', '#6a1b9a', '#1565c0', '#c62828', '#2e7d32
  * This presentation component follows the "Active Route Traceability Map"
  * wireframe. It lists the shipments on the road, draws their routes and
  * checkpoints in a schematic map and shows the detailed traceability log with
- * the progress of every shipment.
+ * the progress of every shipment. Positions and checkpoints are read-only data
+ * supplied by the backend and reloaded periodically or on demand.
  */
 @Component({
   selector: 'app-route-map',
@@ -76,8 +78,21 @@ export class RouteMap implements OnInit {
   );
 
   /**
-   * Lifecycle hook that loads the traceability data.
+   * Keeps the map up to date by reloading the data periodically.
    */
+  constructor() {
+    autoRefresh(() => this.store.reload());
+  }
+
+  /**
+   * Reloads the traceability data from the API.
+   */
+  protected onRefresh(): void {
+    this.store.loadAll();
+  }
+
+  /**
+   * Lifecycle hook that loads the traceability data.
   ngOnInit(): void {
     this.store.loadAll();
   }
@@ -119,6 +134,6 @@ export class RouteMap implements OnInit {
    * @param logId - Identifier of the traceability log
    */
   protected open(logId: number): void {
-    this.router.navigate(['/traceability/log', logId]).then();
+    this.router.navigate(['/traceability/logs', logId]).then();
   }
 }

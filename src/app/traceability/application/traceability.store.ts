@@ -9,7 +9,6 @@ import { RouteCheckpoint } from '../domain/model/route-checkpoint.entity';
 import { DeliveryRecord } from '../domain/model/delivery-record.entity';
 import { RoutePlanner, ORIGIN } from '../domain/model/route-planner';
 import { StartRouteTraceabilityCommand } from '../domain/model/start-route-traceability.command';
-import { ReachCheckpointCommand } from '../domain/model/reach-checkpoint.command';
 import { FinalizeDeliveryCommand } from '../domain/model/finalize-delivery.command';
 import { RejectDeliveryCommand } from '../domain/model/reject-delivery.command';
 
@@ -23,9 +22,10 @@ import { IncidentStore } from '../../incident/application/incident.store';
  *
  * @remarks
  * This store manages the route traceability of the shipments: it starts the
- * traceability when a dispatch departs, registers the checkpoints reached
- * (marking skipped ones as omitted) and finalizes or rejects the delivery.
- * The completion of a delivery closes the dispatch order automatically.
+ * traceability when a dispatch departs and finalizes or rejects the delivery.
+ * The vehicle position and the intermediate checkpoints come from the
+ * tracking backend and are only read. The completion of a delivery closes the
+ * dispatch order automatically.
  */
 @Injectable({ providedIn: 'root' })
 export class TraceabilityStore extends BaseStore {
@@ -190,58 +190,6 @@ export class TraceabilityStore extends BaseStore {
   }
 
   /**
-   * Registers that a checkpoint was reached, omitting the ones skipped before it.
-   *
-   * @param command - Command containing the log and the reached checkpoint
-   */
-  reachCheckpoint(command: ReachCheckpointCommand): void {
-    const operation = defer(() => {
-      const log = this.logById(command.logId);
-      if (!log || log.currentStatus !== 'IN_TRANSIT') {
-        return throwError(() => new BusinessError('traceability.errors.not-in-transit'));
-      }
-      const route = this.checkpointsOf(log.id);
-      const reached = route.find((checkpoint) => checkpoint.sequence === command.sequence);
-      if (!reached || reached.status !== 'PENDING') {
-        return throwError(() => new BusinessError('traceability.errors.checkpoint-invalid'));
-      }
-
-      const now = new Date().toISOString();
-      const skipped = route.filter(
-        (checkpoint) => checkpoint.sequence < reached.sequence && checkpoint.status === 'PENDING',
-      );
-
-      const updates: Observable<unknown>[] = [
-        ...skipped.map((checkpoint) =>
-          this.api.updateCheckpoint(checkpoint.id, {
-            status: 'OMITTED',
-            observation: 'Checkpoint omitted: a later checkpoint was reached first.',
-          }),
-        ),
-        this.api.updateCheckpoint(reached.id, { status: 'REACHED', reachedAt: now }),
-        this.api.updateLog(log.id, {
-          currentLatitude: reached.latitude,
-          currentLongitude: reached.longitude,
-        }),
-      ];
-
-      return forkJoin(updates).pipe(map(() => ({ skipped: skipped.length })));
-    });
-
-    this.write(
-      operation,
-      'traceability.errors.generic',
-      ({ skipped }) => {
-        this.publishSuccess({
-          key: skipped > 0 ? 'traceability.detail.reached-with-omitted' : 'traceability.detail.reached',
-          params: { count: skipped },
-        });
-        this.refresh();
-      },
-    );
-  }
-
-  /**
    * Confirms the delivery at the destination and closes the dispatch.
    *
    * @param command - Command containing the log and the person who received the cargo
@@ -252,25 +200,20 @@ export class TraceabilityStore extends BaseStore {
       if (!log || log.currentStatus === 'COMPLETED') {
         return throwError(() => new BusinessError('traceability.errors.already-completed'));
       }
-      const route = this.checkpointsOf(log.id);
-      const destination = route[route.length - 1];
-      if (!destination || destination.status !== 'REACHED') {
-        return throwError(() => new BusinessError('traceability.errors.not-arrived'));
-      }
       if (command.receivedBy.trim().length < 3) {
         return throwError(() => new BusinessError('traceability.errors.receiver-required'));
       }
 
       const now = new Date().toISOString();
-      return this.api
-        .createDeliveryRecord({
+      return this.markDestinationReached(log.id, now)
+        .pipe(switchMap(() => this.api.createDeliveryRecord({
           logId: log.id,
           receivedBy: command.receivedBy.trim(),
           signatureUrl: null,
           deliveredAt: now,
           status: 'DELIVERED',
           rejectionReason: null,
-        })
+        })))
         .pipe(
           switchMap(() =>
             this.api.updateLog(log.id, { currentStatus: 'COMPLETED', endTime: now, rejectionReason: null }),
@@ -290,7 +233,7 @@ export class TraceabilityStore extends BaseStore {
           title: 'Delivery completed',
           message: `The shipment to ${log.destinationName} was delivered and the dispatch was closed.`,
         });
-        this.refresh();
+        this.reload();
       },
       { key: 'traceability.detail.delivered' },
     );
@@ -307,25 +250,23 @@ export class TraceabilityStore extends BaseStore {
       if (!log || log.currentStatus === 'COMPLETED') {
         return throwError(() => new BusinessError('traceability.errors.already-completed'));
       }
-      const route = this.checkpointsOf(log.id);
-      const destination = route[route.length - 1];
-      if (!destination || destination.status !== 'REACHED') {
-        return throwError(() => new BusinessError('traceability.errors.not-arrived'));
-      }
       if (command.reason.trim().length < 5) {
         return throwError(() => new BusinessError('traceability.errors.reason-required'));
       }
 
-      return this.api
-        .createDeliveryRecord({
-          logId: log.id,
-          receivedBy: '-',
-          signatureUrl: null,
-          deliveredAt: new Date().toISOString(),
-          status: 'REJECTED',
-          rejectionReason: command.reason.trim(),
-        })
+      const now = new Date().toISOString();
+      return this.markDestinationReached(log.id, now)
         .pipe(
+          switchMap(() =>
+            this.api.createDeliveryRecord({
+              logId: log.id,
+              receivedBy: '-',
+              signatureUrl: null,
+              deliveredAt: now,
+              status: 'REJECTED',
+              rejectionReason: command.reason.trim(),
+            }),
+          ),
           switchMap(() =>
             this.api.updateLog(log.id, {
               currentStatus: 'DELIVERY_REJECTED',
@@ -335,7 +276,7 @@ export class TraceabilityStore extends BaseStore {
         );
     });
 
-    this.write(operation, 'traceability.errors.generic', () => this.refresh(), {
+    this.write(operation, 'traceability.errors.generic', () => this.reload(), {
       key: 'traceability.detail.rejected',
     });
   }
@@ -373,9 +314,28 @@ export class TraceabilityStore extends BaseStore {
   }
 
   /**
-   * Reloads the traceability data silently after a write operation.
+   * Reloads the traceability data silently (no loading overlay).
+   *
+   * @remarks
+   * The position and the checkpoints of a shipment are produced by the
+   * tracking backend and are only read here; the views call this method to
+   * stay up to date.
    */
-  private refresh(): void {
+  reload(): void {
     this.snapshot$().subscribe((snapshot) => this.applySnapshot(snapshot));
+  }
+
+  /**
+   * Marks the destination checkpoint as reached when the receiver answers the delivery.
+   *
+   * @param logId - Identifier of the log
+   * @param reachedAt - Moment in which the cargo was handed over or rejected
+   * @returns Observable that completes once the checkpoint is updated
+   */
+  private markDestinationReached(logId: number, reachedAt: string): Observable<unknown> {
+    const route = this.checkpointsOf(logId);
+    const destination = route[route.length - 1];
+    if (!destination || destination.status === 'REACHED') return of(null);
+    return this.api.updateCheckpoint(destination.id, { status: 'REACHED', reachedAt });
   }
 }
