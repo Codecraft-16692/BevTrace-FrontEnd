@@ -93,6 +93,7 @@ export class RouteMap implements OnInit {
 
   /**
    * Lifecycle hook that loads the traceability data.
+   */
   ngOnInit(): void {
     this.store.loadAll();
   }
@@ -115,7 +116,9 @@ export class RouteMap implements OnInit {
   protected progress(logId: number): number {
     const route = this.store.checkpointsOf(logId);
     if (route.length === 0) return 0;
-    return Math.round((route.filter((checkpoint) => checkpoint.status !== 'PENDING').length / route.length) * 100);
+    return Math.round(
+      (route.filter((checkpoint) => checkpoint.status !== 'PENDING').length / route.length) * 100,
+    );
   }
 
   /**
