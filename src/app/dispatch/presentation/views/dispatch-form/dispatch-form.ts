@@ -157,7 +157,7 @@ export class DispatchForm implements OnInit {
         priority: value.priority,
         items,
       },
-      (orderId) => this.router.navigate(['/dispatch', orderId]).then(),
+      (orderId) => this.router.navigate(['/dispatch/orders', orderId]).then(),
     );
   }
 

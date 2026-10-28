@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { Layout } from '../../shared/presentation/components/layout/layout';
-import { iamGuard } from '../../iam/infrastructure/iam-guard';
 import { roleGuard } from '../../iam/infrastructure/role-guard';
 
 /**
@@ -41,25 +39,19 @@ const baseTitle = 'BevTrace';
  * Routing configuration for the Subscription bounded context.
  *
  * @remarks
- * These routes are lazy loaded inside the main Layout. The administration
- * overview is reserved to administrators.
+ * Resources: `plans` (catalog), `subscriptions` (the billing of the
+ * account), `subscriptions/new` (checkout of a plan) and `admin/subscriptions`
+ * (administrator overview).
  */
 export const subscriptionRoutes: Routes = [
+  { path: 'plans', loadComponent: planList, title: `Subscription Plans | ${baseTitle}` },
+  { path: 'subscriptions', loadComponent: billing, title: `Subscriptions | ${baseTitle}` },
+  { path: 'subscriptions/new', loadComponent: checkout, title: `New Subscription | ${baseTitle}` },
   {
-    path: '',
-    component: Layout,
-    canActivate: [iamGuard],
-    children: [
-      { path: 'plans', loadComponent: planList, title: `Plans | ${baseTitle}` },
-      { path: 'checkout', loadComponent: checkout, title: `Checkout | ${baseTitle}` },
-      { path: 'billing', loadComponent: billing, title: `Billing | ${baseTitle}` },
-      {
-        path: 'admin',
-        loadComponent: subscriptionAdmin,
-        canActivate: [roleGuard('ROLE_ADMIN')],
-        title: `Subscriptions Admin | ${baseTitle}`,
-      },
-      { path: '', redirectTo: 'billing', pathMatch: 'full' },
-    ],
+    path: 'admin/subscriptions',
+    loadComponent: subscriptionAdmin,
+    canActivate: [roleGuard('ROLE_ADMIN')],
+    title: `Subscriptions Admin | ${baseTitle}`,
   },
+  { path: '', redirectTo: 'subscriptions', pathMatch: 'full' },
 ];

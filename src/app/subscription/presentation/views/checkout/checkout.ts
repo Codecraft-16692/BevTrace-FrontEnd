@@ -112,7 +112,7 @@ export class Checkout implements OnInit {
         cardHolder: value.cardHolder,
         cardNumber: value.cardNumber,
       },
-      () => this.router.navigate(['/subscriptions/billing']).then(),
+      () => this.router.navigate(['/subscription/subscriptions']).then(),
     );
   }
 }

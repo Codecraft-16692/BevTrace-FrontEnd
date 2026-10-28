@@ -58,7 +58,7 @@ export class PlanList implements OnInit {
       return;
     }
     this.router
-      .navigate(['/subscriptions/checkout'], { queryParams: { plan: plan.code, cycle: plan.billingPeriod } })
+      .navigate(['/subscription/subscriptions/new'], { queryParams: { plan: plan.code, cycle: plan.billingPeriod } })
       .then();
   }
 }

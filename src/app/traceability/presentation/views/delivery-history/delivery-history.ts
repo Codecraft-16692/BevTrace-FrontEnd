@@ -46,7 +46,7 @@ export class DeliveryHistory implements OnInit {
    * @param logId - Identifier of the traceability log
    */
   protected open(logId: number): void {
-    this.router.navigate(['/traceability/log', logId]).then();
+    this.router.navigate(['/traceability/logs', logId]).then();
   }
 
   /**

@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { Layout } from '../../shared/presentation/components/layout/layout';
-import { iamGuard } from '../../iam/infrastructure/iam-guard';
 import { roleGuard } from '../../iam/infrastructure/role-guard';
 
 /**
@@ -33,24 +31,18 @@ const baseTitle = 'BevTrace';
  * Routing configuration for the Dispatch bounded context.
  *
  * @remarks
- * These routes are lazy loaded inside the main Layout. Scheduling a dispatch is
- * reserved to logistics managers and administrators.
+ * The resource is the plural `orders` (mounted under `/dispatch`): the collection, the creation
+ * form (`/new`) and one order (`/:id`). Scheduling a dispatch is reserved to
+ * logistics managers.
  */
 export const dispatchRoutes: Routes = [
+  { path: 'orders', loadComponent: dispatchQueue, title: `Dispatch Orders | ${baseTitle}` },
   {
-    path: '',
-    component: Layout,
-    canActivate: [iamGuard],
-    children: [
-      { path: 'queue', loadComponent: dispatchQueue, title: `Dispatch Queue | ${baseTitle}` },
-      {
-        path: 'new',
-        loadComponent: dispatchForm,
-        canActivate: [roleGuard('ROLE_LOGISTICS_MANAGER')],
-        title: `Schedule Dispatch | ${baseTitle}`,
-      },
-      { path: ':id', loadComponent: dispatchDetail, title: `Dispatch Detail | ${baseTitle}` },
-      { path: '', redirectTo: 'queue', pathMatch: 'full' },
-    ],
+    path: 'orders/new',
+    loadComponent: dispatchForm,
+    canActivate: [roleGuard('ROLE_LOGISTICS_MANAGER')],
+    title: `Schedule Dispatch | ${baseTitle}`,
   },
+  { path: 'orders/:id', loadComponent: dispatchDetail, title: `Dispatch Order | ${baseTitle}` },
+  { path: '', redirectTo: 'orders', pathMatch: 'full' },
 ];

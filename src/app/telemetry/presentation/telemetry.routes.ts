@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { Layout } from '../../shared/presentation/components/layout/layout';
-import { iamGuard } from '../../iam/infrastructure/iam-guard';
 import { roleGuard } from '../../iam/infrastructure/role-guard';
 
 /**
@@ -26,23 +24,16 @@ const baseTitle = 'BevTrace';
  * Routing configuration for the Telemetry bounded context.
  *
  * @remarks
- * These routes are lazy loaded inside the main Layout. Provisioning devices is
- * reserved to logistics managers and administrators.
+ * The resource is the plural `devices` (mounted under `/telemetry`). Provisioning a device (`/devices/new`)
+ * is reserved to logistics managers.
  */
 export const telemetryRoutes: Routes = [
+  { path: 'devices', loadComponent: devicePanel, title: `Devices | ${baseTitle}` },
   {
-    path: '',
-    component: Layout,
-    canActivate: [iamGuard],
-    children: [
-      { path: 'devices', loadComponent: devicePanel, title: `Devices | ${baseTitle}` },
-      {
-        path: 'device-form',
-        loadComponent: deviceForm,
-        canActivate: [roleGuard('ROLE_LOGISTICS_MANAGER')],
-        title: `Provision Device | ${baseTitle}`,
-      },
-      { path: '', redirectTo: 'devices', pathMatch: 'full' },
-    ],
+    path: 'devices/new',
+    loadComponent: deviceForm,
+    canActivate: [roleGuard('ROLE_LOGISTICS_MANAGER')],
+    title: `Provision Device | ${baseTitle}`,
   },
+  { path: '', redirectTo: 'devices', pathMatch: 'full' },
 ];

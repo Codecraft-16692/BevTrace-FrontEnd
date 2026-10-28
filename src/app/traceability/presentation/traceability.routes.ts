@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { Layout } from '../../shared/presentation/components/layout/layout';
-import { iamGuard } from '../../iam/infrastructure/iam-guard';
 
 /**
  * Lazy loads the active route map view component.
@@ -34,19 +32,13 @@ const baseTitle = 'BevTrace';
  * Routing configuration for the Traceability bounded context.
  *
  * @remarks
- * These routes are lazy loaded inside the main Layout and protected by the
- * authentication guard.
+ * `/traceability/logs` is the collection of shipments on the road (rendered as
+ * a map), `/traceability/logs/:id` one shipment and `/traceability/delivery-records` the
+ * history of closed deliveries.
  */
 export const traceabilityRoutes: Routes = [
-  {
-    path: '',
-    component: Layout,
-    canActivate: [iamGuard],
-    children: [
-      { path: 'route-map', loadComponent: routeMap, title: `Route Map | ${baseTitle}` },
-      { path: 'history', loadComponent: deliveryHistory, title: `Delivery History | ${baseTitle}` },
-      { path: 'log/:id', loadComponent: traceabilityDetail, title: `Traceability | ${baseTitle}` },
-      { path: '', redirectTo: 'route-map', pathMatch: 'full' },
-    ],
-  },
+  { path: 'logs', loadComponent: routeMap, title: `Traceability Logs | ${baseTitle}` },
+  { path: 'logs/:id', loadComponent: traceabilityDetail, title: `Traceability Log | ${baseTitle}` },
+  { path: 'delivery-records', loadComponent: deliveryHistory, title: `Delivery Records | ${baseTitle}` },
+  { path: '', redirectTo: 'logs', pathMatch: 'full' },
 ];
