@@ -118,3 +118,4 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; color: #2b2
 .simple-table td { padding: 10px 16px; border-bottom: 1px solid #f0f0f0; }
 
 .form-actions.between { justify-content: space-between; align-items: center; }
+.btn-secondary mat-icon { font-size: 18px; width: 18px; height: 18px; vertical-align: middle; margin-right: 4px; }
