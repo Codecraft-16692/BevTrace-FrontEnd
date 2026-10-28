@@ -52,6 +52,8 @@ const baseTitle = 'BevTrace';
 export const routes: Routes = [
   { path: 'home', loadComponent: home, title: `${baseTitle} | IoT Beverage Logistics` },
   ...authRoutes,
+  // Must come before the Layout route: both have an empty path and the Layout requires a session.
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: '',
     component: Layout,
@@ -68,6 +70,5 @@ export const routes: Routes = [
       ...userRoutes,
     ],
   },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', loadComponent: pageNotFound, title: `Not Found | ${baseTitle}` },
 ];
