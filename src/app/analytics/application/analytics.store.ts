@@ -221,30 +221,19 @@ export class AnalyticsStore extends BaseStore {
   }
 
   /**
-   * Generates a consolidated report for a period.
+   * Generates a logistics report. The backend computes the KPIs of the period.
    *
-   * @param command - Command containing the user and the period
+   * @param command - Report generation command
    */
   generateReport(command: GenerateLogisticsReportCommand): void {
-    const operation = defer(() => {
-      if (!command.periodStart || !command.periodEnd || command.periodEnd < command.periodStart) {
-        return throwError(() => new BusinessError('analytics.errors.invalid-period'));
-      }
-      const indicators = KpiCalculator.calculate(this.dataSignal(), command.periodStart, command.periodEnd);
-      if (!indicators.hasData) {
-        return throwError(() => new BusinessError('analytics.errors.no-data'));
-      }
-      return this.api.createReport({
-        userId: command.userId,
-        periodStart: command.periodStart,
-        periodEnd: command.periodEnd,
-        createdAt: new Date().toISOString(),
-        kpis: KpiCalculator.toMetrics(indicators),
-      });
-    });
+    if (!command.periodStart || !command.periodEnd || command.periodEnd < command.periodStart) {
+      this.startOperation();
+      this.failOperation(new BusinessError('analytics.errors.invalid-period'), '');
+      return;
+    }
 
     this.write(
-      operation,
+      this.api.generateReport({ periodStart: command.periodStart, periodEnd: command.periodEnd }),
       'analytics.errors.generic',
       () => this.api.getReports().subscribe((reports) => this.reportsSignal.set(reports)),
       { key: 'analytics.reports.success' },
