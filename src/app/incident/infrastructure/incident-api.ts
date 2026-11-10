@@ -15,9 +15,6 @@ import { CorrectiveActionApiEndpoint } from './corrective-action-api-endpoint';
 import { NotificationApiEndpoint } from './notification-api-endpoint';
 
 import { CreateAlertRuleRequest } from './alert-rule.request';
-import { CreateIncidentRecordRequest } from './incident-record.request';
-import { CreateCorrectiveActionRequest } from './corrective-action.request';
-import { CreateNotificationRequest } from './notification.request';
 
 /**
  * HTTP API facade for the Incident bounded context.
@@ -82,14 +79,14 @@ export class IncidentApi extends BaseApi {
   }
 
   /**
-   * Enables or disables an alert rule.
+   * Enables or disables a rule (PATCH /rules/{id}/active).
    *
-   * @param id - Identifier of the rule
+   * @param id     - Rule identifier
    * @param active - New activation state
-   * @returns Observable stream emitting the updated AlertRule
+   * @returns Observable completing when the rule was updated
    */
-  setRuleActive(id: number, active: boolean): Observable<AlertRule> {
-    return this.ruleEndpoint.patch(id, { active });
+  setRuleActive(id: number, active: boolean): Observable<void> {
+    return this.ruleEndpoint.command('PATCH', `${id}/active`, { active });
   }
 
   /**
@@ -102,32 +99,43 @@ export class IncidentApi extends BaseApi {
   }
 
   /**
-   * Creates an incident.
+   * Runs the anomaly detection (POST /incidents/detections).
    *
-   * @param request - Incident creation payload
-   * @returns Observable stream emitting the created IncidentRecord
+   * @returns Observable emitting how many incidents were created and reopened
    */
-  createIncident(request: CreateIncidentRecordRequest): Observable<IncidentRecord> {
-    return this.incidentEndpoint.createFromRequest(request);
+  detectAnomalies(): Observable<{ created: number; reopened: number }> {
+    return this.incidentEndpoint.detect();
   }
 
   /**
-   * Partially updates an incident.
+   * Acknowledges an incident (POST /incidents/{id}/acknowledgement).
    *
-   * @param id - Identifier of the incident
-   * @param changes - Fields to change
-   * @returns Observable stream emitting the updated IncidentRecord
+   * @param id - Incident identifier
+   * @returns Observable completing when it was acknowledged
    */
-  updateIncident(
-    id: number,
-    changes: Partial<
-      Pick<
-        IncidentRecord,
-        'status' | 'acknowledgedBy' | 'acknowledgedAt' | 'resolvedAt' | 'reopenCount' | 'detectedAt'
-      >
-    >,
-  ): Observable<IncidentRecord> {
-    return this.incidentEndpoint.patch(id, changes);
+  acknowledgeIncident(id: number): Observable<void> {
+    return this.incidentEndpoint.command('POST', `${id}/acknowledgement`);
+  }
+
+  /**
+   * Registers a corrective action (POST /incidents/{id}/corrective-actions).
+   *
+   * @param id          - Incident identifier
+   * @param description - What was done
+   * @returns Observable completing when the action was registered
+   */
+  registerCorrectiveAction(id: number, description: string): Observable<void> {
+    return this.incidentEndpoint.command('POST', `${id}/corrective-actions`, { description });
+  }
+
+  /**
+   * Resolves an incident (POST /incidents/{id}/resolution).
+   *
+   * @param id - Incident identifier
+   * @returns Observable completing when it was resolved
+   */
+  resolveIncident(id: number): Observable<void> {
+    return this.incidentEndpoint.command('POST', `${id}/resolution`);
   }
 
   /**
@@ -139,15 +147,6 @@ export class IncidentApi extends BaseApi {
     return this.actionEndpoint.getAll();
   }
 
-  /**
-   * Creates a corrective action.
-   *
-   * @param request - Corrective action creation payload
-   * @returns Observable stream emitting the created CorrectiveAction
-   */
-  createAction(request: CreateCorrectiveActionRequest): Observable<CorrectiveAction> {
-    return this.actionEndpoint.createFromRequest(request);
-  }
 
   /**
    * Retrieves every notification.
@@ -158,23 +157,14 @@ export class IncidentApi extends BaseApi {
     return this.notificationEndpoint.getAll();
   }
 
-  /**
-   * Creates a notification.
-   *
-   * @param request - Notification creation payload
-   * @returns Observable stream emitting the created Notification
-   */
-  createNotification(request: CreateNotificationRequest): Observable<Notification> {
-    return this.notificationEndpoint.createFromRequest(request);
-  }
 
   /**
-   * Marks a notification as read.
+   * Marks a notification as read (PATCH /notifications/{id}/read).
    *
-   * @param id - Identifier of the notification
-   * @returns Observable stream emitting the updated Notification
+   * @param id - Notification identifier
+   * @returns Observable completing when it was marked
    */
-  markNotificationRead(id: number): Observable<Notification> {
-    return this.notificationEndpoint.patch(id, { read: true });
+  markNotificationRead(id: number): Observable<void> {
+    return this.notificationEndpoint.command('PATCH', `${id}/read`);
   }
 }
