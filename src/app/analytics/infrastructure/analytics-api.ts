@@ -6,7 +6,7 @@ import { BaseApi } from '../../shared/infrastructure/base-api';
 
 import { LogisticsReport } from '../domain/model/logistics-report.entity';
 import { LogisticsReportApiEndpoint } from './logistics-report-api-endpoint';
-import { CreateLogisticsReportRequest } from './logistics-report.request';
+import { GenerateLogisticsReportRequest } from './logistics-report.request';
 
 /**
  * HTTP API facade for the Analytics bounded context.
@@ -49,7 +49,7 @@ export class AnalyticsApi extends BaseApi {
    * @param request - Report creation payload
    * @returns Observable stream emitting the created LogisticsReport
    */
-  createReport(request: CreateLogisticsReportRequest): Observable<LogisticsReport> {
+  generateReport(request: GenerateLogisticsReportRequest): Observable<LogisticsReport> {
     return this.reportEndpoint.createFromRequest(request);
   }
 }

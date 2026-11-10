@@ -1,43 +1,13 @@
 /**
- * Request payload for creating an IoT telemetry device.
+ * Request payload to provision a device (POST /devices).
  *
  * @remarks
- * This interface belongs to the infrastructure layer and represents the HTTP
- * request body sent to the mock REST API. System-generated fields are excluded.
+ * Installation date, status and signal data are managed by the backend.
  */
-export interface CreateTelemetryDeviceRequest {
-  /**
-   * The identifier of the vehicle carrying the device.
-   */
+export interface ProvisionDeviceRequest {
   vehicleId: number;
 
-  /**
-   * The identifier of the device model.
-   */
   modelId: number;
 
-  /**
-   * The unique hardware code of the device.
-   */
   deviceCode: string;
-
-  /**
-   * The ISO 8601 installation timestamp.
-   */
-  installedAt: string;
-
-  /**
-   * Indicates whether the device is provisioned and active.
-   */
-  isActive: boolean;
-
-  /**
-   * The current connectivity status.
-   */
-  connectionStatus: 'CONNECTED' | 'DISCONNECTED';
-
-  /**
-   * The ISO 8601 timestamp of the last received signal.
-   */
-  lastSignalAt: string;
 }

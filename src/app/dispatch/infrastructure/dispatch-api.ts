@@ -16,8 +16,7 @@ import { TransportVehicleApiEndpoint } from './transport-vehicle-api-endpoint';
 import { DispatchOrderApiEndpoint } from './dispatch-order-api-endpoint';
 import { CargoAssignmentApiEndpoint } from './cargo-assignment-api-endpoint';
 
-import { CreateDispatchOrderRequest } from './dispatch-order.request';
-import { CreateCargoAssignmentRequest } from './cargo-assignment.request';
+import { ScheduleDispatchOrderRequest } from './dispatch-order.request';
 
 /**
  * HTTP API facade for the Dispatch bounded context.
@@ -95,16 +94,6 @@ export class DispatchApi extends BaseApi {
     return this.vehicleEndpoint.getAll();
   }
 
-  /**
-   * Changes the availability of a vehicle.
-   *
-   * @param id - Identifier of the vehicle
-   * @param isAvailable - New availability
-   * @returns Observable stream emitting the updated TransportVehicle
-   */
-  setVehicleAvailable(id: number, isAvailable: boolean): Observable<TransportVehicle> {
-    return this.vehicleEndpoint.patch(id, { isAvailable });
-  }
 
   /**
    * Retrieves every dispatch order.
@@ -126,38 +115,66 @@ export class DispatchApi extends BaseApi {
   }
 
   /**
-   * Creates a dispatch order.
+   * Schedules a dispatch order (POST /dispatch-orders).
    *
-   * @param request - Dispatch order creation payload
-   * @returns Observable stream emitting the created DispatchOrder
+   * @param request - Destination, date, priority and requested batches
+   * @returns Observable emitting the created order
    */
-  createOrder(request: CreateDispatchOrderRequest): Observable<DispatchOrder> {
+  scheduleOrder(request: ScheduleDispatchOrderRequest): Observable<DispatchOrder> {
     return this.orderEndpoint.createFromRequest(request);
   }
 
   /**
-   * Partially updates a dispatch order.
+   * Assigns a vehicle (POST /dispatch-orders/{id}/vehicle-assignment).
    *
-   * @param id - Identifier of the order
-   * @param changes - Fields to change
-   * @returns Observable stream emitting the updated DispatchOrder
+   * @param id        - Order identifier
+   * @param vehicleId - Vehicle identifier
+   * @returns Observable completing when the vehicle was assigned
    */
-  updateOrder(
-    id: number,
-    changes: Partial<
-      Pick<
-        DispatchOrder,
-        | 'vehicleId'
-        | 'status'
-        | 'priority'
-        | 'cargoValidated'
-        | 'departedAt'
-        | 'deliveredAt'
-        | 'deliveredQuantity'
-      >
-    >,
-  ): Observable<DispatchOrder> {
-    return this.orderEndpoint.patch(id, changes);
+  assignVehicle(id: number, vehicleId: number): Observable<void> {
+    return this.orderEndpoint.command('POST', `${id}/vehicle-assignment`, { vehicleId });
+  }
+
+  /**
+   * Validates the scanned pallets (POST /dispatch-orders/{id}/cargo-validation).
+   *
+   * @param id             - Order identifier
+   * @param scannedPallets - Scanned pallet codes
+   * @returns Observable completing when the cargo was validated
+   */
+  validateCargo(id: number, scannedPallets: string[]): Observable<void> {
+    return this.orderEndpoint.command('POST', `${id}/cargo-validation`, { scannedPallets });
+  }
+
+  /**
+   * Changes the priority (PATCH /dispatch-orders/{id}/priority).
+   *
+   * @param id       - Order identifier
+   * @param priority - New priority
+   * @returns Observable completing when the priority was changed
+   */
+  changePriority(id: number, priority: string): Observable<void> {
+    return this.orderEndpoint.command('PATCH', `${id}/priority`, { priority });
+  }
+
+  /**
+   * Registers the departure (POST /dispatch-orders/{id}/departure).
+   *
+   * @param id - Order identifier
+   * @returns Observable completing when the order is in transit
+   */
+  registerDeparture(id: number): Observable<void> {
+    return this.orderEndpoint.command('POST', `${id}/departure`);
+  }
+
+  /**
+   * Cancels the order (POST /dispatch-orders/{id}/cancellation).
+   *
+   * @param id - Order identifier
+   * @returns Observable completing when the order was cancelled
+   */
+  cancelOrder(id: number): Observable<void> {
+    return this.orderEndpoint.command('POST', `${id}/cancellation`);
   }
 
   /**
@@ -169,13 +186,4 @@ export class DispatchApi extends BaseApi {
     return this.cargoEndpoint.getAll();
   }
 
-  /**
-   * Creates a cargo assignment.
-   *
-   * @param request - Cargo assignment creation payload
-   * @returns Observable stream emitting the created CargoAssignment
-   */
-  createCargo(request: CreateCargoAssignmentRequest): Observable<CargoAssignment> {
-    return this.cargoEndpoint.createFromRequest(request);
-  }
 }

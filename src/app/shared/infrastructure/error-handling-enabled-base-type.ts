@@ -1,5 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
+import { BusinessError } from '../domain/model/business-error';
+
+/**
+ * Matches the i18n keys the backend sends in `details` (for example `dispatch.errors.capacity-exceeded`).
+ */
+const I18N_ERROR_KEY = /^[a-z][a-z-]*(\.[a-z0-9][a-z0-9-]*)*\.errors\.[a-z0-9.-]+$/i;
 
 /**
  * Abstract base class providing centralized HTTP error handling for BevTrace.
@@ -16,10 +22,16 @@ export abstract class ErrorHandlingEnabledBaseType {
    */
   protected handleError(operation: string) {
     return (error: HttpErrorResponse): Observable<never> => {
+      const details = (error.error as { details?: unknown } | null)?.details;
+      if (typeof details === 'string' && I18N_ERROR_KEY.test(details)) {
+        console.error(`[BevTrace API Error] ${operation}: ${details}`, error);
+        return throwError(() => new BusinessError(details));
+      }
+
       let errorMessage = operation;
 
       if (error.status === 0) {
-        errorMessage = `${operation}: Cannot reach the mock API. Run 'npm run api' first`;
+        errorMessage = `${operation}: Cannot reach the BevTrace API. Check that the backend is running`;
       } else if (error.status === 400) {
         errorMessage = `${operation}: Invalid request data`;
       } else if (error.status === 401) {

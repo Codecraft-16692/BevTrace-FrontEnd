@@ -8,15 +8,13 @@ import { User } from '../domain/model/user.entity';
 import { Role } from '../domain/model/role.entity';
 
 import { SignInApiEndpoint } from './sign-in-api-endpoint';
-import { SignInAssembler } from './sign-in-assembler';
 import { SignInRequest } from './sign-in.request';
 import { SignInResource } from './sign-in-response';
 
-import { SignUpApiEndpoint } from './sign-up-api-endpoint';
+import { SignUpApiEndpoint, SignUpResource } from './sign-up-api-endpoint';
 import { SignUpRequest } from './sign-up.request';
 
 import { UserApiEndpoint } from './user-api-endpoint';
-import { UserAssembler } from './user-assembler';
 import { RoleApiEndpoint } from './role-api-endpoint';
 
 /**
@@ -57,8 +55,8 @@ export class IamApi extends BaseApi {
    */
   constructor(http: HttpClient) {
     super();
-    this.signInEndpoint = new SignInApiEndpoint(http, new SignInAssembler());
-    this.signUpEndpoint = new SignUpApiEndpoint(http, new UserAssembler());
+    this.signInEndpoint = new SignInApiEndpoint(http);
+    this.signUpEndpoint = new SignUpApiEndpoint(http);
     this.userEndpoint = new UserApiEndpoint(http);
     this.roleEndpoint = new RoleApiEndpoint(http);
   }
@@ -77,9 +75,9 @@ export class IamApi extends BaseApi {
    * Registers a new user account.
    *
    * @param request - Sign-up request payload
-   * @returns Observable stream emitting the registered User entity
+   * @returns Observable stream emitting the created account
    */
-  signUp(request: SignUpRequest): Observable<User> {
+  signUp(request: SignUpRequest): Observable<SignUpResource> {
     return this.signUpEndpoint.signUp(request);
   }
 
@@ -106,10 +104,10 @@ export class IamApi extends BaseApi {
    *
    * @param userId - Numeric identifier of the user
    * @param roleId - Numeric identifier of the new role
-   * @returns Observable stream emitting the updated User entity
+   * @returns Observable stream completing when the role was changed
    */
-  assignRole(userId: number, roleId: number): Observable<User> {
-    return this.userEndpoint.patch(userId, { roleId });
+  assignRole(userId: number, roleId: number): Observable<void> {
+    return this.userEndpoint.command('PATCH', `${userId}/role`, { roleId });
   }
 
   /**
@@ -117,9 +115,9 @@ export class IamApi extends BaseApi {
    *
    * @param userId - Numeric identifier of the user
    * @param active - New activation state
-   * @returns Observable stream emitting the updated User entity
+   * @returns Observable stream completing when the state was changed
    */
-  setUserActive(userId: number, active: boolean): Observable<User> {
-    return this.userEndpoint.patch(userId, { active });
+  setUserActive(userId: number, active: boolean): Observable<void> {
+    return this.userEndpoint.command('PATCH', `${userId}/active`, { active });
   }
 }

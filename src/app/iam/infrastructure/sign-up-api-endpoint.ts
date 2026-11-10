@@ -1,33 +1,35 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, catchError, map, switchMap, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, catchError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ErrorHandlingEnabledBaseType } from '../../shared/infrastructure/error-handling-enabled-base-type';
-import { User } from '../domain/model/user.entity';
-import { UserAssembler } from './user-assembler';
 import { SignUpRequest } from './sign-up.request';
-import { UserResource } from './user-response';
 
-const usersApiEndpointUrl = `${environment.serverBasePath}${environment.usersEndpointPath}`;
+const signUpUrl = `${environment.serverBasePath}/authentication/sign-up`;
+
+/**
+ * Account created by the backend after a successful sign-up.
+ */
+export interface SignUpResource {
+  id: number;
+  name: string;
+  email: string;
+}
 
 /**
  * HTTP endpoint client for user registration operations.
  *
  * @remarks
- * This endpoint belongs to the infrastructure layer. Before creating the user
- * it verifies that the e-mail is not registered yet and answers with a
- * conflict error otherwise, emulating the behavior of the backend.
+ * This endpoint belongs to the infrastructure layer. The backend validates the
+ * payload, rejects duplicated e-mails and administrator self-registration, and
+ * stores the password hashed.
  */
 export class SignUpApiEndpoint extends ErrorHandlingEnabledBaseType {
   /**
    * Creates a new SignUpApiEndpoint instance.
    *
    * @param http - Angular HttpClient used to execute HTTP requests
-   * @param assembler - Assembler used to map the created resource into a User entity
    */
-  constructor(
-    private readonly http: HttpClient,
-    private readonly assembler: UserAssembler,
-  ) {
+  constructor(private readonly http: HttpClient) {
     super();
   }
 
@@ -35,23 +37,11 @@ export class SignUpApiEndpoint extends ErrorHandlingEnabledBaseType {
    * Registers a new user account.
    *
    * @param request - Sign-up request payload
-   * @returns Observable stream emitting the created User entity
+   * @returns Observable stream emitting the created account
    */
-  signUp(request: SignUpRequest): Observable<User> {
-    const params = new HttpParams().set('email', request.email);
-
-    return this.http.get<UserResource[]>(usersApiEndpointUrl, { params }).pipe(
-      switchMap((existing) =>
-        existing.length > 0
-          ? throwError(() => new HttpErrorResponse({ status: 409 }))
-          : this.http.post<UserResource>(usersApiEndpointUrl, request),
-      ),
-      map((resource) => this.assembler.toEntityFromResource(resource)),
-      catchError((error: HttpErrorResponse) =>
-        error.status === 409
-          ? throwError(() => error)
-          : this.handleError('Failed to sign up')(error),
-      ),
-    );
+  signUp(request: SignUpRequest): Observable<SignUpResource> {
+    return this.http
+      .post<SignUpResource>(signUpUrl, request)
+      .pipe(catchError(this.handleError('Failed to sign up')));
   }
 }
