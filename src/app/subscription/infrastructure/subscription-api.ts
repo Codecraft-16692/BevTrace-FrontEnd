@@ -16,10 +16,8 @@ import { PaymentApiEndpoint } from './payment-api-endpoint';
 import { NewsletterSubscriberApiEndpoint } from './newsletter-subscriber-api-endpoint';
 import { ContactRequestApiEndpoint } from './contact-request-api-endpoint';
 
-import { CreateSubscriptionRequest } from './subscription.request';
-import { CreatePaymentRequest } from './payment.request';
-import { CreateNewsletterSubscriberRequest } from './newsletter-subscriber.request';
-import { CreateContactRequestRequest } from './contact-request.request';
+import { SubscribeRequest } from './subscription.request';
+import { SubmitContactRequest } from './contact-request.request';
 
 /**
  * HTTP API facade for the Subscription bounded context.
@@ -90,26 +88,23 @@ export class SubscriptionApi extends BaseApi {
   }
 
   /**
-   * Creates a subscription.
+   * Subscribes to a plan (POST /subscriptions). The backend charges the payment.
    *
-   * @param request - Subscription creation payload
-   * @returns Observable stream emitting the created Subscription
+   * @param request - Company, plan and card data
+   * @returns Observable emitting the created subscription
    */
-  createSubscription(request: CreateSubscriptionRequest): Observable<Subscription> {
+  subscribe(request: SubscribeRequest): Observable<Subscription> {
     return this.subscriptionEndpoint.createFromRequest(request);
   }
 
   /**
-   * Cancels a subscription.
+   * Cancels a subscription (POST /subscriptions/{id}/cancellation).
    *
-   * @param id - Identifier of the subscription
-   * @returns Observable stream emitting the updated Subscription
+   * @param id - Subscription identifier
+   * @returns Observable completing when it was cancelled
    */
-  cancelSubscription(id: number): Observable<Subscription> {
-    return this.subscriptionEndpoint.patch(id, {
-      status: 'CANCELLED',
-      cancelledAt: new Date().toISOString(),
-    });
+  cancelSubscription(id: number): Observable<void> {
+    return this.subscriptionEndpoint.command('POST', `${id}/cancellation`);
   }
 
   /**
@@ -121,15 +116,6 @@ export class SubscriptionApi extends BaseApi {
     return this.paymentEndpoint.getAll();
   }
 
-  /**
-   * Creates a payment.
-   *
-   * @param request - Payment creation payload
-   * @returns Observable stream emitting the created Payment
-   */
-  createPayment(request: CreatePaymentRequest): Observable<Payment> {
-    return this.paymentEndpoint.createFromRequest(request);
-  }
 
   /**
    * Retrieves every newsletter subscriber.
@@ -140,24 +126,15 @@ export class SubscriptionApi extends BaseApi {
     return this.newsletterEndpoint.getAll();
   }
 
-  /**
-   * Retrieves the subscribers registered with an e-mail.
-   *
-   * @param email - E-mail address to look up
-   * @returns Observable stream emitting the matching NewsletterSubscriber entities
-   */
-  findSubscribersByEmail(email: string): Observable<NewsletterSubscriber[]> {
-    return this.newsletterEndpoint.getByQuery({ email });
-  }
 
   /**
-   * Creates a newsletter subscriber.
+   * Subscribes an e-mail to the newsletter (POST /newsletter-subscribers).
    *
-   * @param request - Subscriber creation payload
-   * @returns Observable stream emitting the created NewsletterSubscriber
+   * @param email - E-mail address
+   * @returns Observable emitting the created subscriber
    */
-  createSubscriber(request: CreateNewsletterSubscriberRequest): Observable<NewsletterSubscriber> {
-    return this.newsletterEndpoint.createFromRequest(request);
+  subscribeNewsletter(email: string): Observable<NewsletterSubscriber> {
+    return this.newsletterEndpoint.createFromRequest({ email });
   }
 
   /**
@@ -170,12 +147,12 @@ export class SubscriptionApi extends BaseApi {
   }
 
   /**
-   * Creates a contact request.
+   * Sends a contact request (POST /contact-requests).
    *
-   * @param request - Contact request creation payload
-   * @returns Observable stream emitting the created ContactRequest
+   * @param request - Contact data
+   * @returns Observable emitting the created request
    */
-  createContactRequest(request: CreateContactRequestRequest): Observable<ContactRequest> {
+  submitContactRequest(request: SubmitContactRequest): Observable<ContactRequest> {
     return this.contactEndpoint.createFromRequest(request);
   }
 }
