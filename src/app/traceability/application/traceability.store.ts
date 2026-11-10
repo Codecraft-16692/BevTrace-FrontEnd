@@ -1,5 +1,5 @@
-import { computed, inject, Injectable, Injector, signal } from '@angular/core';
-import { defer, forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { forkJoin, Observable } from 'rxjs';
 
 import { BaseStore } from '../../shared/application/base-store';
 import { BusinessError } from '../../shared/domain/model/business-error';
@@ -7,15 +7,10 @@ import { BusinessError } from '../../shared/domain/model/business-error';
 import { TraceabilityLog } from '../domain/model/traceability-log.entity';
 import { RouteCheckpoint } from '../domain/model/route-checkpoint.entity';
 import { DeliveryRecord } from '../domain/model/delivery-record.entity';
-import { RoutePlanner, ORIGIN } from '../domain/model/route-planner';
-import { StartRouteTraceabilityCommand } from '../domain/model/start-route-traceability.command';
 import { FinalizeDeliveryCommand } from '../domain/model/finalize-delivery.command';
 import { RejectDeliveryCommand } from '../domain/model/reject-delivery.command';
 
 import { TraceabilityApi } from '../infrastructure/traceability-api';
-import { TelemetryApi } from '../../telemetry/infrastructure/telemetry-api';
-import { DispatchStore } from '../../dispatch/application/dispatch.store';
-import { IncidentStore } from '../../incident/application/incident.store';
 
 /**
  * Signal-based application store for the Traceability bounded context.
@@ -33,16 +28,6 @@ export class TraceabilityStore extends BaseStore {
    * API facade used to reach the traceability endpoints.
    */
   private readonly api = inject(TraceabilityApi);
-
-  /**
-   * API facade used to find the device installed in a vehicle.
-   */
-  private readonly telemetryApi = inject(TelemetryApi);
-
-  /**
-   * Injector used to reach other bounded contexts lazily.
-   */
-  private readonly injector = inject(Injector);
 
   /**
    * Internal signal containing the traceability logs.
@@ -127,158 +112,44 @@ export class TraceabilityStore extends BaseStore {
   }
 
   /**
-   * Starts the traceability of a departed dispatch.
+   * Confirms the delivery. The backend closes the checkpoint, the record, the log,
+   * the dispatch order and releases the vehicle atomically.
    *
-   * @remarks
-   * Returns an observable so the dispatch store can chain it after registering
-   * the departure. When a log already exists for the order it is reused.
-   *
-   * @param command - Command containing the departure snapshot
-   * @returns Observable emitting the traceability log
-   */
-  startRouteTraceability(command: StartRouteTraceabilityCommand): Observable<TraceabilityLog> {
-    return this.api.findLogsByOrder(command.dispatchOrderId).pipe(
-      switchMap((existing) => {
-        if (existing.length > 0) return of(existing[0]);
-
-        const points = RoutePlanner.plan(
-          command.destinationName,
-          command.destinationLatitude,
-          command.destinationLongitude,
-        );
-        const minutes = RoutePlanner.estimateMinutes(
-          command.destinationLatitude,
-          command.destinationLongitude,
-        );
-
-        return this.telemetryApi.getDevices().pipe(
-          switchMap((devices) =>
-            this.api.createLog({
-              dispatchOrderId: command.dispatchOrderId,
-              currentStatus: 'IN_TRANSIT',
-              startTime: command.departedAt,
-              endTime: null,
-              estimatedArrival: new Date(new Date(command.departedAt).getTime() + minutes * 60000).toISOString(),
-              currentLatitude: ORIGIN.latitude,
-              currentLongitude: ORIGIN.longitude,
-              rejectionReason: null,
-              orderPriority: command.priority,
-              destinationName: command.destinationName,
-              vehiclePlate: command.vehiclePlate,
-              deviceId: devices.find((device) => device.vehicleId === command.vehicleId)?.id ?? null,
-            }),
-          ),
-          switchMap((log) =>
-            forkJoin(
-              points.map((point) =>
-                this.api.createCheckpoint({
-                  logId: log.id,
-                  sequence: point.sequence,
-                  locationName: point.locationName,
-                  latitude: point.latitude,
-                  longitude: point.longitude,
-                  status: point.sequence === 1 ? 'REACHED' : 'PENDING',
-                  reachedAt: point.sequence === 1 ? command.departedAt : null,
-                  observation: null,
-                }),
-              ),
-            ).pipe(map(() => log)),
-          ),
-        );
-      }),
-    );
-  }
-
-  /**
-   * Confirms the delivery at the destination and closes the dispatch.
-   *
-   * @param command - Command containing the log and the person who received the cargo
+   * @param command - Delivery confirmation command
    */
   finalizeDelivery(command: FinalizeDeliveryCommand): void {
-    const operation = defer(() => {
-      const log = this.logById(command.logId);
-      if (!log || log.currentStatus === 'COMPLETED') {
-        return throwError(() => new BusinessError('traceability.errors.already-completed'));
-      }
-      if (command.receivedBy.trim().length < 3) {
-        return throwError(() => new BusinessError('traceability.errors.receiver-required'));
-      }
-
-      const now = new Date().toISOString();
-      return this.markDestinationReached(log.id, now)
-        .pipe(switchMap(() => this.api.createDeliveryRecord({
-          logId: log.id,
-          receivedBy: command.receivedBy.trim(),
-          signatureUrl: null,
-          deliveredAt: now,
-          status: 'DELIVERED',
-          rejectionReason: null,
-        })))
-        .pipe(
-          switchMap(() =>
-            this.api.updateLog(log.id, { currentStatus: 'COMPLETED', endTime: now, rejectionReason: null }),
-          ),
-          switchMap(() => this.injector.get(DispatchStore).completeDelivery(log.dispatchOrderId)),
-          map(() => log),
-        );
-    });
+    if (command.receivedBy.trim().length < 3) {
+      this.startOperation();
+      this.failOperation(new BusinessError('traceability.errors.receiver-required'), '');
+      return;
+    }
 
     this.write(
-      operation,
+      this.api.confirmDelivery(command.logId, command.receivedBy.trim()),
       'traceability.errors.generic',
-      (log) => {
-        this.injector.get(IncidentStore).notify({
-          recipientRole: 'ROLE_LOGISTICS_MANAGER',
-          type: 'DISPATCH',
-          title: 'Delivery completed',
-          message: `The shipment to ${log.destinationName} was delivered and the dispatch was closed.`,
-        });
-        this.reload();
-      },
+      () => this.reload(),
       { key: 'traceability.detail.delivered' },
     );
   }
 
   /**
-   * Registers a delivery rejected by the client, keeping the shipment open.
+   * Rejects the delivery. The shipment stays open for a new attempt.
    *
-   * @param command - Command containing the log and the rejection reason
+   * @param command - Delivery rejection command
    */
   rejectDelivery(command: RejectDeliveryCommand): void {
-    const operation = defer(() => {
-      const log = this.logById(command.logId);
-      if (!log || log.currentStatus === 'COMPLETED') {
-        return throwError(() => new BusinessError('traceability.errors.already-completed'));
-      }
-      if (command.reason.trim().length < 5) {
-        return throwError(() => new BusinessError('traceability.errors.reason-required'));
-      }
+    if (command.reason.trim().length < 5) {
+      this.startOperation();
+      this.failOperation(new BusinessError('traceability.errors.reason-required'), '');
+      return;
+    }
 
-      const now = new Date().toISOString();
-      return this.markDestinationReached(log.id, now)
-        .pipe(
-          switchMap(() =>
-            this.api.createDeliveryRecord({
-              logId: log.id,
-              receivedBy: '-',
-              signatureUrl: null,
-              deliveredAt: now,
-              status: 'REJECTED',
-              rejectionReason: command.reason.trim(),
-            }),
-          ),
-          switchMap(() =>
-            this.api.updateLog(log.id, {
-              currentStatus: 'DELIVERY_REJECTED',
-              rejectionReason: command.reason.trim(),
-            }),
-          ),
-        );
-    });
-
-    this.write(operation, 'traceability.errors.generic', () => this.reload(), {
-      key: 'traceability.detail.rejected',
-    });
+    this.write(
+      this.api.rejectDelivery(command.logId, command.reason.trim()),
+      'traceability.errors.generic',
+      () => this.reload(),
+      { key: 'traceability.detail.rejected' },
+    );
   }
 
   /**
@@ -323,19 +194,5 @@ export class TraceabilityStore extends BaseStore {
    */
   reload(): void {
     this.snapshot$().subscribe((snapshot) => this.applySnapshot(snapshot));
-  }
-
-  /**
-   * Marks the destination checkpoint as reached when the receiver answers the delivery.
-   *
-   * @param logId - Identifier of the log
-   * @param reachedAt - Moment in which the cargo was handed over or rejected
-   * @returns Observable that completes once the checkpoint is updated
-   */
-  private markDestinationReached(logId: number, reachedAt: string): Observable<unknown> {
-    const route = this.checkpointsOf(logId);
-    const destination = route[route.length - 1];
-    if (!destination || destination.status === 'REACHED') return of(null);
-    return this.api.updateCheckpoint(destination.id, { status: 'REACHED', reachedAt });
   }
 }

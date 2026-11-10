@@ -12,9 +12,6 @@ import { TraceabilityLogApiEndpoint } from './traceability-log-api-endpoint';
 import { RouteCheckpointApiEndpoint } from './route-checkpoint-api-endpoint';
 import { DeliveryRecordApiEndpoint } from './delivery-record-api-endpoint';
 
-import { CreateTraceabilityLogRequest } from './traceability-log.request';
-import { CreateRouteCheckpointRequest } from './route-checkpoint.request';
-import { CreateDeliveryRecordRequest } from './delivery-record.request';
 
 /**
  * HTTP API facade for the Traceability bounded context.
@@ -62,43 +59,28 @@ export class TraceabilityApi extends BaseApi {
     return this.logEndpoint.getAll();
   }
 
+
+
   /**
-   * Retrieves the logs of a dispatch order.
+   * Confirms the delivery (POST /logs/{id}/delivery).
    *
-   * @param dispatchOrderId - Identifier of the dispatch order
-   * @returns Observable stream emitting the matching TraceabilityLog entities
+   * @param id         - Log identifier
+   * @param receivedBy - Name of the person who received the cargo
+   * @returns Observable completing when the delivery was confirmed
    */
-  findLogsByOrder(dispatchOrderId: number): Observable<TraceabilityLog[]> {
-    return this.logEndpoint.getByQuery({ dispatchOrderId });
+  confirmDelivery(id: number, receivedBy: string): Observable<void> {
+    return this.logEndpoint.command('POST', `${id}/delivery`, { receivedBy });
   }
 
   /**
-   * Creates a traceability log.
+   * Rejects the delivery (POST /logs/{id}/rejection).
    *
-   * @param request - Log creation payload
-   * @returns Observable stream emitting the created TraceabilityLog
+   * @param id     - Log identifier
+   * @param reason - Rejection reason
+   * @returns Observable completing when the rejection was registered
    */
-  createLog(request: CreateTraceabilityLogRequest): Observable<TraceabilityLog> {
-    return this.logEndpoint.createFromRequest(request);
-  }
-
-  /**
-   * Partially updates a traceability log.
-   *
-   * @param id - Identifier of the log
-   * @param changes - Fields to change
-   * @returns Observable stream emitting the updated TraceabilityLog
-   */
-  updateLog(
-    id: number,
-    changes: Partial<
-      Pick<
-        TraceabilityLog,
-        'currentStatus' | 'endTime' | 'currentLatitude' | 'currentLongitude' | 'rejectionReason'
-      >
-    >,
-  ): Observable<TraceabilityLog> {
-    return this.logEndpoint.patch(id, changes);
+  rejectDelivery(id: number, reason: string): Observable<void> {
+    return this.logEndpoint.command('POST', `${id}/rejection`, { reason });
   }
 
   /**
@@ -110,29 +92,7 @@ export class TraceabilityApi extends BaseApi {
     return this.checkpointEndpoint.getAll();
   }
 
-  /**
-   * Creates a route checkpoint.
-   *
-   * @param request - Checkpoint creation payload
-   * @returns Observable stream emitting the created RouteCheckpoint
-   */
-  createCheckpoint(request: CreateRouteCheckpointRequest): Observable<RouteCheckpoint> {
-    return this.checkpointEndpoint.createFromRequest(request);
-  }
 
-  /**
-   * Partially updates a route checkpoint.
-   *
-   * @param id - Identifier of the checkpoint
-   * @param changes - Fields to change
-   * @returns Observable stream emitting the updated RouteCheckpoint
-   */
-  updateCheckpoint(
-    id: number,
-    changes: Partial<Pick<RouteCheckpoint, 'status' | 'reachedAt' | 'observation'>>,
-  ): Observable<RouteCheckpoint> {
-    return this.checkpointEndpoint.patch(id, changes);
-  }
 
   /**
    * Retrieves every delivery record.
@@ -143,13 +103,4 @@ export class TraceabilityApi extends BaseApi {
     return this.recordEndpoint.getAll();
   }
 
-  /**
-   * Creates a delivery record.
-   *
-   * @param request - Delivery record creation payload
-   * @returns Observable stream emitting the created DeliveryRecord
-   */
-  createDeliveryRecord(request: CreateDeliveryRecordRequest): Observable<DeliveryRecord> {
-    return this.recordEndpoint.createFromRequest(request);
-  }
 }
