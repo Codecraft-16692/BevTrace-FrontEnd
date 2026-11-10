@@ -18,10 +18,8 @@ import { WasteRecordApiEndpoint } from './waste-record-api-endpoint';
 import { InventoryReconciliationApiEndpoint } from './inventory-reconciliation-api-endpoint';
 import { InventoryDiscrepancyApiEndpoint } from './inventory-discrepancy-api-endpoint';
 
-import { CreateProductBatchRequest } from './product-batch.request';
-import { CreateWasteRecordRequest } from './waste-record.request';
-import { CreateInventoryReconciliationRequest } from './inventory-reconciliation.request';
-import { CreateInventoryDiscrepancyRequest } from './inventory-discrepancy.request';
+import { RegisterBatchRequest } from './product-batch.request';
+import { RegisterWasteRequest } from './waste-record.request';
 
 /**
  * HTTP API facade for the Inventory bounded context.
@@ -106,38 +104,45 @@ export class InventoryApi extends BaseApi {
     return this.batchEndpoint.getAll();
   }
 
-  /**
-   * Retrieves the batches whose code matches the scanned value.
-   *
-   * @param batchNumber - Batch code read by the scanner
-   * @returns Observable stream emitting the matching ProductBatch entities
-   */
-  findBatchesByCode(batchNumber: string): Observable<ProductBatch[]> {
-    return this.batchEndpoint.getByQuery({ batchNumber });
-  }
 
   /**
-   * Creates a product batch.
+   * Registers an expected batch (POST /batches).
    *
-   * @param request - Batch creation payload
-   * @returns Observable stream emitting the created ProductBatch
+   * @param request - Batch data
+   * @returns Observable completing when the batch was registered
    */
-  createBatch(request: CreateProductBatchRequest): Observable<ProductBatch> {
+  registerBatch(request: RegisterBatchRequest): Observable<ProductBatch> {
     return this.batchEndpoint.createFromRequest(request);
   }
 
   /**
-   * Partially updates a product batch.
+   * Receives an expected batch by its scanned code (POST /batches/receptions).
    *
-   * @param id - Identifier of the batch
-   * @param changes - Fields to change
-   * @returns Observable stream emitting the updated ProductBatch
+   * @param scanCode - Scanned batch code
+   * @returns Observable completing when the batch was received
    */
-  updateBatch(
-    id: number,
-    changes: Partial<Pick<ProductBatch, 'currentQty' | 'status' | 'receivedAt'>>,
-  ): Observable<ProductBatch> {
-    return this.batchEndpoint.patch(id, changes);
+  receiveBatch(scanCode: string): Observable<void> {
+    return this.batchEndpoint.command('POST', 'receptions', { scanCode });
+  }
+
+  /**
+   * Registers a waste record (POST /waste-records). The backend deducts the stock.
+   *
+   * @param request - Waste data
+   * @returns Observable completing when the waste was registered
+   */
+  registerWaste(request: RegisterWasteRequest): Observable<WasteRecord> {
+    return this.wasteEndpoint.createFromRequest(request);
+  }
+
+  /**
+   * Runs a reconciliation (POST /reconciliations).
+   *
+   * @param counts - Counted quantity per batch
+   * @returns Observable completing when the reconciliation was created
+   */
+  runReconciliation(counts: { batchId: number; countedQty: number }[]): Observable<InventoryReconciliation> {
+    return this.reconciliationEndpoint.createFromRequest({ counts });
   }
 
   /**
@@ -149,15 +154,6 @@ export class InventoryApi extends BaseApi {
     return this.wasteEndpoint.getAll();
   }
 
-  /**
-   * Creates a waste record.
-   *
-   * @param request - Waste creation payload
-   * @returns Observable stream emitting the created WasteRecord
-   */
-  createWasteRecord(request: CreateWasteRecordRequest): Observable<WasteRecord> {
-    return this.wasteEndpoint.createFromRequest(request);
-  }
 
   /**
    * Retrieves every reconciliation.
@@ -168,33 +164,16 @@ export class InventoryApi extends BaseApi {
     return this.reconciliationEndpoint.getAll();
   }
 
-  /**
-   * Creates a reconciliation.
-   *
-   * @param request - Reconciliation creation payload
-   * @returns Observable stream emitting the created InventoryReconciliation
-   */
-  createReconciliation(
-    request: CreateInventoryReconciliationRequest,
-  ): Observable<InventoryReconciliation> {
-    return this.reconciliationEndpoint.createFromRequest(request);
-  }
 
   /**
-   * Confirms a reconciliation.
+   * Confirms a reconciliation (POST /reconciliations/{id}/confirmation).
    *
-   * @param id - Identifier of the reconciliation
-   * @param userId - Identifier of the confirming user
-   * @returns Observable stream emitting the updated InventoryReconciliation
+   * @param id - Reconciliation identifier
+   * @returns Observable completing when it was confirmed
    */
-  confirmReconciliation(id: number, userId: number): Observable<InventoryReconciliation> {
-    return this.reconciliationEndpoint.patch(id, {
-      status: 'RECONCILED',
-      confirmedBy: userId,
-      confirmedAt: new Date().toISOString(),
-    });
+  confirmReconciliation(id: number): Observable<void> {
+    return this.reconciliationEndpoint.command('POST', `${id}/confirmation`);
   }
-
   /**
    * Retrieves every discrepancy.
    *
@@ -204,30 +183,14 @@ export class InventoryApi extends BaseApi {
     return this.discrepancyEndpoint.getAll();
   }
 
-  /**
-   * Creates a discrepancy.
-   *
-   * @param request - Discrepancy creation payload
-   * @returns Observable stream emitting the created InventoryDiscrepancy
-   */
-  createDiscrepancy(
-    request: CreateInventoryDiscrepancyRequest,
-  ): Observable<InventoryDiscrepancy> {
-    return this.discrepancyEndpoint.createFromRequest(request);
-  }
 
   /**
-   * Marks a discrepancy as resolved.
+   * Resolves a discrepancy (POST /discrepancies/{id}/resolution).
    *
-   * @param id - Identifier of the discrepancy
-   * @param note - Resolution note
-   * @returns Observable stream emitting the updated InventoryDiscrepancy
+   * @param id   - Discrepancy identifier
+   * @param note - Explanatory note
+   * @returns Observable completing when it was resolved
    */
-  resolveDiscrepancy(id: number, note: string): Observable<InventoryDiscrepancy> {
-    return this.discrepancyEndpoint.patch(id, {
-      status: 'RESOLVED',
-      resolvedAt: new Date().toISOString(),
-      resolutionNote: note,
-    });
-  }
-}
+  resolveDiscrepancy(id: number, note: string): Observable<void> {
+    return this.discrepancyEndpoint.command('POST', `${id}/resolution`, { note });
+  }}

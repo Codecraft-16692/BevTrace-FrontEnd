@@ -14,9 +14,7 @@ import { TelemetryDeviceApiEndpoint } from './telemetry-device-api-endpoint';
 import { LocationStreamApiEndpoint } from './location-stream-api-endpoint';
 import { DisconnectionPeriodApiEndpoint } from './disconnection-period-api-endpoint';
 
-import { CreateTelemetryDeviceRequest } from './telemetry-device.request';
-import { CreateLocationStreamRequest } from './location-stream.request';
-import { CreateDisconnectionPeriodRequest } from './disconnection-period.request';
+import { ProvisionDeviceRequest } from './telemetry-device.request';
 
 /**
  * HTTP API facade for the Telemetry bounded context.
@@ -80,39 +78,17 @@ export class TelemetryApi extends BaseApi {
     return this.deviceEndpoint.getAll();
   }
 
-  /**
-   * Retrieves the devices matching a hardware code.
-   *
-   * @param deviceCode - Hardware code of the device
-   * @returns Observable stream emitting the matching TelemetryDevice entities
-   */
-  findDevicesByCode(deviceCode: string): Observable<TelemetryDevice[]> {
-    return this.deviceEndpoint.getByQuery({ deviceCode });
-  }
 
   /**
-   * Creates a device.
+   * Provisions a device (POST /devices).
    *
-   * @param request - Device creation payload
-   * @returns Observable stream emitting the created TelemetryDevice
+   * @param request - Vehicle, model and device code
+   * @returns Observable emitting the provisioned device
    */
-  createDevice(request: CreateTelemetryDeviceRequest): Observable<TelemetryDevice> {
+  provisionDevice(request: ProvisionDeviceRequest): Observable<TelemetryDevice> {
     return this.deviceEndpoint.createFromRequest(request);
   }
 
-  /**
-   * Partially updates a device.
-   *
-   * @param id - Identifier of the device
-   * @param changes - Fields to change
-   * @returns Observable stream emitting the updated TelemetryDevice
-   */
-  updateDevice(
-    id: number,
-    changes: Partial<Pick<TelemetryDevice, 'connectionStatus' | 'lastSignalAt' | 'isActive'>>,
-  ): Observable<TelemetryDevice> {
-    return this.deviceEndpoint.patch(id, changes);
-  }
 
   /**
    * Retrieves every telemetry reading.
@@ -123,15 +99,6 @@ export class TelemetryApi extends BaseApi {
     return this.streamEndpoint.getAll();
   }
 
-  /**
-   * Creates a telemetry reading.
-   *
-   * @param request - Reading creation payload
-   * @returns Observable stream emitting the created LocationStream
-   */
-  createStream(request: CreateLocationStreamRequest): Observable<LocationStream> {
-    return this.streamEndpoint.createFromRequest(request);
-  }
 
   /**
    * Retrieves every disconnection period.
@@ -142,29 +109,5 @@ export class TelemetryApi extends BaseApi {
     return this.disconnectionEndpoint.getAll();
   }
 
-  /**
-   * Creates a disconnection period.
-   *
-   * @param request - Disconnection creation payload
-   * @returns Observable stream emitting the created DisconnectionPeriod
-   */
-  createDisconnection(request: CreateDisconnectionPeriodRequest): Observable<DisconnectionPeriod> {
-    return this.disconnectionEndpoint.createFromRequest(request);
-  }
 
-  /**
-   * Closes a disconnection period when the signal is restored.
-   *
-   * @param id - Identifier of the disconnection period
-   * @param endedAt - ISO 8601 timestamp of the reconnection
-   * @param dataStatus - Availability of the telemetry of the period
-   * @returns Observable stream emitting the updated DisconnectionPeriod
-   */
-  closeDisconnection(
-    id: number,
-    endedAt: string,
-    dataStatus: 'AVAILABLE' | 'UNAVAILABLE',
-  ): Observable<DisconnectionPeriod> {
-    return this.disconnectionEndpoint.patch(id, { endedAt, dataStatus });
-  }
 }

@@ -81,7 +81,12 @@ export abstract class BaseApiEndpoint<
     const lookups = this.expansions.map((name) =>
       this.http
         .get<{ id: number }[]>(`${environment.serverBasePath}/${this.collectionOf(name)}`)
-        .pipe(map((items) => ({ name, items }))),
+        .pipe(
+          // A role may not be allowed to list the related collection (for example /users is
+          // admin only): the rows are still shown, just without the embedded relation.
+          catchError(() => of([] as { id: number }[])),
+          map((items) => ({ name, items })),
+        ),
     );
 
     return forkJoin(lookups).pipe(
@@ -120,7 +125,7 @@ export abstract class BaseApiEndpoint<
 
   /**
    * Retrieves the entities matching the given query parameters.
-   * @param query - Filter, sorting or pagination parameters (json-server syntax).
+   * @param query - Filter, sorting or pagination parameters (plain query-string filters).
    * @returns An observable of an array of domain entities.
    */
   getByQuery(query: Record<string, string | number | boolean>): Observable<TEntity[]> {
@@ -198,6 +203,24 @@ export abstract class BaseApiEndpoint<
       map((updatedResource) => this.assembler.toEntityFromResource(updatedResource)),
       catchError(this.handleError(`Failed to patch entity with id ${id}`)),
     );
+  }
+
+  /**
+   * Executes a domain command exposed by the backend as a sub-resource of this collection.
+   * @remarks The backend applies the business rules and answers with the updated resource,
+   * which callers ignore: the store refreshes its data afterwards.
+   * @param method - HTTP verb of the command.
+   * @param path   - Path relative to the collection, for example `5/departure`.
+   * @param body   - Optional command payload.
+   * @returns An observable that completes when the command was accepted.
+   */
+  command(method: 'POST' | 'PATCH', path: string, body: object = {}): Observable<void> {
+    return this.http
+      .request<unknown>(method, `${this.endpointUrl}/${path}`, { body })
+      .pipe(
+        map(() => undefined),
+        catchError(this.handleError(`Failed to execute ${path}`)),
+      );
   }
 
   /**

@@ -28,6 +28,4 @@ export interface CreateAlertRuleRequest {
 
   /**
    * Indicates whether the rule is evaluated.
-   */
-  active: boolean;
-}
+   */}

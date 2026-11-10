@@ -1,5 +1,5 @@
-import { computed, inject, Injectable, Injector, signal } from '@angular/core';
-import { defer, forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { forkJoin, Observable } from 'rxjs';
 
 import { BaseStore } from '../../shared/application/base-store';
 import { BusinessError } from '../../shared/domain/model/business-error';
@@ -18,7 +18,6 @@ import { ConfirmReconciliationCommand } from '../domain/model/confirm-reconcilia
 import { ResolveDiscrepancyCommand } from '../domain/model/resolve-discrepancy.command';
 
 import { InventoryApi } from '../infrastructure/inventory-api';
-import { IncidentStore } from '../../incident/application/incident.store';
 
 /**
  * Signal-based application store for the Inventory bounded context.
@@ -35,11 +34,6 @@ export class InventoryStore extends BaseStore {
    * API facade used to reach the inventory endpoints.
    */
   private readonly api = inject(InventoryApi);
-
-  /**
-   * Injector used to reach other bounded contexts lazily.
-   */
-  private readonly injector = inject(Injector);
 
   /**
    * Internal signal containing the product catalog.
@@ -167,173 +161,75 @@ export class InventoryStore extends BaseStore {
   }
 
   /**
-   * Registers a batch announced by the plant so it can be scanned later.
+   * Registers an expected batch. The backend rejects duplicated codes.
    *
-   * @param command - Command containing the batch data
+   * @param command - Batch registration command
    */
   registerBatch(command: RegisterBatchCommand): void {
     const batchNumber = command.batchNumber.trim().toUpperCase();
-
-    const operation = this.api.findBatchesByCode(batchNumber).pipe(
-      switchMap((existing) =>
-        existing.length > 0
-          ? throwError(() => new BusinessError('inventory.errors.batch-duplicated', { code: batchNumber }))
-          : this.api.createBatch({
-              productId: command.productId,
-              zoneId: command.zoneId,
-              batchNumber,
-              initialQty: command.initialQty,
-              currentQty: 0,
-              status: 'EXPECTED',
-              receivedAt: null,
-              expirationDate: command.expirationDate,
-            }),
-      ),
+    this.write(
+      this.api.registerBatch({
+        productId: command.productId,
+        zoneId: command.zoneId,
+        batchNumber,
+        initialQty: command.initialQty,
+        expirationDate: command.expirationDate,
+      }),
+      'inventory.errors.generic',
+      () => this.refresh(),
+      { key: 'inventory.batch-form.success', params: { code: batchNumber } },
     );
-
-    this.write(operation, 'inventory.errors.generic', () => this.refresh(), {
-      key: 'inventory.batch-form.success',
-      params: { code: batchNumber },
-    });
   }
 
   /**
-   * Registers the entry of a batch by validating the scanned code.
+   * Receives an expected batch by its scanned code.
    *
-   * @param command - Command containing the scanned code
+   * @param command - Batch reception command
    */
   receiveBatch(command: ReceiveBatchCommand): void {
     const code = command.scanCode.trim().toUpperCase();
-
-    const operation = this.api.findBatchesByCode(code).pipe(
-      switchMap((matches) => {
-        const batch = matches[0];
-        if (!batch) {
-          return throwError(() => new BusinessError('inventory.errors.invalid-code', { code }));
-        }
-        if (batch.status !== 'EXPECTED') {
-          return throwError(() => new BusinessError('inventory.errors.already-received', { code }));
-        }
-        return this.api.updateBatch(batch.id, {
-          status: 'AVAILABLE',
-          currentQty: batch.initialQty,
-          receivedAt: new Date().toISOString(),
-        });
-      }),
-    );
-
-    this.write(operation, 'inventory.errors.generic', () => this.refresh(), {
+    this.write(this.api.receiveBatch(code), 'inventory.errors.generic', () => this.refresh(), {
       key: 'inventory.entry.success',
       params: { code },
     });
   }
 
   /**
-   * Registers a product waste and deducts it from the batch stock.
+   * Registers a waste record. The backend deducts the stock.
    *
-   * @param command - Command containing the waste data
+   * @param command - Waste registration command
    */
   registerWaste(command: RegisterWasteCommand): void {
-    const operation = defer(() => {
-      const batch = this.batchesSignal().find((item) => item.id === command.batchId);
-      if (!batch || batch.status !== 'AVAILABLE') {
-        return throwError(() => new BusinessError('inventory.errors.batch-not-available'));
-      }
-      if (command.quantity > batch.currentQty) {
-        return throwError(
-          () =>
-            new BusinessError('inventory.errors.waste-exceeds-stock', {
-              available: batch.currentQty,
-              code: batch.batchNumber,
-            }),
-        );
-      }
-      const remaining = batch.currentQty - command.quantity;
-      return this.api
-        .createWasteRecord({
-          batchId: command.batchId,
-          userId: command.userId,
-          quantity: command.quantity,
-          reason: command.reason.trim(),
-          reportedDate: new Date().toISOString().split('T')[0],
-        })
-        .pipe(
-          switchMap(() =>
-            this.api.updateBatch(batch.id, {
-              currentQty: remaining,
-              status: remaining === 0 ? 'DEPLETED' : 'AVAILABLE',
-            }),
-          ),
-        );
-    });
-
-    this.write(operation, 'inventory.errors.generic', () => this.refresh(), {
-      key: 'inventory.waste.success',
-    });
+    this.write(
+      this.api.registerWaste({
+        batchId: command.batchId,
+        quantity: command.quantity,
+        reason: command.reason.trim(),
+      }),
+      'inventory.errors.generic',
+      () => this.refresh(),
+      { key: 'inventory.waste.success' },
+    );
   }
 
   /**
-   * Runs the physical reconciliation comparing the counts with the system stock.
+   * Runs a physical-count reconciliation. The backend creates the discrepancies
+   * and notifies the managers.
    *
-   * @param command - Command containing the physical counts
+   * @param command - Reconciliation command with the counted quantities
    */
   runReconciliation(command: RunReconciliationCommand): void {
-    const operation = defer(() => {
-      const counted = command.counts.filter((count) => Number.isFinite(count.countedQty));
-      if (counted.length === 0) {
-        return throwError(() => new BusinessError('inventory.errors.no-counts'));
-      }
-
-      const mismatches = counted.filter((count) => {
-        const batch = this.batchesSignal().find((item) => item.id === count.batchId);
-        return batch !== undefined && batch.currentQty !== count.countedQty;
-      });
-      const matched = counted.length - mismatches.length;
-      const now = new Date().toISOString();
-      const clean = mismatches.length === 0;
-
-      return this.api
-        .createReconciliation({
-          date: now.split('T')[0],
-          status: clean ? 'RECONCILED' : 'IN_REVIEW',
-          totalBatches: counted.length,
-          matchedBatches: matched,
-          eriPercentage: Math.round((matched / counted.length) * 1000) / 10,
-          confirmedBy: clean ? command.userId : null,
-          confirmedAt: clean ? now : null,
-        })
-        .pipe(
-          switchMap((reconciliation) => {
-            if (clean) return of(reconciliation);
-            return forkJoin(
-              mismatches.map((count) => {
-                const batch = this.batchesSignal().find((item) => item.id === count.batchId)!;
-                return this.api.createDiscrepancy({
-                  reconciliationId: reconciliation.id,
-                  batchId: batch.id,
-                  expectedQty: batch.currentQty,
-                  countedQty: count.countedQty,
-                  status: 'OPEN',
-                  detectedAt: now,
-                  resolvedAt: null,
-                  resolutionNote: null,
-                });
-              }),
-            ).pipe(map(() => reconciliation));
-          }),
-          map((reconciliation) => ({ reconciliation, mismatches: mismatches.length })),
-        );
-    });
+    const counts = command.counts.filter((count) => Number.isFinite(count.countedQty));
+    if (counts.length === 0) {
+      this.startOperation();
+      this.failOperation(new BusinessError('inventory.errors.no-counts'), '');
+      return;
+    }
 
     this.write(
-      operation,
+      this.api.runReconciliation(counts),
       'inventory.errors.generic',
-      ({ mismatches }) => {
-        if (mismatches > 0) {
-          this.notifyManagers(mismatches);
-        }
-        this.refresh();
-      },
+      () => this.refresh(),
       { key: 'inventory.reconciliation.run-success' },
     );
   }
@@ -341,54 +237,35 @@ export class InventoryStore extends BaseStore {
   /**
    * Confirms a reconciliation once every discrepancy is resolved.
    *
-   * @param command - Command containing the reconciliation and the confirming user
+   * @param command - Confirmation command
    */
   confirmReconciliation(command: ConfirmReconciliationCommand): void {
-    const operation = defer(() => {
-      const pending = this.discrepanciesSignal().filter(
-        (discrepancy) =>
-          discrepancy.reconciliationId === command.reconciliationId && discrepancy.status === 'OPEN',
-      );
-      if (pending.length > 0) {
-        return throwError(
-          () => new BusinessError('inventory.errors.pending-discrepancies', { count: pending.length }),
-        );
-      }
-      return this.api.confirmReconciliation(command.reconciliationId, command.userId);
-    });
-
-    this.write(operation, 'inventory.errors.generic', () => this.refresh(), {
-      key: 'inventory.reconciliation.confirm-success',
-    });
+    this.write(
+      this.api.confirmReconciliation(command.reconciliationId),
+      'inventory.errors.generic',
+      () => this.refresh(),
+      { key: 'inventory.reconciliation.confirm-success' },
+    );
   }
 
   /**
-   * Resolves a discrepancy and adjusts the batch stock to the counted quantity.
+   * Resolves a discrepancy. The backend adjusts the batch stock.
    *
-   * @param command - Command containing the discrepancy and the resolution note
+   * @param command - Resolution command with the explanatory note
    */
   resolveDiscrepancy(command: ResolveDiscrepancyCommand): void {
-    const operation = defer(() => {
-      const discrepancy = this.discrepanciesSignal().find((item) => item.id === command.discrepancyId);
-      if (!discrepancy) {
-        return throwError(() => new BusinessError('inventory.errors.generic'));
-      }
-      if (command.note.trim().length < 3) {
-        return throwError(() => new BusinessError('inventory.errors.note-required'));
-      }
-      return this.api.resolveDiscrepancy(discrepancy.id, command.note.trim()).pipe(
-        switchMap(() =>
-          this.api.updateBatch(discrepancy.batchId, {
-            currentQty: discrepancy.countedQty,
-            status: discrepancy.countedQty === 0 ? 'DEPLETED' : 'AVAILABLE',
-          }),
-        ),
-      );
-    });
+    if (command.note.trim().length < 3) {
+      this.startOperation();
+      this.failOperation(new BusinessError('inventory.errors.note-required'), '');
+      return;
+    }
 
-    this.write(operation, 'inventory.errors.generic', () => this.refresh(), {
-      key: 'inventory.reconciliation.resolve-success',
-    });
+    this.write(
+      this.api.resolveDiscrepancy(command.discrepancyId, command.note.trim()),
+      'inventory.errors.generic',
+      () => this.refresh(),
+      { key: 'inventory.reconciliation.resolve-success' },
+    );
   }
 
   /**
@@ -440,19 +317,5 @@ export class InventoryStore extends BaseStore {
    */
   private refresh(): void {
     this.snapshot$().subscribe((snapshot) => this.applySnapshot(snapshot));
-  }
-
-  /**
-   * Notifies the logistics managers about inventory discrepancies.
-   *
-   * @param count - Number of discrepancies detected
-   */
-  private notifyManagers(count: number): void {
-    this.injector.get(IncidentStore).notify({
-      recipientRole: 'ROLE_LOGISTICS_MANAGER',
-      type: 'INVENTORY',
-      title: 'Inventory discrepancy',
-      message: `The daily reconciliation detected ${count} batch discrepancies that need review.`,
-    });
   }
 }

@@ -1,48 +1,17 @@
 /**
- * Request payload for creating a batch of beverage products.
+ * Request payload to register a batch (POST /batches).
  *
  * @remarks
- * This interface belongs to the infrastructure layer and represents the HTTP
- * request body sent to the mock REST API. System-generated fields are excluded.
+ * The backend sets the status (EXPECTED), the stock and the audit fields.
  */
-export interface CreateProductBatchRequest {
-  /**
-   * The identifier of the product contained in the batch.
-   */
+export interface RegisterBatchRequest {
   productId: number;
 
-  /**
-   * The identifier of the warehouse zone where the batch is stored.
-   */
   zoneId: number;
 
-  /**
-   * The batch code printed on the pallet label and used for scanning.
-   */
   batchNumber: string;
 
-  /**
-   * The quantity of units announced for the batch.
-   */
   initialQty: number;
 
-  /**
-   * The quantity of units currently available.
-   */
-  currentQty: number;
-
-  /**
-   * The lifecycle status of the batch.
-   */
-  status: 'EXPECTED' | 'AVAILABLE' | 'DEPLETED';
-
-  /**
-   * The ISO 8601 timestamp when the batch entered the warehouse.
-   */
-  receivedAt: string | null;
-
-  /**
-   * The expiration date in ISO date format.
-   */
   expirationDate: string;
 }

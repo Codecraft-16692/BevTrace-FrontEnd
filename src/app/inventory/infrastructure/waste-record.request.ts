@@ -1,33 +1,13 @@
 /**
- * Request payload for creating a product waste (shrinkage) record.
+ * Request payload to register a waste record (POST /waste-records).
  *
  * @remarks
- * This interface belongs to the infrastructure layer and represents the HTTP
- * request body sent to the mock REST API. System-generated fields are excluded.
+ * The user comes from the token and the stock is deducted by the backend.
  */
-export interface CreateWasteRecordRequest {
-  /**
-   * The identifier of the affected batch.
-   */
+export interface RegisterWasteRequest {
   batchId: number;
 
-  /**
-   * The identifier of the user who reported the waste.
-   */
-  userId: number;
-
-  /**
-   * The number of units lost.
-   */
   quantity: number;
 
-  /**
-   * The reason of the waste.
-   */
   reason: string;
-
-  /**
-   * The report date in ISO date format.
-   */
-  reportedDate: string;
 }

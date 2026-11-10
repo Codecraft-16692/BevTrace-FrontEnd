@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable } from 'rxjs';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { environment } from '../../../environments/environment';
 import { IncidentRecord } from '../domain/model/incident-record.entity';
@@ -29,5 +29,16 @@ export class IncidentRecordApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(http, incidentRecordEndpointUrl, new IncidentRecordAssembler());
     this.expansions = ['log'];
+  }
+
+  /**
+   * Runs the anomaly detection on the backend (POST /incidents/detections).
+   *
+   * @returns Observable emitting how many incidents were created and reopened
+   */
+  detect(): Observable<{ created: number; reopened: number }> {
+    return this.http
+      .post<{ created: number; reopened: number }>(`${this.endpointUrl}/detections`, {})
+      .pipe(catchError(this.handleError('Failed to detect anomalies')));
   }
 }

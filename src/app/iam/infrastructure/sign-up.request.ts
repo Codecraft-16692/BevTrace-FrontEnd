@@ -1,28 +1,17 @@
-import { CreateUserRequest } from './user.request';
-
 /**
- * Request payload for registering a new user account.
+ * Request payload of the sign-up (POST /authentication/sign-up).
  *
  * @remarks
- * This interface belongs to the infrastructure layer and extends the user
- * creation payload with the mock credential stored by json-server.
- *
- * @example
- * ```typescript
- * const request: SignUpRequest = {
- *   roleId: 2,
- *   name: 'Alex Rivera',
- *   email: 'alex@bevtrace.com',
- *   phone: '+51 987 654 321',
- *   active: true,
- *   createdAt: new Date().toISOString(),
- *   password: 'Secure1234'
- * };
- * ```
+ * The backend sets the activation state and the creation date itself.
  */
-export interface SignUpRequest extends CreateUserRequest {
-  /**
-   * The password of the new account.
-   */
+export interface SignUpRequest {
+  roleId: number;
+
+  name: string;
+
+  email: string;
+
+  phone: string;
+
   password: string;
 }

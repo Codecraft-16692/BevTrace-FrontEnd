@@ -172,92 +172,32 @@ export class SubscriptionStore extends BaseStore {
   }
 
   /**
-   * Pays and activates a subscription with the simulated gateway.
+   * Subscribes to a plan. The backend validates the card (Luhn), charges the payment
+   * and records a FAILED payment when the card is declined.
    *
-   * @param command - Command containing the plan, company and card data
-   * @param onSubscribed - Callback executed when the subscription is active
+   * @param command      - Subscription command with the plan and card data
+   * @param onSubscribed - Optional callback executed after a successful subscription
    */
   subscribeToPlan(command: SubscribeToPlanCommand, onSubscribed?: () => void): void {
-    const operation = defer(() => {
-      const plan = this.plansSignal().find(
-        (item) => item.code === command.planCode && item.billingPeriod === command.billingCycle,
-      );
-      if (!plan || plan.custom) {
-        return throwError(() => new BusinessError('subscription.errors.plan-not-purchasable'));
-      }
-      if (command.cardHolder.trim().length < 3) {
-        return throwError(() => new BusinessError('subscription.errors.holder-required'));
-      }
-      if (!CardPolicy.isValid(command.cardNumber)) {
-        return throwError(() => new BusinessError('subscription.errors.card-invalid'));
-      }
-      if (this.currentOf(command.userId)) {
-        return throwError(() => new BusinessError('subscription.errors.already-active'));
-      }
-
-      const last4 = CardPolicy.last4(command.cardNumber);
-      const now = new Date();
-
-      if (CardPolicy.normalize(command.cardNumber) === DECLINED_TEST_CARD) {
-        return this.api
-          .createSubscription({
-            userId: command.userId,
-            companyName: command.companyName.trim(),
-            planCode: plan.code,
-            billingCycle: plan.billingPeriod,
-            status: 'PENDING',
-            currentPeriodStart: now.toISOString(),
-            currentPeriodEnd: now.toISOString(),
-            cancelledAt: null,
-          })
-          .pipe(
-            switchMap((subscription) =>
-              this.api.createPayment({
-                subscriptionId: subscription.id,
-                amount: plan.priceAmount,
-                currency: plan.currency,
-                status: 'FAILED',
-                cardLast4: last4,
-                paidAt: now.toISOString(),
-              }),
-            ),
-            switchMap(() => throwError(() => new BusinessError('subscription.errors.payment-declined'))),
-          );
-      }
-
-      const end = new Date(now);
-      if (plan.billingPeriod === 'MONTHLY') end.setMonth(end.getMonth() + 1);
-      else end.setFullYear(end.getFullYear() + 1);
-
-      return this.api
-        .createSubscription({
-          userId: command.userId,
-          companyName: command.companyName.trim(),
-          planCode: plan.code,
-          billingCycle: plan.billingPeriod,
-          status: 'ACTIVE',
-          currentPeriodStart: now.toISOString(),
-          currentPeriodEnd: end.toISOString(),
-          cancelledAt: null,
-        })
-        .pipe(
-          switchMap((subscription) =>
-            this.api
-              .createPayment({
-                subscriptionId: subscription.id,
-                amount: plan.priceAmount,
-                currency: plan.currency,
-                status: 'PAID',
-                cardLast4: last4,
-                paidAt: now.toISOString(),
-              })
-              .pipe(map(() => subscription)),
-          ),
-        );
-    });
+    if (command.cardHolder.trim().length < 3) {
+      this.startOperation();
+      this.failOperation(new BusinessError('subscription.errors.holder-required'), '');
+      return;
+    }
+    if (!CardPolicy.isValid(command.cardNumber)) {
+      this.startOperation();
+      this.failOperation(new BusinessError('subscription.errors.card-invalid'), '');
+      return;
+    }
 
     this.write(
-      operation,
+      this.api.subscribe({
+        companyName: command.companyName.trim(),
+        planCode: command.planCode,
+        billingCycle: command.billingCycle,
+        cardHolder: command.cardHolder.trim(),
+        cardNumber: CardPolicy.normalize(command.cardNumber),
+      }),
       'subscription.errors.generic',
       () => {
         this.loadAllSilently();
@@ -268,9 +208,9 @@ export class SubscriptionStore extends BaseStore {
   }
 
   /**
-   * Cancels a subscription.
+   * Cancels a subscription. Only the owner or an administrator can do it.
    *
-   * @param command - Command containing the subscription
+   * @param command - Cancellation command
    */
   cancelSubscription(command: CancelSubscriptionCommand): void {
     this.write(
@@ -282,56 +222,51 @@ export class SubscriptionStore extends BaseStore {
   }
 
   /**
-   * Subscribes an e-mail to the commercial newsletter.
+   * Subscribes an e-mail address to the newsletter (public endpoint).
    *
-   * @param command - Command containing the e-mail
+   * @param command - Newsletter subscription command
    */
   subscribeNewsletter(command: SubscribeNewsletterCommand): void {
     const email = command.email.trim().toLowerCase();
+    if (!CredentialsPolicy.isValidEmail(email)) {
+      this.startOperation();
+      this.failOperation(new BusinessError('subscription.errors.email-invalid'), '');
+      return;
+    }
 
-    const operation = defer(() => {
-      if (!CredentialsPolicy.isValidEmail(email)) {
-        return throwError(() => new BusinessError('subscription.errors.email-invalid'));
-      }
-      return this.api.findSubscribersByEmail(email).pipe(
-        switchMap((existing) =>
-          existing.length > 0
-            ? throwError(() => new BusinessError('subscription.errors.newsletter-duplicated'))
-            : this.api.createSubscriber({ email, subscribedAt: new Date().toISOString() }),
-        ),
-      );
-    });
-
-    this.write(operation, 'subscription.errors.generic', () => undefined, {
+    this.write(this.api.subscribeNewsletter(email), 'subscription.errors.generic', () => undefined, {
       key: 'subscription.newsletter.success',
     });
   }
 
   /**
-   * Sends a commercial contact request.
+   * Sends a contact request from the landing page (public endpoint).
    *
-   * @param command - Command containing the visitor data and the message
+   * @param command - Contact request command
    */
   submitContactRequest(command: SubmitContactRequestCommand): void {
-    const operation = defer(() => {
-      if (!CredentialsPolicy.isValidEmail(command.email)) {
-        return throwError(() => new BusinessError('subscription.errors.email-invalid'));
-      }
-      if (command.fullName.trim().length < 3 || command.message.trim().length < 10) {
-        return throwError(() => new BusinessError('subscription.errors.contact-incomplete'));
-      }
-      return this.api.createContactRequest({
+    if (!CredentialsPolicy.isValidEmail(command.email)) {
+      this.startOperation();
+      this.failOperation(new BusinessError('subscription.errors.email-invalid'), '');
+      return;
+    }
+    if (command.fullName.trim().length < 3 || command.message.trim().length < 10) {
+      this.startOperation();
+      this.failOperation(new BusinessError('subscription.errors.contact-incomplete'), '');
+      return;
+    }
+
+    this.write(
+      this.api.submitContactRequest({
         fullName: command.fullName.trim(),
         email: command.email.trim().toLowerCase(),
         company: command.company.trim(),
         message: command.message.trim(),
-        createdAt: new Date().toISOString(),
-      });
-    });
-
-    this.write(operation, 'subscription.errors.generic', () => undefined, {
-      key: 'subscription.contact.success',
-    });
+      }),
+      'subscription.errors.generic',
+      () => undefined,
+      { key: 'subscription.contact.success' },
+    );
   }
 
   /**
