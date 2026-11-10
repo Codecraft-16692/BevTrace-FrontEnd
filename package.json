@@ -7,7 +7,6 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "api": "json-server --watch server/db.json --routes server/routes.json --port 3000",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -26,7 +25,6 @@
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
     "chart.js": "^4.3.0",
-    "json-server": "^0.17.4",
     "ng2-charts": "^10.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

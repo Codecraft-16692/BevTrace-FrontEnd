@@ -12,13 +12,7 @@ Install the dependencies:
 npm install
 ```
 
-Start the mock API (json-server) at `http://localhost:3000`, backed by `server/db.json`:
-
-```bash
-npm run api
-```
-
-In a second terminal, start the development server:
+Make sure the BevTrace backend is running at `http://localhost:8080` (see the `BevTrace-BackEnd` repository), then start the development server:
 
 ```bash
 npm start
@@ -26,13 +20,11 @@ npm start
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-To regenerate the sample data with dates relative to today (recommended before a demo):
-
-```bash
-node server/seed.mjs
-```
+The API base URL is set in `src/environments/environment.development.ts` (development) and `src/environments/environment.ts` (production). The backend allows `http://localhost:4200` through CORS by default; use its `CORS_ORIGINS` variable for other origins.
 
 ## Test credentials
+
+Available when the backend runs with `bevtrace.seed.enabled=true`. Otherwise create users with the sign-up form.
 
 | Role | Email | Password |
 |---|---|---|
