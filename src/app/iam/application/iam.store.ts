@@ -224,7 +224,10 @@ export class IamStore extends BaseStore {
       },
       error: (error: unknown) => {
         this.registerFailedAttempt();
-        this.failOperation(new BusinessError(this.resolveSignInErrorKey(error)), '');
+        this.failOperation(
+          error instanceof BusinessError ? error : new BusinessError(this.resolveSignInErrorKey(error)),
+          '',
+        );
       },
     });
   }
@@ -285,7 +288,7 @@ export class IamStore extends BaseStore {
     this.write(
       this.iamApi.assignRole(command.userId, command.roleId),
       'iam.errors.generic',
-      (updated) => this.replaceUser(updated),
+      () => this.loadUsers(),
       { key: 'iam.users.role-updated' },
     );
   }
@@ -305,19 +308,11 @@ export class IamStore extends BaseStore {
     this.write(
       this.iamApi.setUserActive(command.userId, command.active),
       'iam.errors.generic',
-      (updated) => this.replaceUser(updated),
+      () => this.loadUsers(),
       { key: 'iam.users.status-updated' },
     );
   }
 
-  /**
-   * Replaces a user in the loaded list.
-   *
-   * @param updated - User received from the API
-   */
-  private replaceUser(updated: User): void {
-    this.usersSignal.update((users) => users.map((user) => (user.id === updated.id ? updated : user)));
-  }
 
   /**
    * Maps a sign-in command into an infrastructure request.
@@ -344,8 +339,6 @@ export class IamStore extends BaseStore {
       name: command.name.trim(),
       email: command.email.trim().toLowerCase(),
       phone: command.phone.trim(),
-      active: true,
-      createdAt: new Date().toISOString(),
       password: command.password,
     };
   }
@@ -359,7 +352,6 @@ export class IamStore extends BaseStore {
   private resolveSignInErrorKey(error: unknown): string {
     if (error instanceof HttpErrorResponse) {
       if (error.status === 401) return 'iam.errors.invalid-credentials';
-      if (error.status === 403) return 'iam.errors.account-disabled';
     }
     return 'iam.errors.generic';
   }
