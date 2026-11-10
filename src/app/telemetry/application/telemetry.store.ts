@@ -1,8 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { forkJoin, switchMap, throwError } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
 import { BaseStore } from '../../shared/application/base-store';
-import { BusinessError } from '../../shared/domain/model/business-error';
 
 import { DeviceModel } from '../domain/model/device-model.entity';
 import { TelemetryDevice } from '../domain/model/telemetry-device.entity';
@@ -164,37 +163,23 @@ export class TelemetryStore extends BaseStore {
   }
 
   /**
-   * Provisions a new device in a vehicle.
+   * Provisions a device on a vehicle. The backend rejects duplicated codes and
+   * vehicles that already have a device.
    *
-   * @param command - Command containing the device data
+   * @param command - Device provisioning command
    */
   provisionDevice(command: ProvisionDeviceCommand): void {
     const deviceCode = command.deviceCode.trim().toUpperCase();
-
-    const operation = this.api.findDevicesByCode(deviceCode).pipe(
-      switchMap((existing) => {
-        if (existing.length > 0) {
-          return throwError(() => new BusinessError('telemetry.errors.duplicated-code', { code: deviceCode }));
-        }
-        if (this.devicesSignal().some((device) => device.vehicleId === command.vehicleId)) {
-          return throwError(() => new BusinessError('telemetry.errors.vehicle-has-device'));
-        }
-        return this.api.createDevice({
-          vehicleId: command.vehicleId,
-          modelId: command.modelId,
-          deviceCode,
-          installedAt: new Date().toISOString(),
-          isActive: true,
-          connectionStatus: 'CONNECTED',
-          lastSignalAt: new Date().toISOString(),
-        });
+    this.write(
+      this.api.provisionDevice({
+        vehicleId: command.vehicleId,
+        modelId: command.modelId,
+        deviceCode,
       }),
+      'telemetry.errors.generic',
+      () => this.reload(),
+      { key: 'telemetry.form.success', params: { code: deviceCode } },
     );
-
-    this.write(operation, 'telemetry.errors.generic', () => this.reload(), {
-      key: 'telemetry.form.success',
-      params: { code: deviceCode },
-    });
   }
 
   /**
