@@ -264,6 +264,7 @@
       "operator-only": "Only a warehouse operator can validate the cargo.",
       "depart": "Register departure",
       "depart-blocked": "Validate the cargo before departure.",
+      "depart-manager-only": "Only a logistics manager can register the departure.",
       "departed": "Departure registered. Traceability started.",
       "tracking": "Tracking",
       "tracking-hint": "The shipment is being traced on its route.",

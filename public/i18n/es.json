@@ -264,6 +264,7 @@
       "operator-only": "Solo un operario de almacén puede validar la carga.",
       "depart": "Registrar salida",
       "depart-blocked": "Valida la carga antes de la salida.",
+      "depart-manager-only": "Solo un jefe de logística puede registrar la salida.",
       "departed": "Salida registrada. La trazabilidad inició.",
       "tracking": "Seguimiento",
       "tracking-hint": "El envío está siendo trazado en su ruta.",
