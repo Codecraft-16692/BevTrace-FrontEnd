@@ -20,8 +20,8 @@ import { RouteCanvas } from '../../../../shared/presentation/components/route-ca
  * @remarks
  * This presentation component follows the "Dispatch Classification" wireframe.
  * It shows the shipment data, lets the manager choose the operational priority
- * and assign a vehicle (which authorizes the dispatch), and lets the warehouse
- * operator validate the loaded pallets and register the departure.
+ * and assign a vehicle (which authorizes the dispatch), lets the warehouse
+ * operator validate the loaded pallets and lets the manager register the departure.
  */
 @Component({
   selector: 'app-dispatch-detail',
@@ -133,12 +133,12 @@ export class DispatchDetail implements OnInit {
   });
 
   /**
-   * Indicates whether the current user can classify and assign vehicles.
+   * Indicates whether the current user can classify, assign vehicles and register departures.
    */
   protected readonly canManage = computed(() => this.iamStore.hasAnyRole(['ROLE_LOGISTICS_MANAGER']));
 
   /**
-   * Indicates whether the current user can validate pallets and register departures.
+   * Indicates whether the current user can validate the loaded pallets.
    */
   protected readonly canOperate = computed(() => this.iamStore.hasAnyRole(['ROLE_WAREHOUSE_OPERATOR']));
 
@@ -192,6 +192,7 @@ export class DispatchDetail implements OnInit {
    * Registers the departure of the dispatch.
    */
   protected onDepart(): void {
+    if (!this.canManage()) return;
     this.store.registerDeparture({ dispatchOrderId: this.orderId() });
   }
 

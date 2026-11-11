@@ -113,13 +113,15 @@
             <p class="muted">{{ 'dispatch.detail.operator-only' | translate }}</p>
           }
 
-          @if (canOperate()) {
+          @if (canManage()) {
             <div class="depart-box">
               <button type="button" class="btn-action" [disabled]="!order.cargoValidated || store.isLoading()" (click)="onDepart()">{{ 'dispatch.detail.depart' | translate }}</button>
               @if (!order.cargoValidated) {
                 <span class="muted">{{ 'dispatch.detail.depart-blocked' | translate }}</span>
               }
             </div>
+          } @else if (order.cargoValidated) {
+            <p class="muted">{{ 'dispatch.detail.depart-manager-only' | translate }}</p>
           }
         }
 
