@@ -167,6 +167,7 @@
       "register": "Registrar merma",
       "reason": "Motivo",
       "reported-by": "Reportado por",
+      "unknown-reporter": "Usuario #{{id}}",
       "save": "Guardar merma",
       "success": "Merma registrada y stock actualizado."
     },
@@ -264,6 +265,7 @@
       "operator-only": "Solo un operario de almacén puede validar la carga.",
       "depart": "Registrar salida",
       "depart-blocked": "Valida la carga antes de la salida.",
+      "depart-manager-only": "Solo un jefe de logística puede registrar la salida.",
       "departed": "Salida registrada. La trazabilidad inició.",
       "tracking": "Seguimiento",
       "tracking-hint": "El envío está siendo trazado en su ruta.",
