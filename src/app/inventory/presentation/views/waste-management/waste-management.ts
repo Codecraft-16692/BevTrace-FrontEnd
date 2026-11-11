@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { InventoryStore } from '../../../application/inventory.store';
+import { WasteRecord } from '../../../domain/model/waste-record.entity';
 import { IamStore } from '../../../../iam/application/iam.store';
 import { MessageBanner } from '../../../../shared/presentation/components/message-banner/message-banner';
 
@@ -68,6 +69,21 @@ export class WasteManagement implements OnInit {
    */
   ngOnInit(): void {
     this.store.loadAll();
+  }
+
+  /**
+   * Resolves the name of the user who reported a waste record.
+   *
+   * @remarks
+   * The user list is only available to administrators, so for other roles the
+   * name is taken from the signed in session when the record belongs to it.
+   *
+   * @param record - Waste record shown in the history
+   * @returns The reporter name, or null when it cannot be resolved
+   */
+  protected reporterOf(record: WasteRecord): string | null {
+    if (record.userName) return record.userName;
+    return record.userId === this.iamStore.currentUserId() ? this.iamStore.currentUsername() : null;
   }
 
   /**
