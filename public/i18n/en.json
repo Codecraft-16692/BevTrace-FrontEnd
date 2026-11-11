@@ -167,6 +167,7 @@
       "register": "Register waste",
       "reason": "Reason",
       "reported-by": "Reported by",
+      "unknown-reporter": "User #{{id}}",
       "save": "Save waste",
       "success": "Waste registered and stock updated."
     },

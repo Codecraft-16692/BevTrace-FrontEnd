@@ -167,6 +167,7 @@
       "register": "Registrar merma",
       "reason": "Motivo",
       "reported-by": "Reportado por",
+      "unknown-reporter": "Usuario #{{id}}",
       "save": "Guardar merma",
       "success": "Merma registrada y stock actualizado."
     },
