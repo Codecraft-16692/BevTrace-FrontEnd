@@ -4,8 +4,8 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  * Resource representation of an IoT telemetry device for API communication.
  *
  * @remarks
- * This interface belongs to the infrastructure layer and mirrors the mock REST
- * resource contract exposed by json-server until the backend becomes available.
+ * This interface belongs to the infrastructure layer and mirrors the REST
+ * resource contract exposed by the BevTrace Web Services.
  */
 export interface TelemetryDeviceResource extends BaseResource {
   /**

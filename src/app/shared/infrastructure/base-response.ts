@@ -1,6 +1,6 @@
 /**
  * Base resource interface representing a minimal API resource with a numeric identifier.
- * @remarks All API responses from the BevTrace mock REST API (json-server) return
+ * @remarks All API responses from the BevTrace Web Services return
  * resources with numeric identifiers.
  * @author BevTrace
  */

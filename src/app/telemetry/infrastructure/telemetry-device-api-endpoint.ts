@@ -13,7 +13,7 @@ const telemetryDeviceEndpointUrl = `${environment.serverBasePath}${environment.t
  *
  * @remarks
  * This endpoint belongs to the infrastructure layer and extends the shared
- * BaseApiEndpoint to provide CRUD operations against the mock REST API.
+ * BaseApiEndpoint to provide CRUD operations against the BevTrace Web Services.
  */
 export class TelemetryDeviceApiEndpoint extends BaseApiEndpoint<
   TelemetryDevice,
