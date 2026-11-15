@@ -1,5 +1,5 @@
 /**
- * Request payload of the sign-up (POST /authentication/sign-up).
+ * Request payload of the sign-up (POST /authentication/registrations).
  *
  * @remarks
  * The backend sets the activation state and the creation date itself.
