@@ -48,6 +48,11 @@ export class IncidentDashboard implements OnInit {
   private readonly iamStore = inject(IamStore);
 
   /**
+   * Running the anomaly detection is reserved to logistics managers.
+   */
+  protected readonly canDetect = computed(() => this.iamStore.hasAnyRole(['ROLE_LOGISTICS_MANAGER']));
+
+  /**
    * Columns displayed in the incident table.
    */
   protected readonly displayedColumns = ['severity', 'anomalyType', 'destinationName', 'vehiclePlate', 'detectedAt', 'status'];
