@@ -166,13 +166,13 @@ export class InventoryApi extends BaseApi {
 
 
   /**
-   * Confirms a reconciliation (POST /reconciliations/{id}/confirmation).
+   * Confirms a reconciliation (POST /reconciliations/{id}/confirmations).
    *
    * @param id - Reconciliation identifier
    * @returns Observable completing when it was confirmed
    */
   confirmReconciliation(id: number): Observable<void> {
-    return this.reconciliationEndpoint.command('POST', `${id}/confirmation`);
+    return this.reconciliationEndpoint.command('POST', `${id}/confirmations`);
   }
   /**
    * Retrieves every discrepancy.
@@ -185,12 +185,12 @@ export class InventoryApi extends BaseApi {
 
 
   /**
-   * Resolves a discrepancy (POST /discrepancies/{id}/resolution).
+   * Resolves a discrepancy (POST /discrepancies/{id}/resolutions).
    *
    * @param id   - Discrepancy identifier
    * @param note - Explanatory note
    * @returns Observable completing when it was resolved
    */
   resolveDiscrepancy(id: number, note: string): Observable<void> {
-    return this.discrepancyEndpoint.command('POST', `${id}/resolution`, { note });
+    return this.discrepancyEndpoint.command('POST', `${id}/resolutions`, { note });
   }}
