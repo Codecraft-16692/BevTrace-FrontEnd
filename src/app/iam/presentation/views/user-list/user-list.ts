@@ -1,22 +1,23 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { IamStore } from '../../../application/iam.store';
 import { MessageBanner } from '../../../../shared/presentation/components/message-banner/message-banner';
 
 /**
- * Component responsible for the administration of users and roles.
+ * Component responsible for granting and revoking access to the platform.
  *
  * @remarks
- * This presentation component is only reachable by administrators. It lists
- * every registered user and allows changing the assigned role or enabling and
- * disabling the account. The administrator cannot edit its own account.
+ * This presentation component is reachable by logistics managers and administrators. New accounts
+ * wait here with the account disabled: granting a permission assigns the role and enables the
+ * account, and revoking the access disables it. The logistics manager only sees and manages the
+ * warehouse operators; the administrator manages every user. Nobody can edit its own account.
  */
 @Component({
   selector: 'app-user-list',
@@ -26,7 +27,7 @@ import { MessageBanner } from '../../../../shared/presentation/components/messag
     MatTableModule,
     MatIconModule,
     MatSelectModule,
-    MatSlideToggleModule,
+    MatButtonModule,
     MatProgressSpinnerModule,
     MessageBanner,
   ],
@@ -42,7 +43,7 @@ export class UserList implements OnInit {
   /**
    * Columns displayed in the users table.
    */
-  protected readonly displayedColumns = ['name', 'email', 'role', 'status', 'createdAt'];
+  protected readonly displayedColumns = ['name', 'email', 'role', 'status', 'createdAt', 'actions'];
 
   /**
    * Lifecycle hook that loads users and roles.
@@ -63,22 +64,47 @@ export class UserList implements OnInit {
   }
 
   /**
-   * Changes the role of a user.
+   * Role chosen in the select of each user, by user identifier, before granting it.
+   */
+  private readonly chosenRoles = signal<Record<number, number>>({});
+
+  /**
+   * Remembers the role chosen for a user. It is applied when the permission is granted.
    *
    * @param userId - Identifier of the user
-   * @param roleId - Identifier of the new role
+   * @param roleId - Identifier of the chosen role
    */
   protected onRoleChange(userId: number, roleId: number): void {
-    this.store.assignRole({ userId, roleId });
+    this.chosenRoles.update((chosen) => ({ ...chosen, [userId]: roleId }));
   }
 
   /**
-   * Enables or disables a user account.
+   * Gives the role shown in the select of a user: the chosen one or the current one.
+   *
+   * @param userId        - Identifier of the user
+   * @param currentRoleId - Role the user holds now
+   * @returns Identifier of the role to show
+   */
+  protected roleOf(userId: number, currentRoleId: number): number {
+    return this.chosenRoles()[userId] ?? currentRoleId;
+  }
+
+  /**
+   * Grants the chosen (or current) role to a user and enables the account.
+   *
+   * @param userId        - Identifier of the user
+   * @param currentRoleId - Role the user holds now
+   */
+  protected onGrant(userId: number, currentRoleId: number): void {
+    this.store.grantPermission({ userId, roleId: this.roleOf(userId, currentRoleId) });
+  }
+
+  /**
+   * Revokes the access of a user.
    *
    * @param userId - Identifier of the user
-   * @param active - New activation state
    */
-  protected onStatusChange(userId: number, active: boolean): void {
-    this.store.setUserActive({ userId, active });
+  protected onRevoke(userId: number): void {
+    this.store.revokeAccess({ userId });
   }
 }
