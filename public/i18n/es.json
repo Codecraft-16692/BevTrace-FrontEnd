@@ -25,7 +25,8 @@
     "analytics": "Analítica",
     "subscription": "Suscripción",
     "administration": "Administración",
-    "sign-out": "Cerrar sesión"
+    "sign-out": "Cerrar sesión",
+    "access": "Accesos"
   },
   "roles": {
     "ROLE_ADMIN": "Administrador",
@@ -94,7 +95,7 @@
       "subtitle": "Únete a BevTrace y traza cada envase",
       "button": "Crear cuenta",
       "have-account": "¿Ya tienes una cuenta?",
-      "success": "Cuenta creada. Ya puedes iniciar sesión."
+      "success": "Cuenta creada. Se habilitará cuando un jefe te otorgue permiso."
     },
     "rules": {
       "min-length": "Más de 8 caracteres",
@@ -109,16 +110,21 @@
       "name-required": "Ingresa tu nombre completo (mín. 3 caracteres).",
       "phone-format": "Ingresa un teléfono válido.",
       "invalid-credentials": "Correo o contraseña incorrectos.",
-      "account-disabled": "Esta cuenta está deshabilitada. Contacta a un administrador.",
+      "account-disabled": "Esta cuenta está deshabilitada o esperando un permiso. Contacta a tu jefe de logística o a un administrador.",
       "locked": "Demasiados intentos fallidos. Inténtalo de nuevo en {{seconds}} segundos.",
       "cannot-edit-self": "No puedes cambiar tu propio rol ni estado.",
-      "generic": "Algo salió mal. Si el correo ya está registrado, inicia sesión."
+      "generic": "Algo salió mal. Si el correo ya está registrado, inicia sesión.",
+      "role-not-allowed": "No tienes permiso para otorgar o cambiar ese rol."
     },
     "users": {
-      "title": "Usuarios y Roles",
-      "subtitle": "Gestiona el acceso a la plataforma (IAM)",
-      "role-updated": "Rol actualizado.",
-      "status-updated": "Estado de la cuenta actualizado."
+      "title": "Accesos y permisos",
+      "subtitle": "Aprueba cuentas nuevas y otorga o revoca el acceso a la plataforma",
+      "permission-granted": "Permiso otorgado. La cuenta está habilitada.",
+      "access-revoked": "Acceso revocado. La cuenta está deshabilitada.",
+      "pending": "Pendiente / deshabilitada",
+      "actions": "Acciones",
+      "grant": "Otorgar permiso",
+      "revoke": "Revocar acceso"
     }
   },
   "inventory": {
@@ -128,7 +134,12 @@
       "zone": "Zona",
       "stock": "Stock",
       "quantity": "Cantidad",
-      "expiration": "Vencimiento"
+      "expiration": "Vencimiento",
+      "sku": "SKU",
+      "name": "Nombre",
+      "category": "Categoría",
+      "packaging": "Envase",
+      "volume": "Volumen (ml)"
     },
     "catalog": {
       "title": "Catálogo de Inventario y Mermas",
@@ -206,7 +217,16 @@
       "no-counts": "Ingresa al menos un conteo físico.",
       "pending-discrepancies": "Aún hay {{count}} discrepancias abiertas. Resuélvelas primero.",
       "note-required": "Ingresa una nota de resolución (mín. 3 caracteres).",
-      "stock-insufficient": "Stock insuficiente."
+      "stock-insufficient": "Stock insuficiente.",
+      "sku-format": "Usa de 3 a 30 letras, números o guiones.",
+      "sku-duplicated": "Este SKU ya está registrado.",
+      "volume-invalid": "El volumen debe ser mayor que cero."
+    },
+    "product-form": {
+      "title": "Registrar producto",
+      "subtitle": "Agrega un producto al catálogo. El stock aparece cuando se reciben sus lotes.",
+      "save": "Registrar producto",
+      "success": "Producto {{code}} registrado."
     }
   },
   "dispatch": {
@@ -504,16 +524,8 @@
       "subtitle": "Suscripciones, prospectos y usuarios por rol.",
       "active": "Suscripciones activas",
       "revenue": "Ingresos cobrados",
-      "newsletter": "Suscriptores del newsletter",
-      "contacts": "Solicitudes de contacto",
       "subscriptions": "Suscripciones",
       "users": "usuarios"
-    },
-    "newsletter": {
-      "success": "Estás suscrito. ¡Gracias!"
-    },
-    "contact": {
-      "success": "¡Gracias! Te contactaremos pronto."
     },
     "errors": {
       "load": "No se pudieron cargar las suscripciones. {{detail}}",
@@ -682,12 +694,6 @@
       "company": "Empresa",
       "message": "¿Cómo podemos ayudarte?",
       "send": "Enviar solicitud"
-    },
-    "newsletter": {
-      "title": "Novedades comerciales",
-      "text": "Suscríbete para recibir novedades del producto y ofertas.",
-      "placeholder": "Tu correo",
-      "button": "Suscribirme"
     },
     "footer": {
       "tagline": "Optimizando la logística de bebidas con trazabilidad IoT.",

@@ -25,7 +25,8 @@
     "analytics": "Analytics",
     "subscription": "Subscription",
     "administration": "Administration",
-    "sign-out": "Sign out"
+    "sign-out": "Sign out",
+    "access": "Access"
   },
   "roles": {
     "ROLE_ADMIN": "Administrator",
@@ -94,7 +95,7 @@
       "subtitle": "Join BevTrace and trace every container",
       "button": "Create account",
       "have-account": "Already have an account?",
-      "success": "Account created. You can sign in now."
+      "success": "Account created. It will be enabled when a manager grants you permission."
     },
     "rules": {
       "min-length": "More than 8 characters",
@@ -109,16 +110,21 @@
       "name-required": "Enter your full name (min. 3 characters).",
       "phone-format": "Enter a valid phone number.",
       "invalid-credentials": "Invalid e-mail or password.",
-      "account-disabled": "This account is disabled. Contact an administrator.",
+      "account-disabled": "This account is disabled or waiting for a permission. Contact your logistics manager or an administrator.",
       "locked": "Too many failed attempts. Try again in {{seconds}} seconds.",
       "cannot-edit-self": "You cannot change your own role or status.",
-      "generic": "Something went wrong. If the e-mail is already registered, sign in instead."
+      "generic": "Something went wrong. If the e-mail is already registered, sign in instead.",
+      "role-not-allowed": "You are not allowed to grant or change that role."
     },
     "users": {
-      "title": "Users & Roles",
-      "subtitle": "Manage access to the platform (IAM)",
-      "role-updated": "Role updated.",
-      "status-updated": "Account status updated."
+      "title": "Access & permissions",
+      "subtitle": "Approve new accounts and grant or revoke access to the platform",
+      "permission-granted": "Permission granted. The account is enabled.",
+      "access-revoked": "Access revoked. The account is disabled.",
+      "pending": "Pending / disabled",
+      "actions": "Actions",
+      "grant": "Grant permission",
+      "revoke": "Revoke access"
     }
   },
   "inventory": {
@@ -128,7 +134,12 @@
       "zone": "Zone",
       "stock": "Stock",
       "quantity": "Quantity",
-      "expiration": "Expiration"
+      "expiration": "Expiration",
+      "sku": "SKU",
+      "name": "Name",
+      "category": "Category",
+      "packaging": "Packaging",
+      "volume": "Volume (ml)"
     },
     "catalog": {
       "title": "Inventory & Shrinkage Catalog",
@@ -206,7 +217,16 @@
       "no-counts": "Enter at least one physical count.",
       "pending-discrepancies": "{{count}} discrepancies are still open. Resolve them first.",
       "note-required": "Enter a resolution note (min. 3 characters).",
-      "stock-insufficient": "Insufficient stock."
+      "stock-insufficient": "Insufficient stock.",
+      "sku-format": "Use 3 to 30 letters, numbers or dashes.",
+      "sku-duplicated": "This SKU is already registered.",
+      "volume-invalid": "The volume must be greater than zero."
+    },
+    "product-form": {
+      "title": "Register product",
+      "subtitle": "Add a product to the catalogue. Stock appears when its batches are received.",
+      "save": "Register product",
+      "success": "Product {{code}} registered."
     }
   },
   "dispatch": {
@@ -504,16 +524,8 @@
       "subtitle": "Subscriptions, prospects and users by role.",
       "active": "Active subscriptions",
       "revenue": "Revenue collected",
-      "newsletter": "Newsletter subscribers",
-      "contacts": "Contact requests",
       "subscriptions": "Subscriptions",
       "users": "users"
-    },
-    "newsletter": {
-      "success": "You are subscribed. Thank you!"
-    },
-    "contact": {
-      "success": "Thanks! We will contact you soon."
     },
     "errors": {
       "load": "Could not load the subscriptions. {{detail}}",
@@ -682,12 +694,6 @@
       "company": "Company",
       "message": "How can we help you?",
       "send": "Send request"
-    },
-    "newsletter": {
-      "title": "Commercial news",
-      "text": "Subscribe to receive product updates and offers.",
-      "placeholder": "Your e-mail",
-      "button": "Subscribe"
     },
     "footer": {
       "tagline": "Optimizing beverage logistics through IoT traceability.",
