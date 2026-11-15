@@ -79,14 +79,14 @@ export class IncidentApi extends BaseApi {
   }
 
   /**
-   * Enables or disables a rule (PATCH /rules/{id}/active).
+   * Enables or disables a rule (PATCH /rules/{id}/states).
    *
    * @param id     - Rule identifier
    * @param active - New activation state
    * @returns Observable completing when the rule was updated
    */
   setRuleActive(id: number, active: boolean): Observable<void> {
-    return this.ruleEndpoint.command('PATCH', `${id}/active`, { active });
+    return this.ruleEndpoint.command('PATCH', `${id}/states`, { active });
   }
 
   /**
@@ -108,13 +108,13 @@ export class IncidentApi extends BaseApi {
   }
 
   /**
-   * Acknowledges an incident (POST /incidents/{id}/acknowledgement).
+   * Acknowledges an incident (POST /incidents/{id}/acknowledgments).
    *
    * @param id - Incident identifier
    * @returns Observable completing when it was acknowledged
    */
   acknowledgeIncident(id: number): Observable<void> {
-    return this.incidentEndpoint.command('POST', `${id}/acknowledgement`);
+    return this.incidentEndpoint.command('POST', `${id}/acknowledgments`);
   }
 
   /**
@@ -129,13 +129,13 @@ export class IncidentApi extends BaseApi {
   }
 
   /**
-   * Resolves an incident (POST /incidents/{id}/resolution).
+   * Resolves an incident (POST /incidents/{id}/resolutions).
    *
    * @param id - Incident identifier
    * @returns Observable completing when it was resolved
    */
   resolveIncident(id: number): Observable<void> {
-    return this.incidentEndpoint.command('POST', `${id}/resolution`);
+    return this.incidentEndpoint.command('POST', `${id}/resolutions`);
   }
 
   /**
@@ -159,12 +159,12 @@ export class IncidentApi extends BaseApi {
 
 
   /**
-   * Marks a notification as read (PATCH /notifications/{id}/read).
+   * Marks a notification as read (PATCH /notifications/{id}/read-receipts).
    *
    * @param id - Notification identifier
    * @returns Observable completing when it was marked
    */
   markNotificationRead(id: number): Observable<void> {
-    return this.notificationEndpoint.command('PATCH', `${id}/read`);
+    return this.notificationEndpoint.command('PATCH', `${id}/read-receipts`);
   }
 }
