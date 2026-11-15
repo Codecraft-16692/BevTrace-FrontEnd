@@ -3,7 +3,7 @@
  *
  * @remarks
  * This interface belongs to the infrastructure layer and represents the HTTP
- * request body sent to the mock REST API. System-generated fields are excluded.
+ * request body sent to the BevTrace Web Services. System-generated fields are excluded.
  */
 export interface CreateUserRequest {
   /**

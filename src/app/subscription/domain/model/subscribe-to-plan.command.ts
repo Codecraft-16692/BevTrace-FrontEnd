@@ -32,7 +32,7 @@ export interface SubscribeToPlanCommand {
   cardHolder: string;
 
   /**
-   * The card number. Only the last four digits are persisted by the mock.
+   * The card number. Only the last four digits are persisted by the Web Services.
    */
   cardNumber: string;
 }

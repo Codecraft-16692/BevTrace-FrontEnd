@@ -5,8 +5,8 @@ import { KpiMetric } from '../domain/model/kpi-metric';
  * Resource representation of a consolidated logistics report for API communication.
  *
  * @remarks
- * This interface belongs to the infrastructure layer and mirrors the mock REST
- * resource contract exposed by json-server until the backend becomes available.
+ * This interface belongs to the infrastructure layer and mirrors the REST
+ * resource contract exposed by the BevTrace Web Services.
  */
 export interface LogisticsReportResource extends BaseResource {
   /**

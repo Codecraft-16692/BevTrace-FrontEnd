@@ -25,9 +25,9 @@ import { InventoryApi } from '../infrastructure/inventory-api';
  *
  * @remarks
  * This store coordinates the presentation layer with the inventory API facade.
- * Because the mock REST API cannot enforce domain rules, the store validates the
- * business rules of the user stories: scanned code validation, waste limited to
- * the available stock, daily reconciliation and discrepancy handling.
+ * It also validates on the client the business rules of the user stories:
+ * scanned code validation, waste limited to the available stock, daily
+ * reconciliation and discrepancy handling.
  */
 @Injectable({ providedIn: 'root' })
 export class InventoryStore extends BaseStore {
