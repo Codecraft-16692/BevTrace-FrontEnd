@@ -3,7 +3,7 @@
  *
  * @remarks
  * This interface belongs to the infrastructure layer and represents the data
- * used to authenticate against the mock users collection. It is created from a
+ * used to authenticate against the BevTrace Web Services. It is created from a
  * SignInCommand before performing the API call.
  *
  * @example

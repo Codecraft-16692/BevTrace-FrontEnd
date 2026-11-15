@@ -22,7 +22,7 @@ import { SignUpRequest } from '../infrastructure/sign-up.request';
  */
 interface Session {
   /**
-   * Mock access token of the session.
+   * JWT access token of the session.
    */
   token: string;
 
