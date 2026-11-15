@@ -1,0 +1,56 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-group">
+      <mat-icon>add_circle</mat-icon>
+      <div>
+        <h2>{{ 'inventory.product-form.title' | translate }}</h2>
+        <p>{{ 'inventory.product-form.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <app-message-banner [message]="store.error()" type="error" />
+  <app-message-banner [message]="store.successMsg()" type="success" />
+
+  <div class="card form-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="skuCode">{{ 'inventory.fields.sku' | translate }}</label>
+          <input id="skuCode" type="text" class="mono" formControlName="skuCode" [class.invalid]="form.controls.skuCode.invalid && form.controls.skuCode.touched" />
+          @if (form.controls.skuCode.invalid && form.controls.skuCode.touched) {
+            <span class="error-message">{{ 'inventory.errors.sku-format' | translate }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="name">{{ 'inventory.fields.name' | translate }}</label>
+          <input id="name" type="text" formControlName="name" [class.invalid]="form.controls.name.invalid && form.controls.name.touched" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category">{{ 'inventory.fields.category' | translate }}</label>
+          <input id="category" type="text" formControlName="category" [class.invalid]="form.controls.category.invalid && form.controls.category.touched" />
+        </div>
+
+        <div class="form-group">
+          <label for="packagingType">{{ 'inventory.fields.packaging' | translate }}</label>
+          <input id="packagingType" type="text" formControlName="packagingType" [class.invalid]="form.controls.packagingType.invalid && form.controls.packagingType.touched" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="volumeMl">{{ 'inventory.fields.volume' | translate }}</label>
+        <input id="volumeMl" type="number" min="1" formControlName="volumeMl" [class.invalid]="form.controls.volumeMl.invalid && form.controls.volumeMl.touched" />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" style="max-width: 220px" [disabled]="store.isLoading()">
+          {{ 'inventory.product-form.save' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

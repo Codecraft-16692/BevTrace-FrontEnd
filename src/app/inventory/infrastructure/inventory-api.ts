@@ -19,6 +19,7 @@ import { InventoryReconciliationApiEndpoint } from './inventory-reconciliation-a
 import { InventoryDiscrepancyApiEndpoint } from './inventory-discrepancy-api-endpoint';
 
 import { RegisterBatchRequest } from './product-batch.request';
+import { CreateProductRequest } from './product.request';
 import { RegisterWasteRequest } from './waste-record.request';
 
 /**
@@ -104,6 +105,16 @@ export class InventoryApi extends BaseApi {
     return this.batchEndpoint.getAll();
   }
 
+
+  /**
+   * Adds a product to the catalogue (POST /products).
+   *
+   * @param request - Product data
+   * @returns Observable emitting the created product
+   */
+  registerProduct(request: CreateProductRequest): Observable<Product> {
+    return this.productEndpoint.createFromRequest(request);
+  }
 
   /**
    * Registers an expected batch (POST /batches).
