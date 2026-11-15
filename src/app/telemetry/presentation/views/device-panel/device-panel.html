@@ -8,6 +8,11 @@
       </div>
     </div>
     <div class="header-actions">
+      @if (canProvision) {
+        <button type="button" class="btn-action" (click)="onProvision()">
+          <mat-icon>add</mat-icon> {{ 'telemetry.form.title' | translate }}
+        </button>
+      }
       <button type="button" class="btn-secondary" [disabled]="store.isLoading()" (click)="onRefresh()">
         <mat-icon>refresh</mat-icon> {{ 'common.refresh' | translate }}
       </button>

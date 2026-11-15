@@ -47,6 +47,4 @@ export const environment = {
   subscriptionPlansEndpointPath: '/subscription-plans',
   subscriptionsEndpointPath: '/subscriptions',
   subscriptionPaymentsEndpointPath: '/payments',
-  subscriptionNewsletterEndpointPath: '/newsletter-subscribers',
-  subscriptionContactsEndpointPath: '/contact-requests',
 };

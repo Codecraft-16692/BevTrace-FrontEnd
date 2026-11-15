@@ -210,7 +210,7 @@ export abstract class BaseApiEndpoint<
    * @remarks The backend applies the business rules and answers with the updated resource,
    * which callers ignore: the store refreshes its data afterwards.
    * @param method - HTTP verb of the command.
-   * @param path   - Path relative to the collection, for example `5/departure`.
+   * @param path   - Path relative to the collection, for example `5/departures`.
    * @param body   - Optional command payload.
    * @returns An observable that completes when the command was accepted.
    */

@@ -62,25 +62,25 @@ export class TraceabilityApi extends BaseApi {
 
 
   /**
-   * Confirms the delivery (POST /logs/{id}/delivery).
+   * Confirms the delivery (POST /logs/{id}/deliveries).
    *
    * @param id         - Log identifier
    * @param receivedBy - Name of the person who received the cargo
    * @returns Observable completing when the delivery was confirmed
    */
   confirmDelivery(id: number, receivedBy: string): Observable<void> {
-    return this.logEndpoint.command('POST', `${id}/delivery`, { receivedBy });
+    return this.logEndpoint.command('POST', `${id}/deliveries`, { receivedBy });
   }
 
   /**
-   * Rejects the delivery (POST /logs/{id}/rejection).
+   * Rejects the delivery (POST /logs/{id}/rejections).
    *
    * @param id     - Log identifier
    * @param reason - Rejection reason
    * @returns Observable completing when the rejection was registered
    */
   rejectDelivery(id: number, reason: string): Observable<void> {
-    return this.logEndpoint.command('POST', `${id}/rejection`, { reason });
+    return this.logEndpoint.command('POST', `${id}/rejections`, { reason });
   }
 
   /**

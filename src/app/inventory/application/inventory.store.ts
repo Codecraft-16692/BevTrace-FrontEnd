@@ -5,6 +5,7 @@ import { BaseStore } from '../../shared/application/base-store';
 import { BusinessError } from '../../shared/domain/model/business-error';
 
 import { Product } from '../domain/model/product.entity';
+import { RegisterProductCommand } from '../domain/model/register-product.command';
 import { WarehouseZone } from '../domain/model/warehouse-zone.entity';
 import { ProductBatch } from '../domain/model/product-batch.entity';
 import { WasteRecord } from '../domain/model/waste-record.entity';
@@ -158,6 +159,27 @@ export class InventoryStore extends BaseStore {
    */
   loadAll(): void {
     this.read(this.snapshot$(), 'inventory.errors.load', (snapshot) => this.applySnapshot(snapshot));
+  }
+
+  /**
+   * Adds a product to the catalogue. The backend rejects duplicated SKU codes.
+   *
+   * @param command - Product registration command
+   */
+  registerProduct(command: RegisterProductCommand): void {
+    const skuCode = command.skuCode.trim().toUpperCase();
+    this.write(
+      this.api.registerProduct({
+        skuCode,
+        name: command.name.trim(),
+        category: command.category.trim(),
+        volumeMl: command.volumeMl,
+        packagingType: command.packagingType.trim(),
+      }),
+      'inventory.errors.generic',
+      () => this.refresh(),
+      { key: 'inventory.product-form.success', params: { code: skuCode } },
+    );
   }
 
   /**

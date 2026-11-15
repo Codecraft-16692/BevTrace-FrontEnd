@@ -7,11 +7,13 @@
         <p>{{ 'incident.dashboard.subtitle' | translate }}</p>
       </div>
     </div>
-    <div class="header-actions">
-      <button type="button" class="btn-action" [disabled]="store.isLoading()" (click)="onDetect()">
-        {{ 'incident.dashboard.detect' | translate }}
-      </button>
-    </div>
+    @if (canDetect()) {
+      <div class="header-actions">
+        <button type="button" class="btn-action" [disabled]="store.isLoading()" (click)="onDetect()">
+          {{ 'incident.dashboard.detect' | translate }}
+        </button>
+      </div>
+    }
   </div>
 
   <app-message-banner [message]="store.error()" type="error" />

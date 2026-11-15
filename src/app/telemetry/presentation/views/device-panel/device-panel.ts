@@ -1,11 +1,13 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+import { IamStore } from '../../../../iam/application/iam.store';
 import { TelemetryStore } from '../../../application/telemetry.store';
 import { TelemetryDevice } from '../../../domain/model/telemetry-device.entity';
 import { ConnectivityPolicy } from '../../../domain/model/connectivity-policy';
@@ -42,6 +44,16 @@ export class DevicePanel implements OnInit {
    * Store that manages telemetry state.
    */
   protected readonly store = inject(TelemetryStore);
+
+  /**
+   * Router used to open the provisioning form.
+   */
+  private readonly router = inject(Router);
+
+  /**
+   * Adding a device is reserved to logistics managers; the button is hidden for other roles.
+   */
+  protected readonly canProvision = inject(IamStore).hasAnyRole(['ROLE_LOGISTICS_MANAGER']);
 
   /**
    * Columns displayed in the device table.
@@ -108,5 +120,12 @@ export class DevicePanel implements OnInit {
    */
   protected onRefresh(): void {
     this.store.loadAll();
+  }
+
+  /**
+   * Opens the form that adds a device to a vehicle.
+   */
+  protected onProvision(): void {
+    this.router.navigate(['/telemetry/devices/new']).then();
   }
 }

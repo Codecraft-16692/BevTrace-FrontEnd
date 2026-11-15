@@ -280,6 +280,7 @@
     cursor: pointer;
   }
 
+  .mail a { color: inherit; }
   .mail {
     display: flex;
     align-items: center;

@@ -7,9 +7,11 @@
         <p>{{ 'dispatch.queue.subtitle' | translate }}</p>
       </div>
     </div>
-    <div class="header-actions">
-      <button type="button" class="btn-action" (click)="create()">{{ 'dispatch.queue.new' | translate }}</button>
-    </div>
+    @if (canSchedule()) {
+      <div class="header-actions">
+        <button type="button" class="btn-action" (click)="create()">{{ 'dispatch.queue.new' | translate }}</button>
+      </div>
+    }
   </div>
 
   <app-message-banner [message]="store.error()" type="error" />

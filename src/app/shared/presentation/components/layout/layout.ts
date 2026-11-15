@@ -43,11 +43,10 @@ interface NavOption {
   /**
    * Sub-options displayed inside an expansion panel.
    */
-  children?: { label: string; link: string }[];
+  children?: { label: string; link: string; roles?: string[] }[];
 }
 
 const MANAGER = 'ROLE_LOGISTICS_MANAGER';
-const OPERATOR = 'ROLE_WAREHOUSE_OPERATOR';
 
 /**
  * @summary Main application layout of BevTrace.
@@ -107,8 +106,9 @@ export class Layout implements OnInit {
       link: '/inventory',
       children: [
         { label: 'inventory.catalog.title', link: '/inventory/products' },
+        { label: 'inventory.product-form.title', link: '/inventory/products/new', roles: [MANAGER] },
+        { label: 'inventory.batch-form.title', link: '/inventory/batches/new', roles: [MANAGER] },
         { label: 'inventory.entry.title', link: '/inventory/batches' },
-        { label: 'inventory.batch-form.title', link: '/inventory/batches/new' },
         { label: 'inventory.waste.title', link: '/inventory/waste-records' },
         { label: 'inventory.reconciliation.title', link: '/inventory/reconciliations' },
       ],
@@ -119,7 +119,7 @@ export class Layout implements OnInit {
       link: '/dispatch',
       children: [
         { label: 'dispatch.queue.title', link: '/dispatch/orders' },
-        { label: 'dispatch.form.title', link: '/dispatch/orders/new' },
+        { label: 'dispatch.form.title', link: '/dispatch/orders/new', roles: [MANAGER] },
       ],
     },
     {
@@ -137,7 +137,7 @@ export class Layout implements OnInit {
       link: '/telemetry',
       children: [
         { label: 'telemetry.panel.title', link: '/telemetry/devices' },
-        { label: 'telemetry.form.title', link: '/telemetry/devices/new' },
+        { label: 'telemetry.form.title', link: '/telemetry/devices/new', roles: [MANAGER] },
       ],
     },
     {
@@ -171,22 +171,35 @@ export class Layout implements OnInit {
       ],
     },
     {
+      label: 'nav.access',
+      icon: 'manage_accounts',
+      link: '/iam/users',
+      roles: [MANAGER],
+    },
+    {
       label: 'nav.administration',
       icon: 'admin_panel_settings',
       link: '/admin',
       roles: ['ROLE_ADMIN'],
-      children: [
-        { label: 'iam.users.title', link: '/iam/users' },
-        { label: 'subscription.admin.title', link: '/subscription/admin/subscriptions' },
-      ],
+      children: [{ label: 'subscription.admin.title', link: '/subscription/admin/subscriptions' }],
     },
   ];
 
   /**
-   * Navigation options visible for the current user.
+   * Navigation options and sub-options visible for the current user; what a role cannot open is hidden.
    */
   protected readonly options = computed(() =>
-    this.allOptions.filter((option) => !option.roles || this.iamStore.hasAnyRole(option.roles)),
+    this.allOptions
+      .filter((option) => !option.roles || this.iamStore.hasAnyRole(option.roles))
+      .map((option) =>
+        option.children
+          ? {
+              ...option,
+              children: option.children.filter((child) => !child.roles || this.iamStore.hasAnyRole(child.roles)),
+            }
+          : option,
+      )
+      .filter((option) => !option.children || option.children.length > 0),
   );
 
   /**

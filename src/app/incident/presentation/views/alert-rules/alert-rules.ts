@@ -6,6 +6,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
+import { IamStore } from '../../../../iam/application/iam.store';
 import { IncidentStore } from '../../../application/incident.store';
 import { MessageBanner } from '../../../../shared/presentation/components/message-banner/message-banner';
 import { StatusChip } from '../../../../shared/presentation/components/status-chip/status-chip';
@@ -37,6 +38,11 @@ export class AlertRules implements OnInit {
    * Store that manages incident state.
    */
   protected readonly store = inject(IncidentStore);
+
+  /**
+   * Creating and enabling rules is reserved to logistics managers; other roles only read them.
+   */
+  protected readonly canManage = inject(IamStore).hasAnyRole(['ROLE_LOGISTICS_MANAGER']);
 
   /**
    * Columns displayed in the rules table.

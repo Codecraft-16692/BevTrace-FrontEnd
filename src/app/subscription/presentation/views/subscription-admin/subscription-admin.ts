@@ -15,7 +15,7 @@ import { StatusChip } from '../../../../shared/presentation/components/status-ch
  * @remarks
  * This presentation component is the administration overview that joins the
  * Subscription and IAM contexts: it lists every subscription with its owner,
- * the revenue, the newsletter subscribers and the contact requests, and shows
+ * the revenue and the users by role, and shows
  * the amount of users per role.
  */
 @Component({

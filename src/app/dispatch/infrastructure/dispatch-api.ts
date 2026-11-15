@@ -125,56 +125,56 @@ export class DispatchApi extends BaseApi {
   }
 
   /**
-   * Assigns a vehicle (POST /dispatch-orders/{id}/vehicle-assignment).
+   * Assigns a vehicle (POST /dispatch-orders/{id}/vehicle-assignments).
    *
    * @param id        - Order identifier
    * @param vehicleId - Vehicle identifier
    * @returns Observable completing when the vehicle was assigned
    */
   assignVehicle(id: number, vehicleId: number): Observable<void> {
-    return this.orderEndpoint.command('POST', `${id}/vehicle-assignment`, { vehicleId });
+    return this.orderEndpoint.command('POST', `${id}/vehicle-assignments`, { vehicleId });
   }
 
   /**
-   * Validates the scanned pallets (POST /dispatch-orders/{id}/cargo-validation).
+   * Validates the scanned pallets (POST /dispatch-orders/{id}/cargo-validations).
    *
    * @param id             - Order identifier
    * @param scannedPallets - Scanned pallet codes
    * @returns Observable completing when the cargo was validated
    */
   validateCargo(id: number, scannedPallets: string[]): Observable<void> {
-    return this.orderEndpoint.command('POST', `${id}/cargo-validation`, { scannedPallets });
+    return this.orderEndpoint.command('POST', `${id}/cargo-validations`, { scannedPallets });
   }
 
   /**
-   * Changes the priority (PATCH /dispatch-orders/{id}/priority).
+   * Changes the priority (PATCH /dispatch-orders/{id}/priorities).
    *
    * @param id       - Order identifier
    * @param priority - New priority
    * @returns Observable completing when the priority was changed
    */
   changePriority(id: number, priority: string): Observable<void> {
-    return this.orderEndpoint.command('PATCH', `${id}/priority`, { priority });
+    return this.orderEndpoint.command('PATCH', `${id}/priorities`, { priority });
   }
 
   /**
-   * Registers the departure (POST /dispatch-orders/{id}/departure).
+   * Registers the departure (POST /dispatch-orders/{id}/departures).
    *
    * @param id - Order identifier
    * @returns Observable completing when the order is in transit
    */
   registerDeparture(id: number): Observable<void> {
-    return this.orderEndpoint.command('POST', `${id}/departure`);
+    return this.orderEndpoint.command('POST', `${id}/departures`);
   }
 
   /**
-   * Cancels the order (POST /dispatch-orders/{id}/cancellation).
+   * Cancels the order (POST /dispatch-orders/{id}/cancellations).
    *
    * @param id - Order identifier
    * @returns Observable completing when the order was cancelled
    */
   cancelOrder(id: number): Observable<void> {
-    return this.orderEndpoint.command('POST', `${id}/cancellation`);
+    return this.orderEndpoint.command('POST', `${id}/cancellations`);
   }
 
   /**
