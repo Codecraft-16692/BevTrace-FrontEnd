@@ -5,7 +5,7 @@ import { ErrorHandlingEnabledBaseType } from '../../shared/infrastructure/error-
 import { SignInRequest } from './sign-in.request';
 import { SignInResource } from './sign-in-response';
 
-const signInUrl = `${environment.serverBasePath}/authentication/sign-in`;
+const signInUrl = `${environment.serverBasePath}/authentication/tokens`;
 
 /**
  * HTTP endpoint client for user sign-in operations.

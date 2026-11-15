@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { ErrorHandlingEnabledBaseType } from '../../shared/infrastructure/error-handling-enabled-base-type';
 import { SignUpRequest } from './sign-up.request';
 
-const signUpUrl = `${environment.serverBasePath}/authentication/sign-up`;
+const signUpUrl = `${environment.serverBasePath}/authentication/registrations`;
 
 /**
  * Account created by the backend after a successful sign-up.

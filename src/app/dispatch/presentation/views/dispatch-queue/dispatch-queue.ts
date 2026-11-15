@@ -7,6 +7,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+import { IamStore } from '../../../../iam/application/iam.store';
 import { DispatchStore } from '../../../application/dispatch.store';
 import { DispatchOrder } from '../../../domain/model/dispatch-order.entity';
 import { MessageBanner } from '../../../../shared/presentation/components/message-banner/message-banner';
@@ -45,6 +46,16 @@ export class DispatchQueue implements OnInit {
    * Router used to open the dispatch detail.
    */
   private readonly router = inject(Router);
+
+  /**
+   * Store that exposes the roles of the signed in user.
+   */
+  private readonly iamStore = inject(IamStore);
+
+  /**
+   * Scheduling a dispatch is reserved to logistics managers; the button is hidden for other roles.
+   */
+  protected readonly canSchedule = computed(() => this.iamStore.hasAnyRole(['ROLE_LOGISTICS_MANAGER']));
 
   /**
    * Columns displayed in the queue table.

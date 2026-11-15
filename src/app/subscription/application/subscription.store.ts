@@ -3,18 +3,13 @@ import { defer, forkJoin, map, switchMap, throwError } from 'rxjs';
 
 import { BaseStore } from '../../shared/application/base-store';
 import { BusinessError } from '../../shared/domain/model/business-error';
-import { CredentialsPolicy } from '../../iam/domain/model/credentials-policy';
 
 import { SubscriptionPlan } from '../domain/model/subscription-plan.entity';
 import { Subscription } from '../domain/model/subscription.entity';
 import { Payment } from '../domain/model/payment.entity';
-import { NewsletterSubscriber } from '../domain/model/newsletter-subscriber.entity';
-import { ContactRequest } from '../domain/model/contact-request.entity';
 import { CardPolicy, DECLINED_TEST_CARD } from '../domain/model/card-policy';
 import { SubscribeToPlanCommand } from '../domain/model/subscribe-to-plan.command';
 import { CancelSubscriptionCommand } from '../domain/model/cancel-subscription.command';
-import { SubscribeNewsletterCommand } from '../domain/model/subscribe-newsletter.command';
-import { SubmitContactRequestCommand } from '../domain/model/submit-contact-request.command';
 
 import { SubscriptionApi } from '../infrastructure/subscription-api';
 
@@ -24,8 +19,7 @@ import { SubscriptionApi } from '../infrastructure/subscription-api';
  * @remarks
  * This store exposes the commercial plans shown in the landing page and the
  * plans view, simulates the checkout (card validation, declined payment and
- * activation), lists the subscriptions and payments and manages the newsletter
- * and contact requests of prospects.
+ * activation) and lists the subscriptions and payments.
  */
 @Injectable({ providedIn: 'root' })
 export class SubscriptionStore extends BaseStore {
@@ -50,16 +44,6 @@ export class SubscriptionStore extends BaseStore {
   private readonly paymentsSignal = signal<Payment[]>([]);
 
   /**
-   * Internal signal containing the newsletter subscribers.
-   */
-  private readonly subscribersSignal = signal<NewsletterSubscriber[]>([]);
-
-  /**
-   * Internal signal containing the contact requests.
-   */
-  private readonly contactsSignal = signal<ContactRequest[]>([]);
-
-  /**
    * Readonly signal exposing the plans.
    */
   readonly plans = this.plansSignal.asReadonly();
@@ -76,20 +60,6 @@ export class SubscriptionStore extends BaseStore {
    */
   readonly payments = computed(() =>
     [...this.paymentsSignal()].sort((a, b) => b.paidAt.localeCompare(a.paidAt)),
-  );
-
-  /**
-   * Readonly signal exposing the newsletter subscribers, newest first.
-   */
-  readonly subscribers = computed(() =>
-    [...this.subscribersSignal()].sort((a, b) => b.subscribedAt.localeCompare(a.subscribedAt)),
-  );
-
-  /**
-   * Readonly signal exposing the contact requests, newest first.
-   */
-  readonly contactRequests = computed(() =>
-    [...this.contactsSignal()].sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
   );
 
   /**
@@ -124,16 +94,12 @@ export class SubscriptionStore extends BaseStore {
         plans: this.api.getPlans(),
         subscriptions: this.api.getSubscriptions(),
         payments: this.api.getPayments(),
-        subscribers: this.api.getSubscribers(),
-        contacts: this.api.getContactRequests(),
       }),
       'subscription.errors.load',
       (result) => {
         this.plansSignal.set(result.plans);
         this.subscriptionsSignal.set(result.subscriptions);
         this.paymentsSignal.set(result.payments);
-        this.subscribersSignal.set(result.subscribers);
-        this.contactsSignal.set(result.contacts);
       },
     );
   }
@@ -218,54 +184,6 @@ export class SubscriptionStore extends BaseStore {
       'subscription.errors.generic',
       () => this.loadAllSilently(),
       { key: 'subscription.billing.cancelled' },
-    );
-  }
-
-  /**
-   * Subscribes an e-mail address to the newsletter (public endpoint).
-   *
-   * @param command - Newsletter subscription command
-   */
-  subscribeNewsletter(command: SubscribeNewsletterCommand): void {
-    const email = command.email.trim().toLowerCase();
-    if (!CredentialsPolicy.isValidEmail(email)) {
-      this.startOperation();
-      this.failOperation(new BusinessError('subscription.errors.email-invalid'), '');
-      return;
-    }
-
-    this.write(this.api.subscribeNewsletter(email), 'subscription.errors.generic', () => undefined, {
-      key: 'subscription.newsletter.success',
-    });
-  }
-
-  /**
-   * Sends a contact request from the landing page (public endpoint).
-   *
-   * @param command - Contact request command
-   */
-  submitContactRequest(command: SubmitContactRequestCommand): void {
-    if (!CredentialsPolicy.isValidEmail(command.email)) {
-      this.startOperation();
-      this.failOperation(new BusinessError('subscription.errors.email-invalid'), '');
-      return;
-    }
-    if (command.fullName.trim().length < 3 || command.message.trim().length < 10) {
-      this.startOperation();
-      this.failOperation(new BusinessError('subscription.errors.contact-incomplete'), '');
-      return;
-    }
-
-    this.write(
-      this.api.submitContactRequest({
-        fullName: command.fullName.trim(),
-        email: command.email.trim().toLowerCase(),
-        company: command.company.trim(),
-        message: command.message.trim(),
-      }),
-      'subscription.errors.generic',
-      () => undefined,
-      { key: 'subscription.contact.success' },
     );
   }
 

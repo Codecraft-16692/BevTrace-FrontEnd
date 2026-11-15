@@ -19,6 +19,7 @@ import { InventoryReconciliationApiEndpoint } from './inventory-reconciliation-a
 import { InventoryDiscrepancyApiEndpoint } from './inventory-discrepancy-api-endpoint';
 
 import { RegisterBatchRequest } from './product-batch.request';
+import { CreateProductRequest } from './product.request';
 import { RegisterWasteRequest } from './waste-record.request';
 
 /**
@@ -106,6 +107,16 @@ export class InventoryApi extends BaseApi {
 
 
   /**
+   * Adds a product to the catalogue (POST /products).
+   *
+   * @param request - Product data
+   * @returns Observable emitting the created product
+   */
+  registerProduct(request: CreateProductRequest): Observable<Product> {
+    return this.productEndpoint.createFromRequest(request);
+  }
+
+  /**
    * Registers an expected batch (POST /batches).
    *
    * @param request - Batch data
@@ -166,13 +177,13 @@ export class InventoryApi extends BaseApi {
 
 
   /**
-   * Confirms a reconciliation (POST /reconciliations/{id}/confirmation).
+   * Confirms a reconciliation (POST /reconciliations/{id}/confirmations).
    *
    * @param id - Reconciliation identifier
    * @returns Observable completing when it was confirmed
    */
   confirmReconciliation(id: number): Observable<void> {
-    return this.reconciliationEndpoint.command('POST', `${id}/confirmation`);
+    return this.reconciliationEndpoint.command('POST', `${id}/confirmations`);
   }
   /**
    * Retrieves every discrepancy.
@@ -185,12 +196,12 @@ export class InventoryApi extends BaseApi {
 
 
   /**
-   * Resolves a discrepancy (POST /discrepancies/{id}/resolution).
+   * Resolves a discrepancy (POST /discrepancies/{id}/resolutions).
    *
    * @param id   - Discrepancy identifier
    * @param note - Explanatory note
    * @returns Observable completing when it was resolved
    */
   resolveDiscrepancy(id: number, note: string): Observable<void> {
-    return this.discrepancyEndpoint.command('POST', `${id}/resolution`, { note });
+    return this.discrepancyEndpoint.command('POST', `${id}/resolutions`, { note });
   }}

@@ -1,17 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { MatIconModule } from '@angular/material/icon';
 
-import { MessageBanner } from '../../components/message-banner/message-banner';
 import { IamStore } from '../../../../iam/application/iam.store';
 import { SubscriptionStore } from '../../../../subscription/application/subscription.store';
 import { SubscriptionPlan } from '../../../../subscription/domain/model/subscription-plan.entity';
 import { PlanCard } from '../../../../subscription/presentation/components/plan-card/plan-card';
-import { emailFormatValidator } from '../../../../iam/presentation/validators/credentials.validators';
 
 /**
  * Team member displayed in the landing page.
@@ -34,19 +31,16 @@ interface TeamMember {
  * @remarks
  * This presentation component follows the landing page mockup: hero with the
  * segment selector, traceability shift, mission-critical features, pricing with
- * monthly and yearly billing, the CodeCraft team, the contact form and the
- * newsletter subscription.
+ * monthly and yearly billing, the CodeCraft team, and a contact e-mail.
  */
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
     DecimalPipe,
-    ReactiveFormsModule,
     RouterLink,
     TranslateModule,
     MatIconModule,
-    MessageBanner,
     PlanCard,
   ],
   templateUrl: './home.html',
@@ -59,7 +53,7 @@ export class Home implements OnInit {
   protected readonly iamStore = inject(IamStore);
 
   /**
-   * Store that manages plans, newsletter and contact requests.
+   * Store that manages the plans shown in the pricing section.
    */
   protected readonly subscriptionStore = inject(SubscriptionStore);
 
@@ -126,26 +120,6 @@ export class Home implements OnInit {
   ];
 
   /**
-   * Reactive form used to capture the newsletter e-mail.
-   */
-  protected readonly newsletterForm = new FormGroup({
-    email: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required, emailFormatValidator()],
-    }),
-  });
-
-  /**
-   * Reactive form used to capture a contact request.
-   */
-  protected readonly contactForm = new FormGroup({
-    fullName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.minLength(3)] }),
-    email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, emailFormatValidator()] }),
-    company: new FormControl<string>('', { nonNullable: true }),
-    message: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.minLength(10)] }),
-  });
-
-  /**
    * Lifecycle hook that loads the plans shown in the pricing section.
    */
   ngOnInit(): void {
@@ -164,7 +138,7 @@ export class Home implements OnInit {
   }
 
   /**
-   * Continues with a plan: enterprise goes to the contact form, others to the registration.
+   * Continues with a plan: enterprise goes to the contact section, others to the registration.
    *
    * @param plan - Plan chosen by the visitor
    */
@@ -180,29 +154,5 @@ export class Home implements OnInit {
       return;
     }
     this.router.navigate(['/iam/sign-up']).then();
-  }
-
-  /**
-   * Submits the newsletter form.
-   */
-  protected onSubscribe(): void {
-    if (this.newsletterForm.invalid) {
-      this.newsletterForm.markAllAsTouched();
-      return;
-    }
-    this.subscriptionStore.subscribeNewsletter({ email: this.newsletterForm.controls.email.value });
-    this.newsletterForm.reset({ email: '' });
-  }
-
-  /**
-   * Submits the contact form.
-   */
-  protected onContact(): void {
-    if (this.contactForm.invalid) {
-      this.contactForm.markAllAsTouched();
-      return;
-    }
-    this.subscriptionStore.submitContactRequest(this.contactForm.getRawValue());
-    this.contactForm.reset({ fullName: '', email: '', company: '', message: '' });
   }
 }

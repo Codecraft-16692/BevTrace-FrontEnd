@@ -9,8 +9,8 @@ import { User } from '../domain/model/user.entity';
 import { Role } from '../domain/model/role.entity';
 import { SignInCommand } from '../domain/model/sign-in.command';
 import { SignUpCommand } from '../domain/model/sign-up.command';
-import { AssignRoleCommand } from '../domain/model/assign-role.command';
-import { SetUserActiveCommand } from '../domain/model/set-user-active.command';
+import { GrantPermissionCommand } from '../domain/model/grant-permission.command';
+import { RevokeAccessCommand } from '../domain/model/revoke-access.command';
 
 import { IamApi } from '../infrastructure/iam-api';
 import { SignInRequest } from '../infrastructure/sign-in.request';
@@ -78,7 +78,7 @@ const LOCK_SECONDS = 30;
  * @remarks
  * This store coordinates the presentation layer with the IAM API facade. It
  * manages the authenticated session, role based authorization checks and the
- * user administration used by the administrator role.
+ * user administration used by the administrator and the logistics manager.
  */
 @Injectable({ providedIn: 'root' })
 export class IamStore extends BaseStore {
@@ -174,6 +174,16 @@ export class IamStore extends BaseStore {
    * Readonly signal exposing the available roles.
    */
   readonly roles = this.rolesSignal.asReadonly();
+
+  /**
+   * Roles the current user can grant: every role for the administrator, only the warehouse
+   * operator for the logistics manager.
+   */
+  readonly grantableRoles = computed(() =>
+    this.isAdmin()
+      ? this.rolesSignal()
+      : this.rolesSignal().filter((role) => role.name === 'ROLE_WAREHOUSE_OPERATOR'),
+  );
 
   /**
    * Creates a new IamStore and restores the persisted session.
@@ -274,11 +284,11 @@ export class IamStore extends BaseStore {
   }
 
   /**
-   * Changes the role of a user.
+   * Grants a permission (a role) to a user and enables the account.
    *
-   * @param command - Command containing the user and the new role
+   * @param command - Command containing the user and the role to grant
    */
-  assignRole(command: AssignRoleCommand): void {
+  grantPermission(command: GrantPermissionCommand): void {
     if (command.userId === this.currentUserId()) {
       this.startOperation();
       this.failOperation(new BusinessError('iam.errors.cannot-edit-self'), '');
@@ -286,19 +296,19 @@ export class IamStore extends BaseStore {
     }
 
     this.write(
-      this.iamApi.assignRole(command.userId, command.roleId),
+      this.iamApi.grantPermission(command.userId, command.roleId),
       'iam.errors.generic',
       () => this.loadUsers(),
-      { key: 'iam.users.role-updated' },
+      { key: 'iam.users.permission-granted' },
     );
   }
 
   /**
-   * Enables or disables a user account.
+   * Revokes the access of a user.
    *
-   * @param command - Command containing the user and the new activation state
+   * @param command - Command containing the user
    */
-  setUserActive(command: SetUserActiveCommand): void {
+  revokeAccess(command: RevokeAccessCommand): void {
     if (command.userId === this.currentUserId()) {
       this.startOperation();
       this.failOperation(new BusinessError('iam.errors.cannot-edit-self'), '');
@@ -306,13 +316,12 @@ export class IamStore extends BaseStore {
     }
 
     this.write(
-      this.iamApi.setUserActive(command.userId, command.active),
+      this.iamApi.revokeAccess(command.userId),
       'iam.errors.generic',
       () => this.loadUsers(),
-      { key: 'iam.users.status-updated' },
+      { key: 'iam.users.access-revoked' },
     );
   }
-
 
   /**
    * Maps a sign-in command into an infrastructure request.

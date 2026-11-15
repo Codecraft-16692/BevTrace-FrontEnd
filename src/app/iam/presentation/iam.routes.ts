@@ -40,16 +40,17 @@ export const authRoutes: Routes = [
 ];
 
 /**
- * Administrator-only routes of the Identity and Access Management context.
+ * Access-management routes of the Identity and Access Management context.
  *
  * @remarks
- * The resource is the plural `users`, mounted under `/iam`.
+ * The resource is the plural `users`, mounted under `/iam`. The logistics manager grants permissions to the
+ * warehouse operators; the administrator can manage every user.
  */
 export const userRoutes: Routes = [
   {
     path: 'iam/users',
     loadComponent: userList,
-    canActivate: [roleGuard('ROLE_ADMIN')],
+    canActivate: [roleGuard('ROLE_LOGISTICS_MANAGER')],
     title: `Users & Roles | ${baseTitle}`,
   },
 ];

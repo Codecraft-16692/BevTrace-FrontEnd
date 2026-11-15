@@ -100,24 +100,23 @@ export class IamApi extends BaseApi {
   }
 
   /**
-   * Changes the role of a user.
+   * Grants a permission (a role) to a user and enables the account (POST /users/{id}/permissions).
    *
    * @param userId - Numeric identifier of the user
-   * @param roleId - Numeric identifier of the new role
-   * @returns Observable stream completing when the role was changed
+   * @param roleId - Numeric identifier of the role to grant
+   * @returns Observable stream completing when the permission was granted
    */
-  assignRole(userId: number, roleId: number): Observable<void> {
-    return this.userEndpoint.command('PATCH', `${userId}/role`, { roleId });
+  grantPermission(userId: number, roleId: number): Observable<void> {
+    return this.userEndpoint.command('POST', `${userId}/permissions`, { roleId });
   }
 
   /**
-   * Enables or disables a user account.
+   * Revokes the access of a user (POST /users/{id}/revocations).
    *
    * @param userId - Numeric identifier of the user
-   * @param active - New activation state
-   * @returns Observable stream completing when the state was changed
+   * @returns Observable stream completing when the access was revoked
    */
-  setUserActive(userId: number, active: boolean): Observable<void> {
-    return this.userEndpoint.command('PATCH', `${userId}/active`, { active });
+  revokeAccess(userId: number): Observable<void> {
+    return this.userEndpoint.command('POST', `${userId}/revocations`);
   }
 }

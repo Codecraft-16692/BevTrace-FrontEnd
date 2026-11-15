@@ -123,40 +123,10 @@
   <p>{{ 'landing.cta.text' | translate }}</p>
 
   <div class="cta-grid">
-    <form class="panel" [formGroup]="contactForm" (ngSubmit)="onContact()" novalidate>
+    <div class="panel">
       <h3>{{ 'landing.cta.demo' | translate }}</h3>
-      <div class="field">
-        <input type="text" [placeholder]="'landing.contact.name' | translate" formControlName="fullName" [class.invalid]="contactForm.controls.fullName.invalid && contactForm.controls.fullName.touched" />
-      </div>
-      <div class="field">
-        <input type="email" [placeholder]="'iam.fields.email' | translate" formControlName="email" [class.invalid]="contactForm.controls.email.invalid && contactForm.controls.email.touched" />
-      </div>
-      <div class="field">
-        <input type="text" [placeholder]="'landing.contact.company' | translate" formControlName="company" />
-      </div>
-      <div class="field">
-        <textarea rows="3" [placeholder]="'landing.contact.message' | translate" formControlName="message" [class.invalid]="contactForm.controls.message.invalid && contactForm.controls.message.touched"></textarea>
-      </div>
-      <button type="submit" class="btn-white">{{ 'landing.contact.send' | translate }}</button>
-    </form>
-
-    <form class="panel" [formGroup]="newsletterForm" (ngSubmit)="onSubscribe()" novalidate>
-      <h3>{{ 'landing.newsletter.title' | translate }}</h3>
-      <p>{{ 'landing.newsletter.text' | translate }}</p>
-      <div class="field">
-        <input type="email" [placeholder]="'landing.newsletter.placeholder' | translate" formControlName="email" [class.invalid]="newsletterForm.controls.email.invalid && newsletterForm.controls.email.touched" />
-        @if (newsletterForm.controls.email.invalid && newsletterForm.controls.email.touched) {
-          <span class="field-error">{{ 'iam.errors.email-format' | translate }}</span>
-        }
-      </div>
-      <button type="submit" class="btn-white">{{ 'landing.newsletter.button' | translate }}</button>
-      <p class="mail"><mat-icon>mail</mat-icon> contact&#64;bevtrace.com</p>
-    </form>
-  </div>
-
-  <div class="feedback">
-    <app-message-banner [message]="subscriptionStore.successMsg()" type="success" />
-    <app-message-banner [message]="subscriptionStore.error()" type="error" />
+      <p class="mail"><mat-icon>mail</mat-icon> <a href="mailto:contact&#64;bevtrace.com">contact&#64;bevtrace.com</a></p>
+    </div>
   </div>
 </section>
 

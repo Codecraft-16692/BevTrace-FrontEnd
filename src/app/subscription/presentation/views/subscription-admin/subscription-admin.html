@@ -20,14 +20,6 @@
       <span class="kpi-label">{{ 'subscription.admin.revenue' | translate }}</span>
       <span class="kpi-value">S/ {{ store.revenue() | number }}</span>
     </div>
-    <div class="kpi-card">
-      <span class="kpi-label">{{ 'subscription.admin.newsletter' | translate }}</span>
-      <span class="kpi-value">{{ store.subscribers().length }}</span>
-    </div>
-    <div class="kpi-card">
-      <span class="kpi-label">{{ 'subscription.admin.contacts' | translate }}</span>
-      <span class="kpi-value">{{ store.contactRequests().length }}</span>
-    </div>
     @for (role of iamStore.roles(); track role.id) {
       <div class="kpi-card">
         <span class="kpi-label">{{ 'roles.' + role.name | translate }}</span>
@@ -63,38 +55,5 @@
         }
       </tbody>
     </table>
-  </div>
-
-  <div class="grid-2">
-    <div class="table-card">
-      <h3 class="table-title">{{ 'subscription.admin.contacts' | translate }}</h3>
-      <table class="simple-table">
-        <tbody>
-          @for (request of store.contactRequests(); track request.id) {
-            <tr>
-              <td><strong>{{ request.fullName }}</strong> · {{ request.company }}<div class="muted">{{ request.email }} · {{ request.createdAt | date: 'mediumDate' }}</div><div>{{ request.message }}</div></td>
-            </tr>
-          } @empty {
-            <tr><td class="muted">{{ 'common.no-results' | translate }}</td></tr>
-          }
-        </tbody>
-      </table>
-    </div>
-
-    <div class="table-card">
-      <h3 class="table-title">{{ 'subscription.admin.newsletter' | translate }}</h3>
-      <table class="simple-table">
-        <tbody>
-          @for (subscriber of store.subscribers(); track subscriber.id) {
-            <tr>
-              <td>{{ subscriber.email }}</td>
-              <td class="muted">{{ subscriber.subscribedAt | date: 'mediumDate' }}</td>
-            </tr>
-          } @empty {
-            <tr><td class="muted">{{ 'common.no-results' | translate }}</td></tr>
-          }
-        </tbody>
-      </table>
-    </div>
   </div>
 </div>
