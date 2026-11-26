@@ -1,5 +1,4 @@
 import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -36,7 +35,7 @@ interface TeamMember {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [DecimalPipe, RouterLink, TranslateModule, MatIconModule, PlanCard],
+  imports: [RouterLink, TranslateModule, MatIconModule, PlanCard],
   templateUrl: './home.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home.css',
