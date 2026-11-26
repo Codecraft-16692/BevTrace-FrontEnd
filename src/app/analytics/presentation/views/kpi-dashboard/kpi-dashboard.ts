@@ -1,4 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
@@ -31,6 +38,7 @@ import { MessageBanner } from '../../../../shared/presentation/components/messag
     MessageBanner,
   ],
   templateUrl: './kpi-dashboard.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './kpi-dashboard.css',
 })
 export class KpiDashboard implements OnInit {
@@ -72,8 +80,16 @@ export class KpiDashboard implements OnInit {
   protected readonly regionData = computed<ChartData<'bar'>>(() => ({
     labels: this.store.regionalPerformance().map((item) => item.region),
     datasets: [
-      { data: this.store.regionalPerformance().map((item) => item.onTime), label: 'On time', backgroundColor: '#2e7d32' },
-      { data: this.store.regionalPerformance().map((item) => item.late), label: 'Late', backgroundColor: '#c62828' },
+      {
+        data: this.store.regionalPerformance().map((item) => item.onTime),
+        label: 'On time',
+        backgroundColor: '#2e7d32',
+      },
+      {
+        data: this.store.regionalPerformance().map((item) => item.late),
+        label: 'Late',
+        backgroundColor: '#c62828',
+      },
     ],
   }));
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -33,6 +33,7 @@ import { StatusChip } from '../../../../shared/presentation/components/status-ch
     StatusChip,
   ],
   templateUrl: './reconciliation.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './reconciliation.css',
 })
 export class Reconciliation implements OnInit {
@@ -64,7 +65,14 @@ export class Reconciliation implements OnInit {
   /**
    * Columns displayed in the discrepancy table.
    */
-  protected readonly discrepancyColumns = ['batchNumber', 'expectedQty', 'countedQty', 'difference', 'status', 'actions'];
+  protected readonly discrepancyColumns = [
+    'batchNumber',
+    'expectedQty',
+    'countedQty',
+    'difference',
+    'status',
+    'actions',
+  ];
 
   /**
    * Lifecycle hook that loads the inventory.

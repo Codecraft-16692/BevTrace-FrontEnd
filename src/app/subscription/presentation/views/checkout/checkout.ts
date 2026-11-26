@@ -1,4 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,6 +32,7 @@ import { MessageBanner } from '../../../../shared/presentation/components/messag
   standalone: true,
   imports: [DecimalPipe, ReactiveFormsModule, TranslateModule, MatIconModule, MessageBanner],
   templateUrl: './checkout.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './checkout.css',
 })
 export class Checkout implements OnInit {
@@ -62,7 +70,9 @@ export class Checkout implements OnInit {
    * Plan selected by the user.
    */
   protected readonly plan = computed(() =>
-    this.store.plans().find((item) => item.code === this.planCode() && item.billingPeriod === this.cycle()),
+    this.store
+      .plans()
+      .find((item) => item.code === this.planCode() && item.billingPeriod === this.cycle()),
   );
 
   /**

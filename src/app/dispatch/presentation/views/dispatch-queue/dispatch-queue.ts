@@ -1,4 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -34,6 +41,7 @@ import { StatusChip } from '../../../../shared/presentation/components/status-ch
     StatusChip,
   ],
   templateUrl: './dispatch-queue.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dispatch-queue.css',
 })
 export class DispatchQueue implements OnInit {
@@ -55,12 +63,23 @@ export class DispatchQueue implements OnInit {
   /**
    * Scheduling a dispatch is reserved to logistics managers; the button is hidden for other roles.
    */
-  protected readonly canSchedule = computed(() => this.iamStore.hasAnyRole(['ROLE_LOGISTICS_MANAGER']));
+  protected readonly canSchedule = computed(() =>
+    this.iamStore.hasAnyRole(['ROLE_LOGISTICS_MANAGER']),
+  );
 
   /**
    * Columns displayed in the queue table.
    */
-  protected readonly displayedColumns = ['id', 'priority', 'destination', 'scheduledDate', 'units', 'vehicle', 'status', 'actions'];
+  protected readonly displayedColumns = [
+    'id',
+    'priority',
+    'destination',
+    'scheduledDate',
+    'units',
+    'vehicle',
+    'status',
+    'actions',
+  ];
 
   /**
    * Status selected in the filter, empty for every status.
@@ -71,7 +90,9 @@ export class DispatchQueue implements OnInit {
    * Orders matching the active filter.
    */
   protected readonly filtered = computed(() =>
-    this.store.orders().filter((order) => !this.statusFilter() || order.status === this.statusFilter()),
+    this.store
+      .orders()
+      .filter((order) => !this.statusFilter() || order.status === this.statusFilter()),
   );
 
   /**

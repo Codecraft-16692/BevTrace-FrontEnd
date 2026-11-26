@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -24,6 +24,7 @@ import { MessageBanner } from '../../../../shared/presentation/components/messag
   standalone: true,
   imports: [DatePipe, ReactiveFormsModule, TranslateModule, MatIconModule, MessageBanner],
   templateUrl: './report-generator.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './report-generator.css',
 })
 export class ReportGenerator implements OnInit {
@@ -100,9 +101,12 @@ export class ReportGenerator implements OnInit {
       'metric,value',
       ...report.kpis.map((item) => `${item.metricName},${item.actualValue}`),
     ];
-    const blob = new Blob([`period,${report.periodStart} to ${report.periodEnd}\n${rows.join('\n')}\n`], {
-      type: 'text/csv;charset=utf-8',
-    });
+    const blob = new Blob(
+      [`period,${report.periodStart} to ${report.periodEnd}\n${rows.join('\n')}\n`],
+      {
+        type: 'text/csv;charset=utf-8',
+      },
+    );
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;

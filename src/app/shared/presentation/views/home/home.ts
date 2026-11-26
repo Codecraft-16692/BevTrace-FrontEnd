@@ -1,5 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -36,14 +35,9 @@ interface TeamMember {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [
-    DecimalPipe,
-    RouterLink,
-    TranslateModule,
-    MatIconModule,
-    PlanCard,
-  ],
+  imports: [RouterLink, TranslateModule, MatIconModule, PlanCard],
   templateUrl: './home.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
@@ -149,7 +143,9 @@ export class Home implements OnInit {
     }
     if (this.iamStore.isSignedIn()) {
       this.router
-        .navigate(['/subscription/subscriptions/new'], { queryParams: { plan: plan.code, cycle: plan.billingPeriod } })
+        .navigate(['/subscription/subscriptions/new'], {
+          queryParams: { plan: plan.code, cycle: plan.billingPeriod },
+        })
         .then();
       return;
     }

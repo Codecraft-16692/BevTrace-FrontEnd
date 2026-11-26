@@ -1,4 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -37,6 +44,7 @@ import { StatusChip } from '../../../../shared/presentation/components/status-ch
     StatusChip,
   ],
   templateUrl: './device-panel.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './device-panel.css',
 })
 export class DevicePanel implements OnInit {
@@ -58,7 +66,14 @@ export class DevicePanel implements OnInit {
   /**
    * Columns displayed in the device table.
    */
-  protected readonly displayedColumns = ['deviceCode', 'vehicle', 'model', 'connection', 'lastSignal', 'actions'];
+  protected readonly displayedColumns = [
+    'deviceCode',
+    'vehicle',
+    'model',
+    'connection',
+    'lastSignal',
+    'actions',
+  ];
 
   /**
    * Identifier of the selected device.

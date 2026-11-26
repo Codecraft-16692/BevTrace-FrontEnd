@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -17,6 +17,7 @@ import { Toolbar } from '../../components/toolbar/toolbar';
   standalone: true,
   imports: [RouterLink, TranslateModule, MatIconModule, Toolbar],
   templateUrl: './page-not-found.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './page-not-found.css',
 })
 export class PageNotFound {}

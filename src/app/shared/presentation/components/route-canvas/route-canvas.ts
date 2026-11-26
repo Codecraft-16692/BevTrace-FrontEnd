@@ -1,4 +1,4 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, input, output, ChangeDetectionStrategy } from '@angular/core';
 
 import { MapRoute } from '../../../domain/model/map-route';
 
@@ -28,6 +28,7 @@ const PADDING = 40;
   selector: 'app-route-canvas',
   standalone: true,
   templateUrl: './route-canvas.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './route-canvas.css',
 })
 export class RouteCanvas {

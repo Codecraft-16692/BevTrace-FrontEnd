@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 /**
@@ -14,6 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [TranslatePipe],
   templateUrl: './status-chip.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './status-chip.css',
 })
 export class StatusChip {
@@ -38,17 +39,49 @@ export class StatusChip {
 /**
  * Statuses that represent a successful or healthy state.
  */
-const OK = ['AVAILABLE', 'RECONCILED', 'DELIVERED', 'COMPLETED', 'CONNECTED', 'ACTIVE', 'PAID', 'RESOLVED', 'REACHED', 'LOW'];
+const OK = [
+  'AVAILABLE',
+  'RECONCILED',
+  'DELIVERED',
+  'COMPLETED',
+  'CONNECTED',
+  'ACTIVE',
+  'PAID',
+  'RESOLVED',
+  'REACHED',
+  'LOW',
+];
 
 /**
  * Statuses that represent a pending or attention state.
  */
-const WARN = ['IN_REVIEW', 'SCHEDULED', 'PENDING', 'EXPECTED', 'MEDIUM', 'ACKNOWLEDGED', 'ON_LEAVE'];
+const WARN = [
+  'IN_REVIEW',
+  'SCHEDULED',
+  'PENDING',
+  'EXPECTED',
+  'MEDIUM',
+  'ACKNOWLEDGED',
+  'ON_LEAVE',
+];
 
 /**
  * Statuses that represent a failure or critical state.
  */
-const ERROR = ['OPEN', 'CRITICAL', 'HIGH', 'DISCONNECTED', 'FAILED', 'PAST_DUE', 'DELIVERY_REJECTED', 'OMITTED', 'URGENT', 'CANCELLED', 'REJECTED', 'UNAVAILABLE'];
+const ERROR = [
+  'OPEN',
+  'CRITICAL',
+  'HIGH',
+  'DISCONNECTED',
+  'FAILED',
+  'PAST_DUE',
+  'DELIVERY_REJECTED',
+  'OMITTED',
+  'URGENT',
+  'CANCELLED',
+  'REJECTED',
+  'UNAVAILABLE',
+];
 
 /**
  * Statuses that represent an in-progress state.

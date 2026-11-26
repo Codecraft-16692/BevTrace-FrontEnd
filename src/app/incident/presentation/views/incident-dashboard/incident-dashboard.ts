@@ -1,4 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -34,6 +41,7 @@ import { StatusChip } from '../../../../shared/presentation/components/status-ch
     StatusChip,
   ],
   templateUrl: './incident-dashboard.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './incident-dashboard.css',
 })
 export class IncidentDashboard implements OnInit {
@@ -50,12 +58,21 @@ export class IncidentDashboard implements OnInit {
   /**
    * Running the anomaly detection is reserved to logistics managers.
    */
-  protected readonly canDetect = computed(() => this.iamStore.hasAnyRole(['ROLE_LOGISTICS_MANAGER']));
+  protected readonly canDetect = computed(() =>
+    this.iamStore.hasAnyRole(['ROLE_LOGISTICS_MANAGER']),
+  );
 
   /**
    * Columns displayed in the incident table.
    */
-  protected readonly displayedColumns = ['severity', 'anomalyType', 'destinationName', 'vehiclePlate', 'detectedAt', 'status'];
+  protected readonly displayedColumns = [
+    'severity',
+    'anomalyType',
+    'destinationName',
+    'vehiclePlate',
+    'detectedAt',
+    'status',
+  ];
 
   /**
    * Filter applied to the incident list.
@@ -80,7 +97,11 @@ export class IncidentDashboard implements OnInit {
     return this.store
       .incidents()
       .filter((incident) =>
-        filter === 'all' ? true : filter === 'active' ? incident.status !== 'RESOLVED' : incident.status === 'RESOLVED',
+        filter === 'all'
+          ? true
+          : filter === 'active'
+            ? incident.status !== 'RESOLVED'
+            : incident.status === 'RESOLVED',
       );
   });
 

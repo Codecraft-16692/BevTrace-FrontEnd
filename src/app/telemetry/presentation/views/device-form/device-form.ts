@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -20,6 +20,7 @@ import { MessageBanner } from '../../../../shared/presentation/components/messag
   standalone: true,
   imports: [ReactiveFormsModule, TranslateModule, MatIconModule, MessageBanner],
   templateUrl: './device-form.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './device-form.css',
 })
 export class DeviceForm implements OnInit {

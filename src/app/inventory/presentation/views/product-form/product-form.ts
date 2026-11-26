@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -19,6 +19,7 @@ import { MessageBanner } from '../../../../shared/presentation/components/messag
   standalone: true,
   imports: [ReactiveFormsModule, TranslateModule, MatIconModule, MessageBanner],
   templateUrl: './product-form.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './product-form.css',
 })
 export class ProductForm implements OnInit {
@@ -41,7 +42,10 @@ export class ProductForm implements OnInit {
       nonNullable: true,
       validators: [Validators.required, Validators.min(1), Validators.pattern(/^[0-9]+$/)],
     }),
-    packagingType: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+    packagingType: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
   /**

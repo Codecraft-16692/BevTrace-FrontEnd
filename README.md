@@ -2,7 +2,7 @@
 
 Angular frontend for BevTrace, a beverage logistics and traceability platform covering inventory, dispatch, traceability, IoT telemetry, incidents, analytics and subscriptions.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.3.0.
 
 ## Getting started
 

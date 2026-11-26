@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -72,6 +72,7 @@ const MANAGER = 'ROLE_LOGISTICS_MANAGER';
     UserSessionSection,
   ],
   templateUrl: './layout.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './layout.css',
 })
 export class Layout implements OnInit {
@@ -106,7 +107,11 @@ export class Layout implements OnInit {
       link: '/inventory',
       children: [
         { label: 'inventory.catalog.title', link: '/inventory/products' },
-        { label: 'inventory.product-form.title', link: '/inventory/products/new', roles: [MANAGER] },
+        {
+          label: 'inventory.product-form.title',
+          link: '/inventory/products/new',
+          roles: [MANAGER],
+        },
         { label: 'inventory.batch-form.title', link: '/inventory/batches/new', roles: [MANAGER] },
         { label: 'inventory.entry.title', link: '/inventory/batches' },
         { label: 'inventory.waste.title', link: '/inventory/waste-records' },
@@ -195,7 +200,9 @@ export class Layout implements OnInit {
         option.children
           ? {
               ...option,
-              children: option.children.filter((child) => !child.roles || this.iamStore.hasAnyRole(child.roles)),
+              children: option.children.filter(
+                (child) => !child.roles || this.iamStore.hasAnyRole(child.roles),
+              ),
             }
           : option,
       )
@@ -215,7 +222,9 @@ export class Layout implements OnInit {
   /**
    * Number of unread notifications.
    */
-  protected readonly unreadCount = computed(() => this.notifications().filter((n) => !n.read).length);
+  protected readonly unreadCount = computed(
+    () => this.notifications().filter((n) => !n.read).length,
+  );
 
   /**
    * Creates a new Layout.
@@ -251,7 +260,9 @@ export class Layout implements OnInit {
     const matches = (candidate: string) => path === candidate || path.startsWith(`${candidate}/`);
     if (!matches(link)) return false;
     // Siblings such as /batches and /batches/new share a prefix: only the most specific one is active.
-    const links = this.allOptions.flatMap((option) => (option.children ?? []).map((child) => child.link));
+    const links = this.allOptions.flatMap((option) =>
+      (option.children ?? []).map((child) => child.link),
+    );
     return !links.some((other) => other.length > link.length && matches(other));
   }
 

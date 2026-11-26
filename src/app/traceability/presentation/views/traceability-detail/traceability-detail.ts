@@ -1,4 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -35,6 +42,7 @@ import { RouteCanvas } from '../../../../shared/presentation/components/route-ca
     RouteCanvas,
   ],
   templateUrl: './traceability-detail.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './traceability-detail.css',
 })
 export class TraceabilityDetail implements OnInit {
@@ -93,7 +101,10 @@ export class TraceabilityDetail implements OnInit {
         id: log.id,
         label: `${log.vehiclePlate} → ${log.destinationName}`,
         color: '#0d5c63',
-        vehicle: log.currentStatus === 'COMPLETED' ? null : { latitude: log.currentLatitude, longitude: log.currentLongitude },
+        vehicle:
+          log.currentStatus === 'COMPLETED'
+            ? null
+            : { latitude: log.currentLatitude, longitude: log.currentLongitude },
         points: this.checkpoints().map((checkpoint) => ({
           latitude: checkpoint.latitude,
           longitude: checkpoint.longitude,

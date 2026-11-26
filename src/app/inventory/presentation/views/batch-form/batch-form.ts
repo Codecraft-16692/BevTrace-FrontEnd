@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -19,8 +19,15 @@ import { MessageBanner } from '../../../../shared/presentation/components/messag
 @Component({
   selector: 'app-batch-form',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslateModule, MatIconModule, MatProgressSpinnerModule, MessageBanner],
+  imports: [
+    ReactiveFormsModule,
+    TranslateModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MessageBanner,
+  ],
   templateUrl: './batch-form.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './batch-form.css',
 })
 export class BatchForm implements OnInit {

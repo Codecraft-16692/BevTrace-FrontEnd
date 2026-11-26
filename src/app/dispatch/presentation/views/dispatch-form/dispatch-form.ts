@@ -1,4 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -36,8 +43,15 @@ interface CargoLine {
 @Component({
   selector: 'app-dispatch-form',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslateModule, MatIconModule, MatProgressSpinnerModule, MessageBanner],
+  imports: [
+    ReactiveFormsModule,
+    TranslateModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MessageBanner,
+  ],
   templateUrl: './dispatch-form.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dispatch-form.css',
 })
 export class DispatchForm implements OnInit {
@@ -121,7 +135,9 @@ export class DispatchForm implements OnInit {
    */
   protected setBatch(index: number, value: string): void {
     this.lines.update((lines) =>
-      lines.map((line, i) => (i === index ? { ...line, batchId: value ? Number(value) : null } : line)),
+      lines.map((line, i) =>
+        i === index ? { ...line, batchId: value ? Number(value) : null } : line,
+      ),
     );
   }
 
@@ -132,7 +148,9 @@ export class DispatchForm implements OnInit {
    * @param value - Quantity typed in the input
    */
   protected setQuantity(index: number, value: string): void {
-    this.lines.update((lines) => lines.map((line, i) => (i === index ? { ...line, quantity: Number(value) } : line)));
+    this.lines.update((lines) =>
+      lines.map((line, i) => (i === index ? { ...line, quantity: Number(value) } : line)),
+    );
   }
 
   /**

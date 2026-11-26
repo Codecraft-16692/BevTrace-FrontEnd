@@ -1,4 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -36,6 +43,7 @@ import { RouteCanvas } from '../../../../shared/presentation/components/route-ca
     RouteCanvas,
   ],
   templateUrl: './dispatch-detail.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dispatch-detail.css',
 })
 export class DispatchDetail implements OnInit {
@@ -92,7 +100,9 @@ export class DispatchDetail implements OnInit {
   /**
    * Pallet labels expected by the order.
    */
-  protected readonly expectedPallets = computed(() => this.cargo().flatMap((item) => item.palletCodes));
+  protected readonly expectedPallets = computed(() =>
+    this.cargo().flatMap((item) => item.palletCodes),
+  );
 
   /**
    * Destination of the order with its address.
@@ -107,7 +117,11 @@ export class DispatchDetail implements OnInit {
   protected readonly suggestedRoute = computed<MapRoute[]>(() => {
     const destination = this.destination();
     if (!destination) return [];
-    const points = RoutePlanner.plan(destination.clientName, destination.latitude, destination.longitude);
+    const points = RoutePlanner.plan(
+      destination.clientName,
+      destination.latitude,
+      destination.longitude,
+    );
     return [
       {
         id: this.orderId(),
@@ -129,18 +143,24 @@ export class DispatchDetail implements OnInit {
    */
   protected readonly estimatedMinutes = computed(() => {
     const destination = this.destination();
-    return destination ? RoutePlanner.estimateMinutes(destination.latitude, destination.longitude) : 0;
+    return destination
+      ? RoutePlanner.estimateMinutes(destination.latitude, destination.longitude)
+      : 0;
   });
 
   /**
    * Indicates whether the current user can classify, assign vehicles and register departures.
    */
-  protected readonly canManage = computed(() => this.iamStore.hasAnyRole(['ROLE_LOGISTICS_MANAGER']));
+  protected readonly canManage = computed(() =>
+    this.iamStore.hasAnyRole(['ROLE_LOGISTICS_MANAGER']),
+  );
 
   /**
    * Indicates whether the current user can validate the loaded pallets.
    */
-  protected readonly canOperate = computed(() => this.iamStore.hasAnyRole(['ROLE_WAREHOUSE_OPERATOR']));
+  protected readonly canOperate = computed(() =>
+    this.iamStore.hasAnyRole(['ROLE_WAREHOUSE_OPERATOR']),
+  );
 
   /**
    * Lifecycle hook that loads the dispatch data and reads the order identifier.

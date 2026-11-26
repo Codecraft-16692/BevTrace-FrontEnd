@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -19,6 +19,7 @@ import { SubscriptionPlan } from '../../../domain/model/subscription-plan.entity
   standalone: true,
   imports: [DecimalPipe, TranslateModule, MatIconModule],
   templateUrl: './plan-card.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './plan-card.css',
 })
 export class PlanCard {

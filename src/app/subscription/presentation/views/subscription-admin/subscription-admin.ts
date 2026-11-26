@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -23,6 +23,7 @@ import { StatusChip } from '../../../../shared/presentation/components/status-ch
   standalone: true,
   imports: [DatePipe, DecimalPipe, TranslateModule, MatIconModule, MessageBanner, StatusChip],
   templateUrl: './subscription-admin.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './subscription-admin.css',
 })
 export class SubscriptionAdmin implements OnInit {

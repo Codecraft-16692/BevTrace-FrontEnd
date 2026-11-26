@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -20,6 +20,7 @@ import { StatusChip } from '../../../../shared/presentation/components/status-ch
   standalone: true,
   imports: [DatePipe, TranslateModule, MatIconModule, StatusChip],
   templateUrl: './delivery-history.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './delivery-history.css',
 })
 export class DeliveryHistory implements OnInit {
@@ -56,6 +57,8 @@ export class DeliveryHistory implements OnInit {
    * @returns Name of the receiver or a dash
    */
   protected receiverOf(logId: number): string {
-    return this.store.recordsOf(logId).find((record) => record.status === 'DELIVERED')?.receivedBy ?? '-';
+    return (
+      this.store.recordsOf(logId).find((record) => record.status === 'DELIVERED')?.receivedBy ?? '-'
+    );
   }
 }

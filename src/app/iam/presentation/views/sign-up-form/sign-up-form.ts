@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -36,6 +36,7 @@ import { MessageBanner } from '../../../../shared/presentation/components/messag
     MessageBanner,
   ],
   templateUrl: './sign-up-form.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './sign-up-form.css',
 })
 export class SignUpForm {
