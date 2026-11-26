@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -19,6 +19,7 @@ import { IamStore } from '../../../../iam/application/iam.store';
   standalone: true,
   imports: [RouterLink, TranslatePipe, MatToolbarModule, MatButtonModule, LanguageSwitcher],
   templateUrl: './toolbar.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './toolbar.css',
 })
 export class Toolbar {

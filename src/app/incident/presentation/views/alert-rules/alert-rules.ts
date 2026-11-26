@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -31,6 +31,7 @@ import { StatusChip } from '../../../../shared/presentation/components/status-ch
     StatusChip,
   ],
   templateUrl: './alert-rules.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './alert-rules.css',
 })
 export class AlertRules implements OnInit {
@@ -47,12 +48,22 @@ export class AlertRules implements OnInit {
   /**
    * Columns displayed in the rules table.
    */
-  protected readonly displayedColumns = ['conditionType', 'threshold', 'severity', 'description', 'active'];
+  protected readonly displayedColumns = [
+    'conditionType',
+    'threshold',
+    'severity',
+    'description',
+    'active',
+  ];
 
   /**
    * Condition types supported by the detection.
    */
-  protected readonly conditions = ['TEMPERATURE_MAX', 'DELAY_MINUTES', 'SIGNAL_LOSS_MINUTES'] as const;
+  protected readonly conditions = [
+    'TEMPERATURE_MAX',
+    'DELAY_MINUTES',
+    'SIGNAL_LOSS_MINUTES',
+  ] as const;
 
   /**
    * Severities available for a rule.
@@ -63,7 +74,9 @@ export class AlertRules implements OnInit {
    * Reactive form used to capture a new rule.
    */
   protected readonly form = new FormGroup({
-    conditionType: new FormControl<(typeof this.conditions)[number]>('TEMPERATURE_MAX', { nonNullable: true }),
+    conditionType: new FormControl<(typeof this.conditions)[number]>('TEMPERATURE_MAX', {
+      nonNullable: true,
+    }),
     threshold: new FormControl<number>(30, {
       nonNullable: true,
       validators: [Validators.required, Validators.min(1)],

@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -23,6 +23,7 @@ import { StatusChip } from '../../../../shared/presentation/components/status-ch
   standalone: true,
   imports: [DatePipe, DecimalPipe, TranslateModule, MatIconModule, MessageBanner, StatusChip],
   templateUrl: './billing.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './billing.css',
 })
 export class Billing implements OnInit {

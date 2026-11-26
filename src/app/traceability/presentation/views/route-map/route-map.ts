@@ -1,4 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -41,6 +48,7 @@ const PALETTE = ['#0d5c63', '#e07b00', '#6a1b9a', '#1565c0', '#c62828', '#2e7d32
     RouteCanvas,
   ],
   templateUrl: './route-map.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './route-map.css',
 })
 export class RouteMap implements OnInit {

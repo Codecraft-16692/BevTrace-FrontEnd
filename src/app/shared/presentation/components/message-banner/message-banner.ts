@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -17,6 +17,7 @@ import { AppMessage } from '../../../domain/model/app-message';
   standalone: true,
   imports: [TranslatePipe, MatIconModule],
   templateUrl: './message-banner.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './message-banner.css',
 })
 export class MessageBanner {

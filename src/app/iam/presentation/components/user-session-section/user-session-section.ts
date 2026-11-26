@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -20,6 +20,7 @@ import { IamStore } from '../../../application/iam.store';
   standalone: true,
   imports: [TranslateModule, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './user-session-section.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './user-session-section.css',
 })
 export class UserSessionSection {

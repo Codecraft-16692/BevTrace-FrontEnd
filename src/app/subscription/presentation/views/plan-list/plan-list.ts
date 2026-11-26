@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -22,6 +22,7 @@ import { MessageBanner } from '../../../../shared/presentation/components/messag
   standalone: true,
   imports: [TranslateModule, MatIconModule, PlanCard, MessageBanner],
   templateUrl: './plan-list.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './plan-list.css',
 })
 export class PlanList implements OnInit {
@@ -58,7 +59,9 @@ export class PlanList implements OnInit {
       return;
     }
     this.router
-      .navigate(['/subscription/subscriptions/new'], { queryParams: { plan: plan.code, cycle: plan.billingPeriod } })
+      .navigate(['/subscription/subscriptions/new'], {
+        queryParams: { plan: plan.code, cycle: plan.billingPeriod },
+      })
       .then();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
 
@@ -15,6 +15,7 @@ import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-
   standalone: true,
   imports: [MatButtonToggleGroup, MatButtonToggle],
   templateUrl: './language-switcher.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './language-switcher.css',
 })
 export class LanguageSwitcher {

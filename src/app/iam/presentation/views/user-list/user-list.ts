@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { MatTableModule } from '@angular/material/table';
@@ -32,6 +32,7 @@ import { MessageBanner } from '../../../../shared/presentation/components/messag
     MessageBanner,
   ],
   templateUrl: './user-list.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './user-list.css',
 })
 export class UserList implements OnInit {

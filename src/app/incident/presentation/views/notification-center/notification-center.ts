@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -20,6 +20,7 @@ import { IamStore } from '../../../../iam/application/iam.store';
   standalone: true,
   imports: [DatePipe, TranslateModule, MatIconModule],
   templateUrl: './notification-center.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './notification-center.css',
 })
 export class NotificationCenter implements OnInit {

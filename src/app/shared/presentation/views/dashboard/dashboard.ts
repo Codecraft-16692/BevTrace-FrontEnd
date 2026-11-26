@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -26,6 +26,7 @@ import { StatusChip } from '../../components/status-chip/status-chip';
   standalone: true,
   imports: [DatePipe, DecimalPipe, TranslateModule, MatIconModule, StatusChip],
   templateUrl: './dashboard.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
@@ -67,7 +68,9 @@ export class Dashboard implements OnInit {
   /**
    * First name of the signed in user.
    */
-  protected readonly firstName = computed(() => (this.iamStore.currentUsername() ?? '').split(' ')[0]);
+  protected readonly firstName = computed(
+    () => (this.iamStore.currentUsername() ?? '').split(' ')[0],
+  );
 
   /**
    * Next dispatches waiting in the queue.

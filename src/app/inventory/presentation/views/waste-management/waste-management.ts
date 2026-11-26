@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -31,6 +31,7 @@ import { MessageBanner } from '../../../../shared/presentation/components/messag
     MessageBanner,
   ],
   templateUrl: './waste-management.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './waste-management.css',
 })
 export class WasteManagement implements OnInit {
@@ -47,7 +48,13 @@ export class WasteManagement implements OnInit {
   /**
    * Columns displayed in the waste table.
    */
-  protected readonly displayedColumns = ['reportedDate', 'batchNumber', 'quantity', 'reason', 'userName'];
+  protected readonly displayedColumns = [
+    'reportedDate',
+    'batchNumber',
+    'quantity',
+    'reason',
+    'userName',
+  ];
 
   /**
    * Reactive form used to capture the waste data.

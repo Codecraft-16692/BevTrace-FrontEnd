@@ -1,4 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -34,6 +41,7 @@ import { StatusChip } from '../../../../shared/presentation/components/status-ch
     StatusChip,
   ],
   templateUrl: './inventory-catalog.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './inventory-catalog.css',
 })
 export class InventoryCatalog implements OnInit {
